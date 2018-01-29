@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/pblogin"
+        android:indeterminate="true" />
+    <ImageView
+        android:src="@drawable/profile_generic"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:scaleType="center"
+        android:contentDescription="@string/app_name" />
+    <TextView
+        android:layout_marginTop="12dp"
+        android:text="@string/sign_in_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/email_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:hint="EmUsernameail"
+            android:layout_height="wrap_content"
+            android:id="@+id/etlogin_username" />
+    </android.support.design.widget.TextInputLayout>
+    <EditText
+        android:id="@+id/etlogin_password"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:hint="Password" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:text="Cancel"
+            android:backgroundTint="@color/primary"
+            android:theme="@style/button_primary"
+            android:id="@+id/btnlogin_cancel"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="@string/signin"
+            android:backgroundTint="@color/primary"
+            android:theme="@style/button_primary"
+            android:id="@+id/btnlogin_signin"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#df3e16"
+        android:gravity="center"
+        android:id="@+id/tvlogin_message" />
+</LinearLayout>

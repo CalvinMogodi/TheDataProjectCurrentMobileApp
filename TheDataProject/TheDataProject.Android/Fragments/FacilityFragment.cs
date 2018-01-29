@@ -9,10 +9,10 @@ using Android.Content;
 
 namespace TheDataProject.Droid
 {
-    public class BrowseFragment : Android.Support.V4.App.Fragment, IFragmentVisible
+    public class FacilityFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-        public static BrowseFragment NewInstance() =>
-            new BrowseFragment { Arguments = new Bundle() };
+        public static FacilityFragment NewInstance() =>
+            new FacilityFragment { Arguments = new Bundle() };
 
         BrowseItemsAdapter adapter;
         SwipeRefreshLayout refresher;
@@ -31,7 +31,7 @@ namespace TheDataProject.Droid
         {
             ViewModel = new ItemsViewModel();
 
-            View view = inflater.Inflate(Resource.Layout.fragment_browse, container, false);
+            View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
             var recyclerView =
                 view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
 

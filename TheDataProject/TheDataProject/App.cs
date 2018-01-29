@@ -6,7 +6,7 @@ namespace TheDataProject
     {
         public static void Initialize()
         {
-            ServiceLocator.Instance.Register<IDataStore<Item>, MockDataStore>();
+            ServiceLocator.Instance.Register<IDataStore<Facility>, MockDataStore>();
         }
     }
 }

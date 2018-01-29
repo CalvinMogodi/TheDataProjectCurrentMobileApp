@@ -4,8 +4,8 @@ namespace TheDataProject
 {
     public class ItemDetailViewModel : BaseViewModel
     {
-        public Item Item { get; set; }
-        public ItemDetailViewModel(Item item = null)
+        public Facility Item { get; set; }
+        public ItemDetailViewModel(Facility item = null)
         {
             if (item != null)
             {

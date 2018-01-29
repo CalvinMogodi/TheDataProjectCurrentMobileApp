@@ -38,22 +38,15 @@ namespace TheDataProject.Droid
 
                 fragment?.BecameVisible();
             };
-
-            Toolbar.MenuItemClick += (sender, e) =>
-            {
-                var intent = new Intent(this, typeof(AddItemActivity)); ;
-                StartActivity(intent);
-            };
-
             SupportActionBar.SetDisplayHomeAsUpEnabled(false);
             SupportActionBar.SetHomeButtonEnabled(false);
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }
+        //public override bool OnCreateOptionsMenu(IMenu menu)
+        //{
+        //    MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+        //    return base.OnCreateOptionsMenu(menu);
+        //}
     }
 
     class TabsAdapter : FragmentStatePagerAdapter
@@ -74,8 +67,7 @@ namespace TheDataProject.Droid
         {
             switch (position)
             {
-                case 0: return BrowseFragment.NewInstance();
-                case 1: return AboutFragment.NewInstance();
+                case 0: return FacilityFragment.NewInstance();
             }
             return null;
         }

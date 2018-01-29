@@ -21,7 +21,7 @@ namespace TheDataProject.Droid
 
             var data = Intent.GetStringExtra("data");
 
-            var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Item>(data);
+            var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
             viewModel = new ItemDetailViewModel(item);
 
             FindViewById<TextView>(Resource.Id.description).Text = item.Description;

@@ -18,7 +18,7 @@ namespace TheDataProject.iOS
 
             btnSaveItem.TouchUpInside += (sender, e) =>
             {
-                var item = new Item
+                var item = new Facility
                 {
                     Text = txtTitle.Text,
                     Description = txtDesc.Text

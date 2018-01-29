@@ -19,7 +19,7 @@ namespace TheDataProject.Droid
         {
             base.OnCreate(savedInstanceState);
 
-            ViewModel = BrowseFragment.ViewModel;
+            ViewModel = FacilityFragment.ViewModel;
 
             // Create your application here
             SetContentView(Resource.Layout.activity_add_item);
@@ -32,7 +32,7 @@ namespace TheDataProject.Droid
 
         void SaveButton_Click(object sender, EventArgs e)
         {
-            var item = new Item
+            var item = new Facility
             {
                 Text = title.Text,
                 Description = description.Text

@@ -71,13 +71,19 @@ namespace TheDataProject.Droid.Activities
                 Password = encryptionHelper.Encrypt(password.Text, "Passw0rd@SendMe"),
             };
 
-           // await ViewModel.ChangePasswordAsync(_user, Convert.ToInt32(oneTimePin.Text.Trim()));
+            // await ViewModel.ChangePasswordAsync(_user, Convert.ToInt32(oneTimePin.Text.Trim()));
 
             //if (ViewModel.Respond.ErrorOccurred)
             //    message.Text = ViewModel.Respond.Error.Message;
             //else
             //{
-            //    messageDialog.SendToast("Password is changed successfully.");
+            message.Text = "Loged In";
+            var newIntent = new Intent(this, typeof(MainActivity));
+            newIntent.AddFlags(ActivityFlags.ClearTop);
+            newIntent.AddFlags(ActivityFlags.SingleTop);
+
+            StartActivity(newIntent);
+            Finish();
             //    Finish();
             //}
 
@@ -86,7 +92,9 @@ namespace TheDataProject.Droid.Activities
 
         private async void Cancel_Click(object sender, EventArgs e)
         {
-
+            username.Text = "";
+            password.Text = "";
+            message.Text = "";
         }
 
         private bool ValidateForm()
@@ -95,17 +103,22 @@ namespace TheDataProject.Droid.Activities
             Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
             icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
 
-            FormIsValid = true;
+            FormIsValid = true;            
 
             if (!validation.IsValidEmail(username.Text))
             {
-                username.SetError("Invalid email address", icon);
+                username.SetError("Invalid username", icon);
+                FormIsValid = false;
+            }
+            if (!validation.IsRequired(username.Text))
+            {
+                username.SetError("This field is required", icon);
                 FormIsValid = false;
             }
 
-            if (!validation.IsValidPassword(password.Text))
+            if (!validation.IsRequired(password.Text))
             {
-                password.SetError("Password cannot be empty and length must be greater than 6 characters", icon);
+                password.SetError("This field is required", icon);
                 FormIsValid = false;
             }
 

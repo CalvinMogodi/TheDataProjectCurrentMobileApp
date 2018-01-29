@@ -2,7 +2,7 @@
 
 namespace TheDataProject
 {
-    public class Item
+    public class Facility
     {
         public string Id { get; set; }
         public string Text { get; set; }

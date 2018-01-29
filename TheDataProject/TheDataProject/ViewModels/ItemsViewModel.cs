@@ -7,16 +7,16 @@ namespace TheDataProject
 {
     public class ItemsViewModel : BaseViewModel
     {
-        public ObservableCollection<Item> Items { get; set; }
+        public ObservableCollection<Facility> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         public Command AddItemCommand { get; set; }
 
         public ItemsViewModel()
         {
-            Title = "Browse";
-            Items = new ObservableCollection<Item>();
+            Title = "Facility";
+            Items = new ObservableCollection<Facility>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            AddItemCommand = new Command<Item>(async (Item item) => await AddItem(item));
+            AddItemCommand = new Command<Facility>(async (Facility item) => await AddItem(item));
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -45,7 +45,7 @@ namespace TheDataProject
             }
         }
 
-        async Task AddItem(Item item)
+        async Task AddItem(Facility item)
         {
             Items.Add(item);
             await DataStore.AddItemAsync(item);

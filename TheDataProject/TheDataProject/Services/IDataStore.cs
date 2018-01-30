@@ -4,12 +4,17 @@ using System.Threading.Tasks;
 
 namespace TheDataProject
 {
-    public interface IDataStore<T>
+    public interface IDataStore<F, B, U>
     {
-        Task<bool> AddItemAsync(T item);
-        Task<bool> UpdateItemAsync(T item);
-        Task<bool> DeleteItemAsync(string id);
-        Task<T> GetItemAsync(string id);
-        Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
+        Task<bool> UpdateFacilityAsync(F facility);
+        Task<F> GetFacilityAsync(string id);
+        Task<IEnumerable<F>> GetFacilitysAsync(bool forceRefresh = false);
+
+        Task<bool> AddBuildingAsync(B building);
+        Task<B> GetBuildingAsync(string id);
+        Task<IEnumerable<B>> GetBuildingsAsync(bool forceRefresh = false);
+
+        Task<bool> LoginUser(U user);
+        Task<U> ChangePassword(U user);
     }
 }

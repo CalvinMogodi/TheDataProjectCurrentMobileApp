@@ -2,64 +2,94 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheDataProject.Models;
 
 namespace TheDataProject
 {
-    public class MockDataStore : IDataStore<Facility>
+    public class MockDataStore : IDataStore<Facility, Building, User>
     {
-        List<Facility> items;
+        List<Facility> facilities;
+        List<Building> buildings;
 
         public MockDataStore()
         {
-            items = new List<Facility>();
-            var _items = new List<Facility>
+            facilities = new List<Facility>();
+            buildings = new List<Building>();
+
+            var _facilities = new List<Facility>
             {
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "Second item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "First item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "Fifth item", Description="This is a nice description"},
+                new Facility { Id = Guid.NewGuid().ToString(), Name = "Sixth item", Description="This is a nice description"},
             };
 
-            foreach (Facility item in _items)
+            var _buildings = new List<Building>
             {
-                items.Add(item);
+                new Building { Id = Guid.NewGuid().ToString(), Name = "First item", Description="This is a nice description"},
+                new Building { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is a nice description"},
+                new Building { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is a nice description"},
+                new Building { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is a nice description"},
+                new Building { Id = Guid.NewGuid().ToString(), Name = "Fifth item", Description="This is a nice description"},
+                new Building { Id = Guid.NewGuid().ToString(), Name = "Sixth item", Description="This is a nice description"},
+            };
+
+            foreach (Facility facility in _facilities)
+            {
+                facilities.Add(facility);
+            }
+
+            foreach (Building building in _buildings)
+            {
+                buildings.Add(building);
             }
         }
 
-        public async Task<bool> AddItemAsync(Facility item)
+        public async Task<bool> UpdateFacilityAsync(Facility facility)
         {
-            items.Add(item);
+            var _facility = facilities.Where((Facility arg) => arg.Id == facility.Id).FirstOrDefault();
+            facilities.Remove(_facility);
+            facilities.Add(facility);
 
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> UpdateItemAsync(Facility item)
+        public async Task<Facility> GetFacilityAsync(string id)
         {
-            var _item = items.Where((Facility arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(_item);
-            items.Add(item);
-
-            return await Task.FromResult(true);
+            return await Task.FromResult(facilities.FirstOrDefault(s => s.Id == id));
         }
 
-        public async Task<bool> DeleteItemAsync(string id)
+        public async Task<IEnumerable<Facility>> GetFacilitysAsync(bool forceRefresh = false)
         {
-            var _item = items.Where((Facility arg) => arg.Id == id).FirstOrDefault();
-            items.Remove(_item);
-
-            return await Task.FromResult(true);
+            return await Task.FromResult(facilities);
         }
 
-        public async Task<Facility> GetItemAsync(string id)
+        public Task<bool> AddBuildingAsync(Building building)
         {
-            return await Task.FromResult(items.FirstOrDefault(s => s.Id == id));
+            buildings.Add(building);
+            return Task.FromResult(true);
         }
 
-        public async Task<IEnumerable<Facility>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<Building> GetBuildingAsync(string id)
         {
-            return await Task.FromResult(items);
+            return await Task.FromResult(buildings.FirstOrDefault(s => s.Id == id));
+        }
+
+        public async Task<IEnumerable<Building>> GetBuildingsAsync(bool forceRefresh = false)
+        {
+            return await Task.FromResult(buildings);
+        }
+
+        public Task<bool> LoginUser(User user)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<User> ChangePassword(User user)
+        {
+            return Task.FromResult(user);
         }
     }
 }

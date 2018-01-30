@@ -1,4 +1,5 @@
 ﻿using System;
+using TheDataProject.Models;
 
 namespace TheDataProject
 {
@@ -6,7 +7,7 @@ namespace TheDataProject
     {
         public static void Initialize()
         {
-            ServiceLocator.Instance.Register<IDataStore<Facility>, MockDataStore>();
+            ServiceLocator.Instance.Register<IDataStore<Facility, Building, User>, MockDataStore>();
         }
     }
 }

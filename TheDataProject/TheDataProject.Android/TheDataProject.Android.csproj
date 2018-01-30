@@ -86,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\AddItemActivity.cs" />
-    <Compile Include="Activities\BrowseItemDetailActivity.cs" />
+    <Compile Include="Activities\FacilityDetailActivity.cs" />
     <Compile Include="Activities\ForgotPasswordActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
     <Compile Include="Fragments\IFragmentVisible.cs" />
@@ -125,7 +125,9 @@
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values-v21\styles.xml" />
     <AndroidResource Include="Resources\layout\tabs.axml" />
-    <AndroidResource Include="Resources\layout\activity_item_details.axml" />
+    <AndroidResource Include="Resources\layout\activity_facility_details.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\layout\toolbar.axml" />
     <AndroidResource Include="Resources\layout\fragment_facility.axml" />
     <AndroidResource Include="Resources\layout\item_browse.axml" />

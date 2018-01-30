@@ -6,7 +6,7 @@ namespace TheDataProject.iOS
 {
     public partial class ItemNewViewController : UIViewController
     {
-        public ItemsViewModel ViewModel { get; set; }
+        public FacilitiesViewModel ViewModel { get; set; }
 
         public ItemNewViewController(IntPtr handle) : base(handle)
         {
@@ -20,7 +20,7 @@ namespace TheDataProject.iOS
             {
                 var item = new Facility
                 {
-                    Text = txtTitle.Text,
+                    Name = txtTitle.Text,
                     Description = txtDesc.Text
                 };
                 ViewModel.AddItemCommand.Execute(item);

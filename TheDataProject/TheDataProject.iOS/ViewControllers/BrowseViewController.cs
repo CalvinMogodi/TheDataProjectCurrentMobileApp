@@ -10,7 +10,7 @@ namespace TheDataProject.iOS
     {
         UIRefreshControl refreshControl;
 
-        public ItemsViewModel ViewModel { get; set; }
+        public FacilitiesViewModel ViewModel { get; set; }
 
         public BrowseViewController(IntPtr handle) : base(handle)
         {
@@ -20,7 +20,7 @@ namespace TheDataProject.iOS
         {
             base.ViewDidLoad();
 
-            ViewModel = new ItemsViewModel();
+            ViewModel = new FacilitiesViewModel();
 
             // Setup UITableView.
             refreshControl = new UIRefreshControl();
@@ -50,7 +50,7 @@ namespace TheDataProject.iOS
                 var indexPath = TableView.IndexPathForCell(sender as UITableViewCell);
                 var item = ViewModel.Items[indexPath.Row];
 
-                controller.ViewModel = new ItemDetailViewModel(item);
+                controller.ViewModel = new FacilityDetailViewModel(item);
             }
             else
             {
@@ -94,9 +94,9 @@ namespace TheDataProject.iOS
     {
         static readonly NSString CELL_IDENTIFIER = new NSString("ITEM_CELL");
 
-        ItemsViewModel viewModel;
+        FacilitiesViewModel viewModel;
 
-        public ItemsDataSource(ItemsViewModel viewModel)
+        public ItemsDataSource(FacilitiesViewModel viewModel)
         {
             this.viewModel = viewModel;
         }
@@ -109,7 +109,7 @@ namespace TheDataProject.iOS
             var cell = tableView.DequeueReusableCell(CELL_IDENTIFIER, indexPath);
 
             var item = viewModel.Items[indexPath.Row];
-            cell.TextLabel.Text = item.Text;
+            cell.TextLabel.Text = item.Name;
             cell.DetailTextLabel.Text = item.Description;
             cell.LayoutMargins = UIEdgeInsets.Zero;
 

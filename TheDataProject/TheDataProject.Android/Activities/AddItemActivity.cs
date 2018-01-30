@@ -13,7 +13,7 @@ namespace TheDataProject.Droid
         FloatingActionButton saveButton;
         EditText title, description;
 
-        public ItemsViewModel ViewModel { get; set; }
+        public FacilitiesViewModel ViewModel { get; set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -32,14 +32,14 @@ namespace TheDataProject.Droid
 
         void SaveButton_Click(object sender, EventArgs e)
         {
-            var item = new Facility
-            {
-                Text = title.Text,
-                Description = description.Text
-            };
-            ViewModel.AddItemCommand.Execute(item);
+            //var item = new Facility
+            //{
+            //    Name = title.Text,
+            //    Description = description.Text
+            //};
+            //ViewModel.AddItemCommand.Execute(item);
 
-            Finish();
+            //Finish();
         }
     }
 }

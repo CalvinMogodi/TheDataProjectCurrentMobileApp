@@ -2525,7 +2525,7 @@ namespace TheDataProject.Droid
 			public const int activity_add_item = 2130968601;
 			
 			// aapt resource value: 0x7f04001a
-			public const int activity_item_details = 2130968602;
+			public const int activity_facility_details = 2130968602;
 			
 			// aapt resource value: 0x7f04001b
 			public const int activity_login = 2130968603;

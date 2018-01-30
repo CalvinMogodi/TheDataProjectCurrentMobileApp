@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TheDataProject.Models;
 
 namespace TheDataProject
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Facility> DataStore => ServiceLocator.Instance.Get<IDataStore<Facility>>() ?? new MockDataStore();
+        public IDataStore<Facility, Building, User> DataStore => ServiceLocator.Instance.Get<IDataStore<Facility, Building, User>>() ?? new MockDataStore();
 
         bool isBusy = false;
         public bool IsBusy

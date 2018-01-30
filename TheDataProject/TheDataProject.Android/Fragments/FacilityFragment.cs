@@ -18,7 +18,7 @@ namespace TheDataProject.Droid
         SwipeRefreshLayout refresher;
 
         ProgressBar progress;
-        public static ItemsViewModel ViewModel { get; set; }
+        public static FacilitiesViewModel ViewModel { get; set; }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -29,7 +29,7 @@ namespace TheDataProject.Droid
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            ViewModel = new ItemsViewModel();
+            ViewModel = new FacilitiesViewModel();
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
             var recyclerView =
@@ -54,8 +54,8 @@ namespace TheDataProject.Droid
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
 
-            if (ViewModel.Items.Count == 0)
-                ViewModel.LoadItemsCommand.Execute(null);
+            if (ViewModel.Facilities.Count == 0)
+                ViewModel.LoadFacilitiesCommand.Execute(null);
         }
 
         public override void OnStop()
@@ -67,8 +67,8 @@ namespace TheDataProject.Droid
 
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
-            var item = ViewModel.Items[e.Position];
-            var intent = new Intent(Activity, typeof(BrowseItemDetailActivity));
+            var item = ViewModel.Facilities[e.Position];
+            var intent = new Intent(Activity, typeof(FacilityDetailActivity));
 
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
@@ -76,7 +76,7 @@ namespace TheDataProject.Droid
 
         void Refresher_Refresh(object sender, EventArgs e)
         {
-            ViewModel.LoadItemsCommand.Execute(null);
+            ViewModel.LoadFacilitiesCommand.Execute(null);
             refresher.Refreshing = false;
         }
 
@@ -88,15 +88,15 @@ namespace TheDataProject.Droid
 
     class BrowseItemsAdapter : BaseRecycleViewAdapter
     {
-        ItemsViewModel viewModel;
+        FacilitiesViewModel viewModel;
         Activity activity;
 
-        public BrowseItemsAdapter(Activity activity, ItemsViewModel viewModel)
+        public BrowseItemsAdapter(Activity activity, FacilitiesViewModel viewModel)
         {
             this.viewModel = viewModel;
             this.activity = activity;
 
-            this.viewModel.Items.CollectionChanged += (sender, args) =>
+            this.viewModel.Facilities.CollectionChanged += (sender, args) =>
             {
                 this.activity.RunOnUiThread(NotifyDataSetChanged);
             };
@@ -117,15 +117,15 @@ namespace TheDataProject.Droid
         // Replace the contents of a view (invoked by the layout manager)
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            var item = viewModel.Items[position];
+            var item = viewModel.Facilities[position];
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
-            myHolder.TextView.Text = item.Text;
+            myHolder.TextView.Text = item.Name;
             myHolder.DetailTextView.Text = item.Description;
         }
 
-        public override int ItemCount => viewModel.Items.Count;
+        public override int ItemCount => viewModel.Facilities.Count;
     }
 
     public class MyViewHolder : RecyclerView.ViewHolder

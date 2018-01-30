@@ -7,14 +7,14 @@ namespace TheDataProject.Droid
 {
     [Activity(Label = "Details", ParentActivity = typeof(MainActivity))]
     [MetaData("android.support.PARENT_ACTIVITY", Value = ".MainActivity")]
-    public class BrowseItemDetailActivity : BaseActivity
+    public class FacilityDetailActivity : BaseActivity
     {
         /// <summary>
         /// Specify the layout to inflace
         /// </summary>
-        protected override int LayoutResource => Resource.Layout.activity_item_details;
+        protected override int LayoutResource => Resource.Layout.activity_facility_details;
 
-        ItemDetailViewModel viewModel;
+        FacilityDetailViewModel viewModel;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,11 +22,11 @@ namespace TheDataProject.Droid
             var data = Intent.GetStringExtra("data");
 
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
-            viewModel = new ItemDetailViewModel(item);
+            viewModel = new FacilityDetailViewModel(item);
 
             FindViewById<TextView>(Resource.Id.description).Text = item.Description;
 
-            SupportActionBar.Title = item.Text;
+            SupportActionBar.Title = item.Name;
         }
 
         protected override void OnStart()

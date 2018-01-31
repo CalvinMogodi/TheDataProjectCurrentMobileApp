@@ -11,15 +11,18 @@ using Android.Views;
 using Android.Widget;
 using TheDataProject.ViewModels;
 using TheDataProject.Models;
+using Android.Support.Design.Widget;
 
 namespace TheDataProject.Droid.Activities
 {
     [Activity(Label = "BuildingDetailsActivity")]
     public class BuildingDetailsActivity : BaseActivity
     {
+
         protected override int LayoutResource => Resource.Layout.activity_building_details;
 
         BuildingDetailViewModel viewModel;
+        FloatingActionButton editButton, saveButton;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,6 +33,13 @@ namespace TheDataProject.Droid.Activities
             viewModel = new BuildingDetailViewModel(item);
 
             FindViewById<TextView>(Resource.Id.description).Text = item.Description;
+            editButton = FindViewById<FloatingActionButton>(Resource.Id.editbuildinginfo_button);
+            saveButton = FindViewById<FloatingActionButton>(Resource.Id.savebuildinginfo_button);
+
+            saveButton.Visibility = ViewStates.Gone;
+
+            editButton.Click += EditButton_Click;
+            saveButton.Click += SaveButton_Click;
 
             SupportActionBar.Title = item.Name;
             SupportActionBar.SetHomeButtonEnabled(true);
@@ -43,6 +53,18 @@ namespace TheDataProject.Droid.Activities
         protected override void OnStop()
         {
             base.OnStop();
+        }
+
+        void EditButton_Click(object sender, EventArgs e)
+        {
+            editButton.Visibility = ViewStates.Gone;
+            saveButton.Visibility = ViewStates.Visible;
+        }
+
+        void SaveButton_Click(object sender, EventArgs e)
+        {
+            editButton.Visibility = ViewStates.Visible;
+            saveButton.Visibility = ViewStates.Gone;
         }
     }
 }

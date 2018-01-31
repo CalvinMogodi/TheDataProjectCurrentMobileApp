@@ -28,8 +28,9 @@
          android:id="@+id/addnewBuilding_button"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:src="@drawable/ic_add_circle_outline_white_24dp"
+         android:src="@drawable/ic_add"
          app:elevation="4dp"
+         android:background="@color/button_background"
          android:layout_gravity="bottom|right"
          android:layout_margin="@dimen/fab_margin" />
 </android.support.design.widget.CoordinatorLayout>

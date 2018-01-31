@@ -9,12 +9,12 @@ using Android.Content;
 
 namespace TheDataProject.Droid
 {
-    public class FacilityFragment : Android.Support.V4.App.Fragment, IFragmentVisible
+    public class BrowseFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-        public static FacilityFragment NewInstance() =>
-            new FacilityFragment { Arguments = new Bundle() };
+        public static BrowseFragment NewInstance() =>
+            new BrowseFragment { Arguments = new Bundle() };
 
-        BrowseFacilitiesAdapter adapter;
+        BrowseItemsAdapter adapter;
         SwipeRefreshLayout refresher;
 
         ProgressBar progress;
@@ -31,12 +31,12 @@ namespace TheDataProject.Droid
         {
             ViewModel = new FacilitiesViewModel();
 
-            View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
+            View view = inflater.Inflate(Resource.Layout.fragment_browse, container, false);
             var recyclerView =
                 view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
 
             recyclerView.HasFixedSize = true;
-            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+            recyclerView.SetAdapter(adapter = new BrowseItemsAdapter(Activity, ViewModel));
 
             refresher = view.FindViewById<SwipeRefreshLayout>(Resource.Id.refresher);
             refresher.SetColorSchemeColors(Resource.Color.accent);
@@ -68,10 +68,7 @@ namespace TheDataProject.Droid
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
             var item = ViewModel.Facilities[e.Position];
-            var intent = new Intent(Activity, typeof(FacilityDetailActivity));
-
-            intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
-            Activity.StartActivity(intent);
+           
         }
 
         void Refresher_Refresh(object sender, EventArgs e)
@@ -86,12 +83,12 @@ namespace TheDataProject.Droid
         }
     }
 
-    class BrowseFacilitiesAdapter : BaseRecycleViewAdapter
+    class BrowseItemsAdapter1 : BaseRecycleViewAdapter
     {
         FacilitiesViewModel viewModel;
         Activity activity;
 
-        public BrowseFacilitiesAdapter(Activity activity, FacilitiesViewModel viewModel)
+        public BrowseItemsAdapter1(Activity activity, FacilitiesViewModel viewModel)
         {
             this.viewModel = viewModel;
             this.activity = activity;
@@ -110,7 +107,7 @@ namespace TheDataProject.Droid
             var id = Resource.Layout.item_browse;
             itemView = LayoutInflater.From(parent.Context).Inflate(id, parent, false);
 
-            var vh = new MyViewHolder(itemView, OnClick, OnLongClick);
+            var vh = new MyViewHolder1(itemView, OnClick, OnLongClick);
             return vh;
         }
 
@@ -121,19 +118,19 @@ namespace TheDataProject.Droid
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
-            myHolder.TextView.Text = item.Name;
-            myHolder.DetailTextView.Text = item.Description;
+            //myHolder.TextView.Text = item.Text;
+            //myHolder.DetailTextView.Text = item.Description;
         }
 
         public override int ItemCount => viewModel.Facilities.Count;
     }
 
-    public class MyViewHolder : RecyclerView.ViewHolder
+    public class MyViewHolder1 : RecyclerView.ViewHolder
     {
         public TextView TextView { get; set; }
         public TextView DetailTextView { get; set; }
 
-        public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
+        public MyViewHolder1(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
             TextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text1);

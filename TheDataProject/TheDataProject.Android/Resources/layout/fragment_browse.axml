@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"> 
+    android:layout_height="match_parent">
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/buildingRefresher">
+        android:id="@+id/refresher">
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/buildingRecyclerView"
+            android:id="@+id/recyclerView"
             android:scrollbars="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -20,16 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/buildingprogressbar_loading"
+        android:id="@+id/progressbar_loading"
         android:indeterminate="true" />
-
-
-  <android.support.design.widget.FloatingActionButton
-         android:id="@+id/addnewBuilding_button"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:src="@drawable/ic_add_circle_outline_white_24dp"
-         app:elevation="4dp"
-         android:layout_gravity="bottom|right"
-         android:layout_margin="@dimen/fab_margin" />
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

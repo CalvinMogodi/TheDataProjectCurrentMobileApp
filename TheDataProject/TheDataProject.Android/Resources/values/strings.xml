@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="hello">Hello World, Click Me!</string>
-	<string name="app_name">The Data Project</string>
+	<string name="app_name">Zethu Asset Management</string>
 	<string name="tab1">Facilities</string>
   <string name="tab2">Information</string>
   <string name="tab3">Buildings</string>

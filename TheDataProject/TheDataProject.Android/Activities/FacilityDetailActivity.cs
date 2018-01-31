@@ -10,9 +10,7 @@ using TheDataProject.Droid.Fragments;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "Details", ParentActivity = typeof(MainActivity), LaunchMode = LaunchMode.SingleInstance,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-        ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "Facility", ParentActivity = typeof(MainActivity))]
     [MetaData("android.support.PARENT_ACTIVITY", Value = ".MainActivity")]
     public class FacilityDetailActivity : BaseActivity
     {
@@ -28,19 +26,18 @@ namespace TheDataProject.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             var data = Intent.GetStringExtra("data");
 
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
             viewModel = new FacilityDetailViewModel(item);
             
 
-            //SupportActionBar.Title = item.Name;
+          
             adapter = new TabsAdapter(this, SupportFragmentManager);
-            pager = FindViewById<ViewPager>(Resource.Id.facilityviewpager);
-            var tabs = FindViewById<TabLayout>(Resource.Id.facilitytabs);
+            pager = FindViewById<ViewPager>(Resource.Id.viewpager);
+            var tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             pager.Adapter = adapter;
-            //tabs.SetupWithViewPager(pager);
+            tabs.SetupWithViewPager(pager);
             pager.OffscreenPageLimit = 3;
 
             pager.PageSelected += (sender, args) =>
@@ -49,8 +46,10 @@ namespace TheDataProject.Droid
 
                 fragment?.BecameVisible();
             };
-            //SupportActionBar.SetDisplayHomeAsUpEnabled(false);
-            //SupportActionBar.SetHomeButtonEnabled(false);
+
+            SupportActionBar.Title = item.Name;
+            SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+            SupportActionBar.SetHomeButtonEnabled(false);
 
         }
 

@@ -19,7 +19,7 @@ namespace TheDataProject.Droid
         {
             base.OnCreate(savedInstanceState);
 
-            ViewModel = FacilityFragment.ViewModel;
+           // ViewModel = FacilityFragment.ViewModel;
 
             // Create your application here
             SetContentView(Resource.Layout.activity_add_item);

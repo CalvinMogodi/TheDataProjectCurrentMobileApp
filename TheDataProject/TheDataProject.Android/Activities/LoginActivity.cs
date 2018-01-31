@@ -20,7 +20,7 @@ namespace TheDataProject.Droid.Activities
         LaunchMode = LaunchMode.SingleInstance,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         ScreenOrientation = ScreenOrientation.Portrait)]
-    public class LoginActivity : BaseActivity
+    public class LoginActivity : Activity
     {
         EditText username, password;
         TextView message;
@@ -30,12 +30,11 @@ namespace TheDataProject.Droid.Activities
         public bool FormIsValid { get; set; }
         public User User { get; set; }
         public LoginViewModel ViewModel { get; set; }
-
-        protected override int LayoutResource => Resource.Layout.activity_login;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            //SetContentView(Resource.Layout.activity_login);
+            SetContentView(Resource.Layout.activity_login);
 
             // Create your application here
             Initialize();

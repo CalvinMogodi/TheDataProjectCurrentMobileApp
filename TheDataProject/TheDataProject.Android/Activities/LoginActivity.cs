@@ -13,6 +13,7 @@ using Android.Content.PM;
 using TheDataProject.Models;
 using TheDataProject.ViewModels;
 using TheDataProject.Droid.Helpers;
+using System.Drawing;
 
 namespace TheDataProject.Droid.Activities
 {
@@ -47,11 +48,11 @@ namespace TheDataProject.Droid.Activities
             username = FindViewById<EditText>(Resource.Id.etlogin_username);
             password = FindViewById<EditText>(Resource.Id.etlogin_password);            
             message = FindViewById<TextView>(Resource.Id.tvlogin_message);
-            cancelBtn = FindViewById<Button>(Resource.Id.btnlogin_cancel);
             signInBtn = FindViewById<Button>(Resource.Id.btnlogin_signin);
+
+            signInBtn.SetBackgroundColor(Android.Graphics.Color.Tan);
             ViewModel = new LoginViewModel();
             signInBtn.Click += SignIn_Click;
-            cancelBtn.Click += Cancel_Click;
         }
 
         private async void SignIn_Click(object sender, EventArgs e)

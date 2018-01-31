@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TheDataProject.Models
 {
-    public class UserType
+    public class Role
     {
         public int Id { get; set; }
-        public int Description { get; set; }
+        public int Name { get; set; }
     }
 }

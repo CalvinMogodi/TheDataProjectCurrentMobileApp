@@ -32,17 +32,27 @@ namespace TheDataProject.Droid.Activities
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Building>(data);
             viewModel = new BuildingDetailViewModel(item);
 
-            FindViewById<TextView>(Resource.Id.description).Text = item.Description;
+            FindViewById<TextView>(Resource.Id.description).Text = item.BuildingNumber;
             editButton = FindViewById<FloatingActionButton>(Resource.Id.editbuildinginfo_button);
             saveButton = FindViewById<FloatingActionButton>(Resource.Id.savebuildinginfo_button);
 
             saveButton.Visibility = ViewStates.Gone;
-
+            editButton.SetBackgroundColor(Android.Graphics.Color.Tan);
+            saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
             editButton.Click += EditButton_Click;
             saveButton.Click += SaveButton_Click;
 
             SupportActionBar.Title = item.Name;
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId != Android.Resource.Id.Home)
+                return base.OnOptionsItemSelected(item);
+            Finish();
+            return true;
         }
 
         protected override void OnStart()

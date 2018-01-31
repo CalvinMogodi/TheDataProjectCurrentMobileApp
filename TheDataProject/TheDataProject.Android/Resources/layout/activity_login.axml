@@ -52,20 +52,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
-        <Button
-            android:text="Cancel"
-            android:backgroundTint="@color/primary"
-            android:theme="@style/button_primary"
-            android:id="@+id/btnlogin_cancel"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content" />
+        android:orientation="horizontal">        
         <Button
             android:text="@string/signin"
             android:backgroundTint="@color/primary"
-            android:theme="@style/button_primary"
+            android:theme="@style/button_custom"
             android:id="@+id/btnlogin_signin"
-            android:layout_width="160dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <TextView

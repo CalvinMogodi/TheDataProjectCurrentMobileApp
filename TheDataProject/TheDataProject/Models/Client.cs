@@ -6,23 +6,11 @@ using System.Threading.Tasks;
 
 namespace TheDataProject.Models
 {
-    public class User
+    public class Client
     {
         public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Surname { get; set; }
-
-        public string Username { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Designation { get; set; }
-
-        public string Password { get; set; }
-
-        public string Role { get; set; }
-
-        public List<Facility> Facilities { get; set; }
+        public string ClientName { get; set; }
+        public string ClientId { get; set; }
         public DateTime CreatedDate { get; set; }
         public int CreatedUserId { get; set; }
         public DateTime ModifiedDate { get; set; }

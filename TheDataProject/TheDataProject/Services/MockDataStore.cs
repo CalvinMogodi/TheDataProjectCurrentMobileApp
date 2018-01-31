@@ -18,22 +18,22 @@ namespace TheDataProject
 
             var _facilities = new List<Facility>
             {
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "First item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "Fifth item", Description="This is a nice description"},
-                new Facility { Id = Guid.NewGuid().ToString(), Name = "Sixth item", Description="This is a nice description"},
+                new Facility { Id = 1, Name = "First item", ClientCode="This is a nice description"},
+                new Facility { Id = 2, Name = "Second item", ClientCode="This is a nice description"},
+                new Facility { Id = 3, Name = "Third item", ClientCode="This is a nice description"},
+                new Facility { Id = 4, Name = "Fourth item", ClientCode="This is a nice description"},
+                new Facility { Id = 5, Name = "Fifth item", ClientCode="This is a nice description"},
+                new Facility { Id = 6, Name = "Sixth item", ClientCode="This is a nice description"},
             };
 
             var _buildings = new List<Building>
             {
-                new Building { Id = Guid.NewGuid().ToString(), Name = "First item", Description="This is a nice description"},
-                new Building { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is a nice description"},
-                new Building { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is a nice description"},
-                new Building { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is a nice description"},
-                new Building { Id = Guid.NewGuid().ToString(), Name = "Fifth item", Description="This is a nice description"},
-                new Building { Id = Guid.NewGuid().ToString(), Name = "Sixth item", Description="This is a nice description"},
+                new Building { Id = 1, Name = "First item", BuildingNumber="This is a nice description"},
+                new Building { Id = 2, Name = "Second item", BuildingNumber="This is a nice description"},
+                new Building { Id = 3, Name = "Third item", BuildingNumber="This is a nice description"},
+                new Building { Id = 4, Name = "Fourth item", BuildingNumber="This is a nice description"},
+                new Building { Id = 5, Name = "Fifth item", BuildingNumber="This is a nice description"},
+                new Building { Id = 6, Name = "Sixth item", BuildingNumber="This is a nice description"},
             };
 
             foreach (Facility facility in _facilities)
@@ -56,7 +56,7 @@ namespace TheDataProject
             return await Task.FromResult(true);
         }
 
-        public async Task<Facility> GetFacilityAsync(string id)
+        public async Task<Facility> GetFacilityAsync(int id)
         {
             return await Task.FromResult(facilities.FirstOrDefault(s => s.Id == id));
         }
@@ -72,7 +72,7 @@ namespace TheDataProject
             return Task.FromResult(true);
         }
 
-        public async Task<Building> GetBuildingAsync(string id)
+        public async Task<Building> GetBuildingAsync(int id)
         {
             return await Task.FromResult(buildings.FirstOrDefault(s => s.Id == id));
         }

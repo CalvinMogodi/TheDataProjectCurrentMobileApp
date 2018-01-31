@@ -95,7 +95,9 @@
     <Compile Include="Fragments\IFragmentVisible.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\EncryptionHelper.cs" />
+    <Compile Include="Helpers\ImageManager.cs" />
     <Compile Include="Helpers\MessageDialog.cs" />
+    <Compile Include="Helpers\StaticData.cs" />
     <Compile Include="Helpers\Validations.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

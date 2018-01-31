@@ -19,7 +19,7 @@ namespace TheDataProject
             }
         }
 
-        async Task ExecuteGetFacilityDetailsCommand(string id)
+        async Task ExecuteGetFacilityDetailsCommand(int id)
         {
             if (IsBusy)
                 return;

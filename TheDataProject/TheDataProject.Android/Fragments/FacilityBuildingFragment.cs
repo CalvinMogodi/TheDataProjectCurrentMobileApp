@@ -55,7 +55,7 @@ namespace TheDataProject.Droid.Fragments
             progress = view.FindViewById<ProgressBar>(Resource.Id.buildingprogressbar_loading);
             progress.Visibility = ViewStates.Gone;
             addButton.Click += AddButton_Click;
-
+            addButton.SetBackgroundColor(Android.Graphics.Color.Tan);
             return view;
         }
 
@@ -141,7 +141,7 @@ namespace TheDataProject.Droid.Fragments
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
             myHolder.TextView.Text = item.Name;
-            myHolder.DetailTextView.Text = item.Description;
+            myHolder.DetailTextView.Text = item.BuildingNumber;
         }
 
         public override int ItemCount => viewModel.Buildings.Count;

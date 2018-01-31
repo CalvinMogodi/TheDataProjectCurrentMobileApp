@@ -6,6 +6,7 @@ using Android.Widget;
 using Android.Support.Design.Widget;
 using TheDataProject.ViewModels;
 using TheDataProject.Models;
+using Android.Views;
 
 namespace TheDataProject.Droid
 {
@@ -30,8 +31,18 @@ namespace TheDataProject.Droid
             description = FindViewById<EditText>(Resource.Id.txtDesc);
 
             SupportActionBar.Title = "Add New Building";
+            saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
             saveButton.Click += SaveButton_Click;
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId != Android.Resource.Id.Home)
+                return base.OnOptionsItemSelected(item);
+            Finish();
+            return true;
         }
 
         void SaveButton_Click(object sender, EventArgs e)
@@ -39,7 +50,7 @@ namespace TheDataProject.Droid
             var item = new Building
             {
                 Name = title.Text,
-                Description = description.Text
+                BuildingNumber = description.Text
             };
             ViewModel.AddBuildingCommand.Execute(item);
 

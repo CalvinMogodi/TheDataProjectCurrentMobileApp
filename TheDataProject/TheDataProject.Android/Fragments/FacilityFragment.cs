@@ -122,7 +122,7 @@ namespace TheDataProject.Droid
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
             myHolder.TextView.Text = item.Name;
-            myHolder.DetailTextView.Text = item.Description;
+            myHolder.DetailTextView.Text = item.ClientCode;
         }
 
         public override int ItemCount => viewModel.Facilities.Count;

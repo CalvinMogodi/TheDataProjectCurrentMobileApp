@@ -38,7 +38,8 @@ namespace TheDataProject.Droid.Fragments
             saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
 
             saveButton.Visibility = ViewStates.Gone;
-
+            editButton.SetBackgroundColor(Android.Graphics.Color.Tan);
+            saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
             editButton.Click += EditButton_Click;
             saveButton.Click += SaveButton_Click;
             return view;

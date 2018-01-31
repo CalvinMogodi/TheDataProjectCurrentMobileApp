@@ -7,6 +7,7 @@ using Android.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.Design.Widget;
+using TheDataProject.Droid.Activities;
 
 namespace TheDataProject.Droid
 {
@@ -41,7 +42,7 @@ namespace TheDataProject.Droid
 
             Toolbar.MenuItemClick += (sender, e) =>
             {
-                var intent = new Intent(this, typeof(AddItemActivity)); ;
+                var intent = new Intent(this, typeof(LoginActivity)); ;
                 StartActivity(intent);
             };
 

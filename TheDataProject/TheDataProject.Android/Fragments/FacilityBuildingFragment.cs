@@ -13,6 +13,8 @@ using Android.Widget;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using TheDataProject.ViewModels;
+using Android.Support.Design.Widget;
+using TheDataProject.Droid.Activities;
 
 namespace TheDataProject.Droid.Fragments
 {
@@ -23,6 +25,7 @@ namespace TheDataProject.Droid.Fragments
 
         BrowseBuildingsAdapter adapter;
         SwipeRefreshLayout refresher;
+        FloatingActionButton addButton;
 
         ProgressBar progress;
         public static BuildingsViewModel ViewModel { get; set; }
@@ -40,8 +43,8 @@ namespace TheDataProject.Droid.Fragments
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility_building, container, false);
 
-            var recyclerView =
-               view.FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
+            var recyclerView = view.FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
+            addButton = view.FindViewById<FloatingActionButton>(Resource.Id.addnewBuilding_button);
 
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
@@ -51,10 +54,17 @@ namespace TheDataProject.Droid.Fragments
 
             progress = view.FindViewById<ProgressBar>(Resource.Id.buildingprogressbar_loading);
             progress.Visibility = ViewStates.Gone;
-            
+            addButton.Click += AddButton_Click;
 
             return view;
         }
+
+        void AddButton_Click(object sender, EventArgs e)
+        {
+            var intent = new Intent(Activity, typeof(AddBuildingActivity)); ;
+            StartActivity(intent);
+        }
+       
 
         public override void OnStart()
         {
@@ -77,7 +87,7 @@ namespace TheDataProject.Droid.Fragments
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
             var item = ViewModel.Buildings[e.Position];
-            var intent = new Intent(Activity, typeof(FacilityDetailActivity));
+            var intent = new Intent(Activity, typeof(BuildingDetailsActivity));
 
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);

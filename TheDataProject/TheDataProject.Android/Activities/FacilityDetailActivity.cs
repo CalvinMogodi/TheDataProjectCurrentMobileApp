@@ -5,7 +5,9 @@ using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
+using Android.Views;
 using Android.Widget;
+using TheDataProject.Droid.Activities;
 using TheDataProject.Droid.Fragments;
 
 namespace TheDataProject.Droid
@@ -30,15 +32,19 @@ namespace TheDataProject.Droid
 
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
             viewModel = new FacilityDetailViewModel(item);
-            
 
-          
             adapter = new TabsAdapter(this, SupportFragmentManager);
             pager = FindViewById<ViewPager>(Resource.Id.viewpager);
             var tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             pager.Adapter = adapter;
             tabs.SetupWithViewPager(pager);
             pager.OffscreenPageLimit = 3;
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var intent = new Intent(this, typeof(LoginActivity)); ;
+                StartActivity(intent);
+            };
 
             pager.PageSelected += (sender, args) =>
             {
@@ -49,8 +55,14 @@ namespace TheDataProject.Droid
 
             SupportActionBar.Title = item.Name;
             SupportActionBar.SetDisplayHomeAsUpEnabled(false);
-            SupportActionBar.SetHomeButtonEnabled(false);
+            SupportActionBar.SetHomeButtonEnabled(true);
 
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            return base.OnCreateOptionsMenu(menu);
         }
 
         protected override void OnStart()

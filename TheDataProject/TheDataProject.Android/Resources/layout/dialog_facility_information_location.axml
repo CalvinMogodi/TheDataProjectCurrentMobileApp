@@ -10,10 +10,13 @@
          android:text="Location"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:textColor="@android:color/white"
-         style="?android:textAppearanceSmall"
-         android:id="@+id/textView67"
+         android:textColor="@color/primary"
+         style="?android:textAppearanceLarge"
          android:gravity="center" />
+  <Space
+     android:layout_width="match_parent"
+     android:layout_height="20dp"
+     android:layout_weight="1" />
   <android.support.design.widget.TextInputLayout
          android:id="@+id/streetaddress_layout"
          android:layout_width="match_parent"
@@ -129,8 +132,8 @@
       android:orientation="horizontal">
     <Button
          android:text="@string/cancel"
-        android:backgroundTint="@color/primary"
-        android:theme="@style/button_primary"
+        android:backgroundTint="@color/darkgray"
+        android:theme="@style/button_cancel"
         android:id="@+id/dfil_cancelbutton"
         android:layout_width="140dp"
         android:paddingLeft="20dp"

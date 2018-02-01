@@ -34,6 +34,11 @@
             style="?android:textAppearanceMedium"
             tools:text="Title 1"
             android:layout_toEndOf="@id/item_count" />
+      <ImageView
+       android:src="@drawable/facility_placeholder"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:scaleType="center" />
         <TextView
             android:id="@android:id/text2"
             android:layout_width="match_parent"

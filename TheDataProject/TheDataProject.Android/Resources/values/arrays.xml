@@ -10,13 +10,11 @@
   </string-array>
 
   <string-array name="settlementtypes">
-    <item>Select Settlement Type</item>
     <item>FORMAL - Formal</item>
     <item>INFORMAL - Informal</item>
   </string-array>
 
   <string-array name="provinces">
-    <item>Select Province</item>
     <item>Central District</item>
     <item>Ghanzi District</item>
     <item>Kalagadi District</item>
@@ -51,15 +49,39 @@
   </string-array>
 
   <string-array name="localmunicipalities">
-    <item>Select Local Municipality</item>
     <item>1</item>
     <item>2</item>
   </string-array>
 
   <string-array name="polygontypes">
-    <item>Select Polygon Type</item>
     <item>CS - Condition Survey</item>
     <item>SG - Surveyor-General</item>
+  </string-array>
+
+  <string-array name="zoningtypes">
+    <item>Select Polygon Type</item>
+    <item>Agriculture</item>
+    <item>business 1</item>
+    <item>Business 2</item>
+    <item>Business 3</item>
+    <item>Community facility</item>
+    <item>Industrial 1</item>
+    <item>Industrial 2</item>
+    <item>Mining</item>    
+    <item>Parking</item>
+    <item>Private Open Space</item>
+    <item>Public garage</item>
+    <item>Public open space</item>
+    <item>Public services</item>
+    <item>Recreation</item>
+    <item>Residential 1</item>
+    <item>Residential 2</item>
+    <item>Residential 3</item>
+    <item>Residential 4</item> 
+    <item>Roads</item>
+    <item>Social services</item>
+    <item>Special</item>
+    <item>Transportation</item>    
   </string-array>
   
 

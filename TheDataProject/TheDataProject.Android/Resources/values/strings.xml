@@ -6,7 +6,9 @@
   <string name="tab2">Information</string>
   <string name="tab3">Buildings</string>
 	<string name="signin">Sign In</string>
-	<string name="notnow">Not Now</string>
+  <string name="done">Done</string>
+  <string name="cancel">Cancel</string>
+  <string name="notnow">Not Now</string>
 	<string name="signing_in">Signing in...</string>
 	<string name="version_number">Version 1.0</string>
 	<string name="login">Login</string>

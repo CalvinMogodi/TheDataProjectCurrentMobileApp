@@ -11,15 +11,19 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Support.Design.Widget;
+using TheDataProject.Droid.Helpers;
+using System.IO;
+using Android.Graphics;
 
 namespace TheDataProject.Droid.Fragments
 {
     public class FacilityInformationFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-        
+
 
         #region Properties 
-
+        public string Photo { get; set; }
+        public static readonly int PickImageId = 1000;
         FloatingActionButton editButton, saveButton;
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton;
         ProgressBar progress;        
@@ -28,6 +32,7 @@ namespace TheDataProject.Droid.Fragments
         AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
         LayoutInflater Inflater;
         TextView locationHolder, responsiblepersonHolder, deedHolder;
+        ImageView facilityPhoto;
 
         public static FacilityDetailViewModel ViewModel { get; set; }
         public static FacilityInformationFragment NewInstance() => new FacilityInformationFragment { Arguments = new Bundle() };
@@ -53,6 +58,7 @@ namespace TheDataProject.Droid.Fragments
             locationHolder = view.FindViewById<TextView>(Resource.Id.tvf_locationholder);
             responsiblepersonHolder = view.FindViewById<TextView>(Resource.Id.tvf_responsiblepersonholder);
             deedHolder = view.FindViewById<TextView>(Resource.Id.tvf_deedholder);
+            facilityPhoto = view.FindViewById<ImageView>(Resource.Id.imgf_facilityphoto);
 
             //set settlement type drop down
             var settlementTypeAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.settlementtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
@@ -63,7 +69,7 @@ namespace TheDataProject.Droid.Fragments
             var zoningAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.zoningtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
             zoningAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             settlementtype.Adapter = zoningAdapter;
-
+            
             saveButton.Visibility = ViewStates.Gone;
             editButton.SetBackgroundColor(Android.Graphics.Color.Tan);
             saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
@@ -71,9 +77,21 @@ namespace TheDataProject.Droid.Fragments
             saveButton.Click += SaveButton_Click;
             locationHolder.Click += Location_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
-            deedHolder.Click += Deed_Click;            
+            deedHolder.Click += Deed_Click;
+            facilityPhoto.Click += FacilityPhoto_Click;
+
             return view;
         }
+
+        private void FacilityPhoto_Click(object sender, EventArgs eventArgs)
+        {
+            Intent Intent = new Intent();
+            Intent.SetType("image/*");
+            Intent.SetAction(Intent.ActionGetContent);
+            StartActivityForResult(Intent.CreateChooser(Intent, "Select Picture"), PickImageId);
+        }
+
+
         public void BecameVisible()
         {
 

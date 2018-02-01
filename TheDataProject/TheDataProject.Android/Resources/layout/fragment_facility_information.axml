@@ -3,111 +3,132 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-    
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingBottom="66dp">
-      <android.support.design.widget.TextInputLayout
-        android:id="@+id/fname_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:inputType="textPersonName"
-            android:hint="Facility Name"
-            android:layout_height="wrap_content"
-             android:id="@+id/etf_facilityname" />
-      </android.support.design.widget.TextInputLayout>
-      <android.support.design.widget.TextInputLayout
-        android:id="@+id/clientcode_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-              android:inputType="number"
-            android:hint="Client Code"
-            android:layout_height="wrap_content"
-             android:id="@+id/etf_clientcode" />
-      </android.support.design.widget.TextInputLayout>
-      <Spinner
-           android:id="@+id/sf_settlementtype"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:entries="@array/settlementtypes"
-           android:spinnerMode="dialog"
-           style="@style/Widget.AppCompat.Spinner.Underlined"
-           android:gravity="bottom"/>     
-      <Space
-      android:layout_width="match_parent"
-      android:layout_height="20dp"
-      android:layout_weight="1" />
-      <TextView
-       android:text="Location"
-       android:id="@+id/tvf_locationholder"
-       android:layout_gravity="center_horizontal"
-       android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="66dp">
+          <Space
+              android:layout_width="match_parent"
+              android:layout_height="20dp"
+              android:layout_weight="1" />
+          <LinearLayout
        android:layout_width="match_parent"
-       android:layout_height="wrap_content"/>
-      <Space
-     android:layout_width="match_parent"
-     android:layout_height="20dp"
-     android:layout_weight="1" />
-      <Spinner
-        android:id="@+id/sf_zoning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/zoningtypes"
-        android:spinnerMode="dialog"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:gravity="bottom"/>
-      <Space
-    android:layout_width="match_parent"
-    android:layout_height="20dp"
-    android:layout_weight="1" />
-      <TextView
-         android:id="@+id/tvf_responsiblepersonholder"
-         android:text="Responsible Person"
-         android:layout_gravity="center_horizontal"
-         android:textAppearance="?android:attr/textAppearanceMedium"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"/>
-      <TextView
-        android:id="@+id/tvf_deedholder"
-        android:text="Deed Office"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-      <Button
-           android:text="@string/submit"
-           android:backgroundTint="@color/primary"
-           android:theme="@style/button_custom"
-           android:id="@+id/submitfacilitybtn"
-           android:layout_width="350dp"
-           android:layout_height="wrap_content" />
-      <android.support.design.widget.FloatingActionButton
-          android:id="@+id/editfacilityinfo_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@drawable/ic_edit"
-          android:background="#9f6800"
-          android:layout_gravity="bottom|right"
-          android:layout_margin="@dimen/fab_margin" />
-      <android.support.design.widget.FloatingActionButton
-           android:id="@+id/savefacilityinfo_button"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_save"
-           android:background="#9f6800"
-           android:layout_gravity="bottom|right"
-           android:layout_margin="@dimen/fab_margin" />
-    </LinearLayout>
+       android:layout_height="wrap_content"
+       android:gravity="center"
+       android:orientation="horizontal">
+            <ImageView
+             android:src="@drawable/facility_placeholder"
+             android:layout_width="80dp"
+             android:layout_height="80dp"
+             android:paddingLeft="20dp"
+             android:layout_gravity="center_horizontal"
+             android:id="@+id/imgf_facilityphoto" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/fname_layout"
+                android:layout_width="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content">              
+              <android.support.design.widget.TextInputEditText
+                  android:layout_width="match_parent"
+                  android:inputType="textPersonName"
+                  android:hint="Facility Name"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/etf_facilityname" />
+            </android.support.design.widget.TextInputLayout>
+          </LinearLayout>
+          
+          
+          
+            
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/clientcode_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="number"
+                    android:hint="Client Code"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etf_clientcode" />
+            </android.support.design.widget.TextInputLayout>
+            <Spinner
+                android:id="@+id/sf_settlementtype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/settlementtypes"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:gravity="bottom" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+            <TextView
+                android:text="Location"
+                android:id="@+id/tvf_locationholder"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+            <Spinner
+                android:id="@+id/sf_zoning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/zoningtypes"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:gravity="bottom" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/tvf_responsiblepersonholder"
+                android:text="Responsible Person"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tvf_deedholder"
+                android:text="Deed Office"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
+                android:text="@string/submit"
+                android:backgroundTint="@color/primary"
+                android:theme="@style/button_custom"
+                android:id="@+id/submitfacilitybtn"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/editfacilityinfo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit"
+                android:background="#9f6800"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="@dimen/fab_margin" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/savefacilityinfo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_save"
+                android:background="#9f6800"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="@dimen/fab_margin" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

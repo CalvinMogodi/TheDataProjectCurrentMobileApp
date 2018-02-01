@@ -126,7 +126,7 @@ namespace TheDataProject.Droid.Fragments
         {
             //Setup your layout here
             View itemView = null;
-            var id = Resource.Layout.item_browse;
+            var id = Resource.Layout.building_card;
             itemView = LayoutInflater.From(parent.Context).Inflate(id, parent, false);
 
             var vh = new MyViewHolder(itemView, OnClick, OnLongClick);

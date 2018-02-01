@@ -129,7 +129,7 @@
     <AndroidResource Include="Resources\layout\activity_building_details.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\item_browse.axml" />
+    <AndroidResource Include="Resources\layout\facility_card.axml" />
     <AndroidResource Include="Resources\layout\dialog_facility_information_location.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -162,7 +162,7 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\toolbar.axml" />
     <AndroidResource Include="Resources\layout\fragment_facility.axml" />
-    <AndroidResource Include="Resources\layout\item_my_item.axml">
+    <AndroidResource Include="Resources\layout\building_card.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\values\dimens.axml" />

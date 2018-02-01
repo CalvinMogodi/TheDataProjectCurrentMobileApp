@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:foreground="?attr/selectableItemBackground"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="12dp">
     <LinearLayout
         android:orientation="vertical"
         android:gravity="center"
@@ -19,7 +21,7 @@
             android:paddingLeft="@dimen/small_margin"
             android:paddingRight="@dimen/small_margin"
             android:maxLines="1"
-             android:gravity="center"
+            android:gravity="center"
             style="?android:textAppearanceLarge"
             tools:text="Title 1" />
         <ImageView

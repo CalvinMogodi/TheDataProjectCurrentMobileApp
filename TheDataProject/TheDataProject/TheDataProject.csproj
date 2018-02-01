@@ -45,6 +45,7 @@
     <Compile Include="Models\GPSCoordinate.cs" />
     <Compile Include="Models\Facility.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Picture.cs" />
     <Compile Include="Models\SettlementType.cs" />
     <Compile Include="Models\User.cs" />

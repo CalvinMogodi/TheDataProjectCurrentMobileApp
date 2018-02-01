@@ -15,10 +15,19 @@ namespace TheDataProject
         {
             facilities = new List<Facility>();
             buildings = new List<Building>();
+            GPSCoordinate coordinate = new GPSCoordinate() { };
+            BoundryPolygon boundryPolygon = new BoundryPolygon() { };
+            DeedsInfo deedsInfo = new DeedsInfo() { };
+            Person resposiblePerson = new Person();
+            Location location = new Location() { };
+            List<Building> buildingList = new List<Building>() { };
 
             var _facilities = new List<Facility>
             {
-                new Facility { Id = 1, Name = "First item", ClientCode="This is a nice description"},
+                new Facility { Id = 1, Name = "First item", ClientCode="3225664000001",SettlementType="Formal - formal",Zoning="2",
+                    MunicipalRoll = "", IDPicture = "", GPSCoordinates = coordinate, Polygon = boundryPolygon,DeedsInfo = deedsInfo,
+                    ResposiblePerson = resposiblePerson,Location = location, Buildings = buildingList, CreatedDate = new DateTime(),
+                    CreatedUserId = 1 ,ModifiedDate = new DateTime(), ModifiedUserId =1    },
                 new Facility { Id = 2, Name = "Second item", ClientCode="This is a nice description"},
                 new Facility { Id = 3, Name = "Third item", ClientCode="This is a nice description"},
                 new Facility { Id = 4, Name = "Fourth item", ClientCode="This is a nice description"},

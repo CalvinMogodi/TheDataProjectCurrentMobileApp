@@ -14,7 +14,7 @@ namespace TheDataProject.Droid
     [Activity(Label = "@string/app_name", Icon = "@mipmap/icon",
         LaunchMode = LaunchMode.SingleInstance,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-        ScreenOrientation = ScreenOrientation.Portrait)]
+        ScreenOrientation = ScreenOrientation.Landscape)]
     public class MainActivity : BaseActivity
     {
         protected override int LayoutResource => Resource.Layout.activity_main;

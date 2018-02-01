@@ -20,7 +20,7 @@ namespace TheDataProject
         public GPSCoordinate GPSCoordinates { get; set; }
         public BoundryPolygon Polygon { get; set; }
         public DeedsInfo DeedsInfo { get; set; }
-        public User ResposiblePerson { get; set; }
+        public Person ResposiblePerson { get; set; }
         public Location Location { get; set; }
         public List<Building> Buildings { get; set; }
         public DateTime CreatedDate { get; set; }

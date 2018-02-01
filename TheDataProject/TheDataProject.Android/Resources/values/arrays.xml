@@ -8,4 +8,59 @@
     <item>@string/tab2</item>
     <item>@string/tab3</item>
   </string-array>
+
+  <string-array name="settlementtypes">
+    <item>Select Settlement Type</item>
+    <item>FORMAL - Formal</item>
+    <item>INFORMAL - Informal</item>
+  </string-array>
+
+  <string-array name="provinces">
+    <item>Select Province</item>
+    <item>Central District</item>
+    <item>Ghanzi District</item>
+    <item>Kalagadi District</item>
+    <item>Kgatleng District</item>
+    <item>Kweneng District</item>
+    <item>North East District</item>
+    <item>North-West District</item>
+    <item>South East District</item>
+    <item>Southern District</item>
+    <item>Caprivi Regional Council</item>
+    <item>Erongo Regional Council</item>
+    <item>Hardap Regional Council</item>
+    <item>Karas Regional Council</item>
+    <item>Kavango Regional Council</item>
+    <item>Khomas Regional Council</item>
+    <item>Kunene Regional Council</item>
+    <item>Ohangwena Regional Council</item>
+    <item>Omaheke Regional Council</item>
+    <item>Omusati Regional Council</item>
+    <item>Oshana Regional Council</item>
+    <item>Oshikoto regional Council</item>
+    <item>Otjozondjupa Regional Council</item>
+    <item>Eastern Cape</item>
+    <item>Free State</item>
+    <item>Gauteng</item>
+    <item>KwaZulu-Natal</item>
+    <item>Limpopo</item>
+    <item>Mpumalanga</item>
+    <item>Northern Cape</item>
+    <item>North West</item>
+    <item>Western Cape</item>  
+  </string-array>
+
+  <string-array name="localmunicipalities">
+    <item>Select Local Municipality</item>
+    <item>1</item>
+    <item>2</item>
+  </string-array>
+
+  <string-array name="polygontypes">
+    <item>Select Polygon Type</item>
+    <item>CS - Condition Survey</item>
+    <item>SG - Surveyor-General</item>
+  </string-array>
+  
+
 </resources>

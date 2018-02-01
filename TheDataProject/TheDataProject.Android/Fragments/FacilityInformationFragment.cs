@@ -20,8 +20,10 @@ namespace TheDataProject.Droid.Fragments
 
         FloatingActionButton editButton, saveButton;
         ProgressBar progress;
-        public static FacilityDetailViewModel ViewModel { get; set; }
+        EditText clientCode, facilityName, streetAddress, suburb;
+        Spinner settlementtype, province, localmunicipality, polygontype;
 
+        public static FacilityDetailViewModel ViewModel { get; set; }
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -36,6 +38,39 @@ namespace TheDataProject.Droid.Fragments
             View view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
             editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
             saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
+            clientCode = view.FindViewById<EditText>(Resource.Id.etf_clientcode);
+            facilityName = view.FindViewById<EditText>(Resource.Id.etf_facilityname);
+            settlementtype = view.FindViewById<Spinner>(Resource.Id.sf_settlementtype);
+            streetAddress = view.FindViewById<EditText>(Resource.Id.etf_streetAddress);
+            suburb = view.FindViewById<EditText>(Resource.Id.etf_suburb);
+            province = view.FindViewById<Spinner>(Resource.Id.sf_province);
+            localmunicipality = view.FindViewById<Spinner>(Resource.Id.sf_localmunicipality);
+            polygontype = view.FindViewById<Spinner>(Resource.Id.sf_polygontype);
+            
+
+            //set settlement type drop down
+           // List<string> settlementtypelist = new List<string>();
+            var adapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.settlementtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            settlementtype.Adapter = adapter;
+
+            //set province drop down
+            List<string> provinceList = new List<string>();
+            var provinceAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.provinces, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            provinceAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            province.Adapter = provinceAdapter;
+
+            //set local municipality drop down
+           // List<string> localmunicipalityList = new List<string>();
+            var localmunicipalityAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.localmunicipalities, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            localmunicipalityAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            localmunicipality.Adapter = localmunicipalityAdapter;
+
+            //set polygon type drop down
+            //List<string> lpolygontypeList = new List<string>();
+            var polygontypeAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.polygontypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            localmunicipalityAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            polygontype.Adapter = polygontypeAdapter;
 
             saveButton.Visibility = ViewStates.Gone;
             editButton.SetBackgroundColor(Android.Graphics.Color.Tan);

@@ -7,10 +7,12 @@ using Android.Support.Design.Widget;
 using TheDataProject.ViewModels;
 using TheDataProject.Models;
 using Android.Views;
+using Android.Content.PM;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "AddItemActivity")]
+    [Activity(Label = "AddItemActivity", LaunchMode = LaunchMode.SingleInstance,
+        ScreenOrientation = ScreenOrientation.Portrait)]
     public class AddBuildingActivity : BaseActivity
     {
         FloatingActionButton saveButton;

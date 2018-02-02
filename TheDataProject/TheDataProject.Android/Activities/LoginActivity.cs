@@ -19,7 +19,6 @@ namespace TheDataProject.Droid.Activities
 {
     [Activity(Label = "Login", Icon = "@mipmap/icon",
         LaunchMode = LaunchMode.SingleInstance,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class LoginActivity : Activity
     {

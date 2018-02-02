@@ -12,10 +12,12 @@ using Android.Widget;
 using TheDataProject.ViewModels;
 using TheDataProject.Models;
 using Android.Support.Design.Widget;
+using Android.Content.PM;
 
 namespace TheDataProject.Droid.Activities
 {
-    [Activity(Label = "BuildingDetailsActivity")]
+    [Activity(Label = "BuildingDetailsActivity", LaunchMode = LaunchMode.SingleInstance,
+        ScreenOrientation = ScreenOrientation.Portrait)]
     public class BuildingDetailsActivity : BaseActivity
     {
 

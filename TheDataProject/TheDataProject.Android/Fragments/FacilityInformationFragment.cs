@@ -68,7 +68,7 @@ namespace TheDataProject.Droid.Fragments
             //set zoning drop down
             var zoningAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.zoningtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
             zoningAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            settlementtype.Adapter = zoningAdapter;
+            zoning.Adapter = zoningAdapter;
             
             saveButton.Visibility = ViewStates.Gone;
             editButton.SetBackgroundColor(Android.Graphics.Color.Tan);

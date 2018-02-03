@@ -33,8 +33,7 @@ namespace TheDataProject.Droid.Helpers
         {
             progress.Cancel();
         }
-
-       
+        
         public void SendMessage(string message, string title = null)
         {
             var activity = CrossCurrentActivity.Current.Activity;

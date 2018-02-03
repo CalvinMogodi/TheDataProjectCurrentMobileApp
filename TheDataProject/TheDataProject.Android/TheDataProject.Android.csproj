@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\AddBuildingActivity.cs" />
-    <Compile Include="Activities\BuildingDetailsActivity.cs" />
     <Compile Include="Activities\FacilityDetailActivity.cs" />
     <Compile Include="Activities\ForgotPasswordActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\EncryptionHelper.cs" />
     <Compile Include="Helpers\ImageManager.cs" />
+    <Compile Include="Helpers\GPSTracker.cs" />
     <Compile Include="Helpers\MessageDialog.cs" />
     <Compile Include="Helpers\StaticData.cs" />
     <Compile Include="Helpers\Validations.cs" />
@@ -115,7 +115,9 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\activity_add_building.axml" />
+    <AndroidResource Include="Resources\layout\activity_add_building.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\layout\fragment_myitems.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -126,9 +128,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\fragment_facility_information.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\activity_building_details.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\facility_card.axml">
@@ -171,7 +170,9 @@
     </AndroidResource>
     <AndroidResource Include="Resources\values\dimens.axml" />
     <AndroidResource Include="Resources\drawable\circle_background.xml" />
-    <AndroidResource Include="Resources\values\arrays.xml" />
+    <AndroidResource Include="Resources\values\arrays.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\background_splash.xml" />
@@ -292,6 +293,26 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_app.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\location.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\person.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\deed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\list_item.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_greenAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\dialog_numberpicker.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

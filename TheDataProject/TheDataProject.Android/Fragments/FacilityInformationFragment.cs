@@ -14,6 +14,8 @@ using Android.Support.Design.Widget;
 using TheDataProject.Droid.Helpers;
 using System.IO;
 using Android.Graphics;
+using Android.Support.V7.Widget;
+using Android.Locations;
 
 namespace TheDataProject.Droid.Fragments
 {
@@ -24,21 +26,25 @@ namespace TheDataProject.Droid.Fragments
         #region Properties 
         public string Photo { get; set; }
         public static readonly int PickImageId = 1000;
-        FloatingActionButton editButton, saveButton;
+        FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton;
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton;
         ProgressBar progress;        
-        EditText clientCode, facilityName, streetAddress, suburb, fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
-        Spinner settlementtype, province, localmunicipality, polygontype, zoning;
+        EditText streetAddress, suburb, fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
+        Spinner settlementtype, province, localmunicipality, zoning;
         AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
         LayoutInflater Inflater;
-        TextView locationHolder, responsiblepersonHolder, deedHolder;
+        CardView locationHolder, responsiblepersonHolder, deedHolder;
+        TextView clientCode, facilityName;
         ImageView facilityPhoto;
+        LinearLayout locationlinearlayout;
+        View view;
+        ListView mListView;
 
         public static FacilityDetailViewModel ViewModel { get; set; }
         public static FacilityInformationFragment NewInstance() => new FacilityInformationFragment { Arguments = new Bundle() };
 
         #endregion #endregion 
-
+         
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);            
@@ -48,22 +54,26 @@ namespace TheDataProject.Droid.Fragments
         {
             ViewModel = new FacilityDetailViewModel();
             Inflater = inflater;
-            View view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
-            editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
+            view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
+            editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);            
             saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
-            clientCode = view.FindViewById<EditText>(Resource.Id.etf_clientcode);
-            facilityName = view.FindViewById<EditText>(Resource.Id.etf_facilityname);
+            clientCode = view.FindViewById<TextView>(Resource.Id.tvf_clientcode);
+            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);
             settlementtype = view.FindViewById<Spinner>(Resource.Id.sf_settlementtype);
             zoning = view.FindViewById<Spinner>(Resource.Id.sf_zoning);
-            locationHolder = view.FindViewById<TextView>(Resource.Id.tvf_locationholder);
-            responsiblepersonHolder = view.FindViewById<TextView>(Resource.Id.tvf_responsiblepersonholder);
-            deedHolder = view.FindViewById<TextView>(Resource.Id.tvf_deedholder);
+            locationHolder = view.FindViewById<CardView>(Resource.Id.tvf_locationholder);
+            responsiblepersonHolder = view.FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
+            deedHolder = view.FindViewById<CardView>(Resource.Id.tvf_deedholder);
             facilityPhoto = view.FindViewById<ImageView>(Resource.Id.imgf_facilityphoto);
 
+            // set data
+            clientCode.Text = "Facility Name";
+            facilityName.Text = "9558744000024800";
+            
             //set settlement type drop down
-            var settlementTypeAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.settlementtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            settlementTypeAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            settlementtype.Adapter = settlementTypeAdapter;
+            //var settlementTypeAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.settlementtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            //settlementTypeAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            //settlementtype.Adapter = settlementTypeAdapter;
 
             //set zoning drop down
             var zoningAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.zoningtypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
@@ -79,6 +89,7 @@ namespace TheDataProject.Droid.Fragments
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
             facilityPhoto.Click += FacilityPhoto_Click;
+           
 
             return view;
         }
@@ -109,34 +120,42 @@ namespace TheDataProject.Droid.Fragments
             saveButton.Visibility = ViewStates.Gone;
         }
 
+        public void ShowSettingsAlert()
+        {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Application.Context);
+            Intent intent = new Intent(Android.Provider.Settings.ActionLocationSourceSettings);
+            StartActivity(intent);
+        }
+
         #region Location 
-        private void InitializeFacilityInfo(AlertDialog dialog)
+        private void InitializeLocation(AlertDialog dialog)
         {
             streetAddress = dialog.FindViewById<EditText>(Resource.Id.etf_streetAddress);
             suburb = dialog.FindViewById<EditText>(Resource.Id.etf_suburb);
             province = dialog.FindViewById<Spinner>(Resource.Id.sf_province);
             localmunicipality = dialog.FindViewById<Spinner>(Resource.Id.sf_localmunicipality);
-            polygontype = dialog.FindViewById<Spinner>(Resource.Id.sf_polygontype);
             locationCancelButton = dialog.FindViewById<Button>(Resource.Id.dfil_cancelbutton);
             locationDoneButton = dialog.FindViewById<Button>(Resource.Id.dfil_donebutton);
-
+            gpsLocationButton = dialog.FindViewById<FloatingActionButton>(Resource.Id.gpscaddlocation_button);
+            bpLocationButton = dialog.FindViewById<FloatingActionButton>(Resource.Id.bpaddlocation_button);
+            locationlinearlayout = dialog.FindViewById<LinearLayout>(Resource.Id.location_linearlayout);
+            locationlinearlayout.Visibility = ViewStates.Gone;
+                       
+            
             //set province drop down
             var provinceAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.provinces, Android.Resource.Layout.SimpleSpinnerDropDownItem);
             provinceAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             province.Adapter = provinceAdapter;
 
             //set local municipality drop down
-            var localmunicipalityAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.localmunicipalities, Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            var localmunicipalityAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.localmunicipalities, Android.Resource.Layout.SimpleDropDownItem1Line);
             localmunicipalityAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             localmunicipality.Adapter = localmunicipalityAdapter;
 
-            //set polygon type drop down
-            var polygontypeAdapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.polygontypes, Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            polygontypeAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            polygontype.Adapter = polygontypeAdapter;
-
             locationCancelButton.Click += LocationCancelButton_Click;
             locationDoneButton.Click += LocationDoneButton_Click;
+            bpLocationButton.Click += BPLocationButton_Click;
+            gpsLocationButton.Click += GPSLocationButton_Click;
         }
 
         
@@ -149,7 +168,58 @@ namespace TheDataProject.Droid.Fragments
 
             locationDialog.Show();
             locationDialog.SetCanceledOnTouchOutside(false);
-            InitializeFacilityInfo(locationDialog);
+            InitializeLocation(locationDialog);
+        }
+
+        private void BPLocationButton_Click(object sender, EventArgs eventArgs)
+        {
+           
+        }
+
+        private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
+        {
+            locationlinearlayout.Visibility = ViewStates.Visible;
+            //GPSTracker GPSTracker = new GPSTracker();
+            //Context context = view.Context;
+            //MainActivity mainActivity = (MainActivity) context;
+
+            LocationManager locationManager = Application.Context.GetSystemService(Context.LocationService) as LocationManager;
+            
+            Location location = null;
+            // getting GPS status
+
+            bool isGPSEnabled = locationManager.IsProviderEnabled(LocationManager.GpsProvider);
+            bool isNetworkEnabled = locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
+            bool isPassiveProviderEnabled = locationManager.IsProviderEnabled(LocationManager.PassiveProvider);
+
+            if (!isGPSEnabled && !isNetworkEnabled && !isPassiveProviderEnabled)
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.SendToast("GPS is not enabled");
+                ShowSettingsAlert();
+            }
+            else
+            {
+                if (isGPSEnabled)
+                {
+                    location = locationManager.GetLastKnownLocation(LocationManager.GpsProvider);
+                }
+                if (isNetworkEnabled)
+                {
+                    if (location == null)
+                        location = locationManager.GetLastKnownLocation(LocationManager.NetworkProvider);
+                }
+                if (isPassiveProviderEnabled)
+                {
+                    if (location == null)
+                        location = locationManager.GetLastKnownLocation(LocationManager.PassiveProvider);
+                }
+            }
+            if (location == null)
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.SendToast("Unable to get location");
+            }
         }
 
         private void LocationCancelButton_Click(object sender, EventArgs e)

@@ -33,7 +33,7 @@ namespace TheDataProject.Droid
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
             var recyclerView =
-                view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
+                view.FindViewById<RecyclerView>(Resource.Id.facilityRecyclerView);
 
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));

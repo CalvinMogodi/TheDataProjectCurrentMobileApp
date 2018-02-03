@@ -1,36 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"> 
-    <android.support.v4.widget.SwipeRefreshLayout
+    android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/buildingRefresher">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/buildingRecyclerView"
-            android:scrollbars="vertical"
-            android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+      <android.support.design.widget.FloatingActionButton
+               android:id="@+id/addnewBuilding_button"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:src="@drawable/ic_add"
+               app:elevation="4dp"
+               android:layout_gravity="bottom|right"
+               android:layout_margin="@dimen/fab_margin" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            app:layoutManager="GridLayoutManager"
-            android:paddingTop="12dp" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-    <ProgressBar
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/buildingprogressbar_loading"
-        android:indeterminate="true" />
-
-
-  <android.support.design.widget.FloatingActionButton
-         android:id="@+id/addnewBuilding_button"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:src="@drawable/ic_add"
-         app:elevation="4dp"
-         android:background="@color/button_background"
-         android:layout_gravity="bottom|right"
-         android:layout_margin="@dimen/fab_margin" />
-</android.support.design.widget.CoordinatorLayout>
+            android:id="@+id/buildingRefresher">
+           
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/buildingRecyclerView"
+                android:scrollbars="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                app:layoutManager="GridLayoutManager"
+                android:paddingTop="12dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+        <ProgressBar
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/buildingprogressbar_loading"
+            android:indeterminate="true" />
+    </LinearLayout>
+</ScrollView>

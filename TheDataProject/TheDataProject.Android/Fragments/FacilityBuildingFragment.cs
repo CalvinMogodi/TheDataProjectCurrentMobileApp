@@ -87,7 +87,7 @@ namespace TheDataProject.Droid.Fragments
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
             var item = ViewModel.Buildings[e.Position];
-            var intent = new Intent(Activity, typeof(BuildingDetailsActivity));
+            var intent = new Intent(Activity, typeof(AddBuildingActivity));
 
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);

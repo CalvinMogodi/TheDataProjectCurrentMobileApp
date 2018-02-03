@@ -62,22 +62,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="horizontal">
+        <TextView
+            android:text="GPS Coordinate"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/gpscaddlocation_button"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_greenAdd"
+                android:background="#9f6800"
+                android:layout_gravity="center|right"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_width="30dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:id="@+id/location_linearlayout"
         android:orientation="horizontal">
         <TextView
             android:text="Latitude: 4578.3225"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_width="140dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
+            android:paddingLeft="10dp"
             android:id="@+id/tvf_latitude" />
         <TextView
             android:text="Longitude: -12454.215"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_width="140dp"
-            android:paddingRight="20dp"
+            android:layout_width="180dp"
+            android:paddingRight="10dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvf_longitude" />
     </LinearLayout>
@@ -85,42 +112,32 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_weight="1" />
-    <TextView
-        android:text="Boundary polygons"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Spinner
-        android:id="@+id/sf_polygontype"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/polygontypes"
-        android:spinnerMode="dialog"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:gravity="bottom" />
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/remarks_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
+        android:gravity="left"
+        android:orientation="horizontal">
+        <TextView
+            android:text="Boundary Polygons"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
             android:layout_width="match_parent"
-            android:inputType="text"
-            android:hint="Remarks"
             android:layout_height="wrap_content"
-            android:id="@+id/etf_aemarks" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/actions_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:hint="Actions"
-            android:layout_height="wrap_content"
-            android:id="@+id/etf_actions" />
-    </android.support.design.widget.TextInputLayout>
+            android:gravity="right"
+            android:orientation="horizontal">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/bpaddlocation_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_add"
+                android:background="#9f6800"
+                android:layout_gravity="center|right"
+                android:layout_margin="@dimen/fab_margin" />
+        </LinearLayout>
+    </LinearLayout>
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"

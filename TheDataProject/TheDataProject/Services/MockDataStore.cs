@@ -1,6 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using TheDataProject.Models;
 
@@ -8,61 +15,36 @@ namespace TheDataProject
 {
     public class MockDataStore : IDataStore<Facility, Building, User>
     {
-        List<Facility> facilities;
+
+        HttpClient client;
+        ObservableCollection<Facility> facilities;
         List<Building> buildings;
 
         public MockDataStore()
         {
-            facilities = new List<Facility>();
-            buildings = new List<Building>();
-            GPSCoordinate coordinate = new GPSCoordinate() { };
-            BoundryPolygon boundryPolygon = new BoundryPolygon() { };
-            DeedsInfo deedsInfo = new DeedsInfo() { };
-            Person resposiblePerson = new Person();
-            Location location = new Location() { };
-            List<Building> buildingList = new List<Building>() { };
+            
+            client = new HttpClient();
+            client.MaxResponseContentBufferSize = 256000;
 
-            var _facilities = new List<Facility>
-            {
-                new Facility { Id = 1, Name = "First item", ClientCode="3225664000001",SettlementType="Formal - formal",Zoning="2",
-                    MunicipalRoll = "", IDPicture = "", GPSCoordinates = coordinate, Polygon = boundryPolygon,DeedsInfo = deedsInfo,
-                    ResposiblePerson = resposiblePerson,Location = location, Buildings = buildingList, CreatedDate = new DateTime(),
-                    CreatedUserId = 1 ,ModifiedDate = new DateTime(), ModifiedUserId =1    },
-                new Facility { Id = 2, Name = "Second item", ClientCode="This is a nice description"},
-                new Facility { Id = 3, Name = "Third item", ClientCode="This is a nice description"},
-                new Facility { Id = 4, Name = "Fourth item", ClientCode="This is a nice description"},
-                new Facility { Id = 5, Name = "Fifth item", ClientCode="This is a nice description"},
-                new Facility { Id = 6, Name = "Sixth item", ClientCode="This is a nice description"},
-            };
-
-            var _buildings = new List<Building>
-            {
-                new Building { Id = 1, Name = "First item", BuildingNumber="This is a nice description"},
-                new Building { Id = 2, Name = "Second item", BuildingNumber="This is a nice description"},
-                new Building { Id = 3, Name = "Third item", BuildingNumber="This is a nice description"},
-                new Building { Id = 4, Name = "Fourth item", BuildingNumber="This is a nice description"},
-                new Building { Id = 5, Name = "Fifth item", BuildingNumber="This is a nice description"},
-                new Building { Id = 6, Name = "Sixth item", BuildingNumber="This is a nice description"},
-            };
-
-            foreach (Facility facility in _facilities)
-            {
-                facilities.Add(facility);
-            }
-
-            foreach (Building building in _buildings)
-            {
-                buildings.Add(building);
-            }
+            
         }
 
         public async Task<bool> UpdateFacilityAsync(Facility facility)
         {
-            var _facility = facilities.Where((Facility arg) => arg.Id == facility.Id).FirstOrDefault();
-            facilities.Remove(_facility);
-            facilities.Add(facility);
+            string restUrl = "http://154.0.170.81:89/api/Facility/UpdateFacility";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isUpdated = false;
 
-            return await Task.FromResult(true);
+            var json = JsonConvert.SerializeObject(facility);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await client.PutAsync(uri, content);
+            if (response.IsSuccessStatusCode)
+            {
+                var _content = await response.Content.ReadAsStringAsync();
+                isUpdated = JsonConvert.DeserializeObject<bool>(_content);
+            }
+
+            return await Task.FromResult(isUpdated);
         }
 
         public async Task<Facility> GetFacilityAsync(int id)
@@ -70,8 +52,17 @@ namespace TheDataProject
             return await Task.FromResult(facilities.FirstOrDefault(s => s.Id == id));
         }
 
-        public async Task<IEnumerable<Facility>> GetFacilitysAsync(bool forceRefresh = false)
+        public async Task<ObservableCollection<Facility>> GetFacilitysAsync(int userId)
         {
+            string restUrl = "http://154.0.170.81:89/api/Facility/GetFacilitiesByUserId?userId=" + userId;
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            var response = await client.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                facilities = JsonConvert.DeserializeObject<ObservableCollection<Facility>>(content);
+            }
+
             return await Task.FromResult(facilities);
         }
 
@@ -86,14 +77,44 @@ namespace TheDataProject
             return await Task.FromResult(buildings.FirstOrDefault(s => s.Id == id));
         }
 
-        public async Task<IEnumerable<Building>> GetBuildingsAsync(bool forceRefresh = false)
+        public async Task<ObservableCollection<Building>> GetBuildingsAsync(bool forceRefresh = false)
         {
-            return await Task.FromResult(buildings);
+            return null;// await Task.FromResult(buildings);
         }
 
-        public Task<bool> LoginUser(User user)
+        public async Task<User> LoginUser(User user)
         {
-            return Task.FromResult(true);
+            string RestUrl = "http://154.0.170.81:89/api/User/Login";
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            HttpResponseMessage response = null;
+            User _user = new User();
+            try
+            {
+                var json = JsonConvert.SerializeObject(user);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                response = await client.PutAsync(json, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var _content = await response.Content.ReadAsStringAsync();
+                    _user = JsonConvert.DeserializeObject<User>(_content);
+                }
+                else if(_user == user) {
+                    _user.RespondMessage = "Invaild username or password.";
+                }
+                else
+                {
+                    _user.RespondMessage = "Error occurred: Please try again later.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _user.RespondMessage = "Error occurred: Please try again later.";              
+                return _user;
+            }
+            
+            return _user;
         }
 
         public Task<User> ChangePassword(User user)
@@ -101,4 +122,15 @@ namespace TheDataProject
             return Task.FromResult(user);
         }
     }
+
+    public class RestService 
+    {
+        HttpClient client;
+        public RestService()
+        {
+            client = new HttpClient();
+            client.MaxResponseContentBufferSize = 256000;
+        }
+}
+
 }

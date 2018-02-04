@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:gravity="center">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_below="@id/numberPicker1"
+      android:orientation="horizontal">
+    <Button
+        android:text="@string/selectPicture"
+        android:backgroundTint="@color/primary"
+        android:theme="@style/button_primary"
+        android:id="@+id/img_selectpicture"
+        android:layout_width="160dp"
+        android:paddingLeft="20dp"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="@string/camera"
+        android:backgroundTint="@color/primary"
+        android:theme="@style/button_primary"
+        android:id="@+id/img_takeaphoto"
+        android:layout_width="160dp"
+        android:paddingRight="20dp"
+        android:layout_height="wrap_content" />
+  </LinearLayout>
+  <ImageView
+      android:src="@drawable/noimage_placeholder"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingLeft="20dp"
+      android:layout_gravity="center_horizontal"
+      android:id="@+id/imgsi_facilityphoto" />
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_below="@id/imgsi_facilityphoto"
+      android:orientation="horizontal">
+    <Button
+        android:text="@string/cancel"
+        android:backgroundTint="@color/darkgray"
+        android:theme="@style/button_cancel"
+        android:id="@+id/sicancel_button"
+        android:layout_width="140dp"
+        android:paddingLeft="20dp"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="@string/done"
+        android:backgroundTint="@color/primary"
+        android:theme="@style/button_primary"
+        android:id="@+id/sidone_button"
+        android:layout_width="140dp"
+        android:paddingRight="20dp"
+        android:layout_height="wrap_content" />
+  </LinearLayout>
+</LinearLayout>

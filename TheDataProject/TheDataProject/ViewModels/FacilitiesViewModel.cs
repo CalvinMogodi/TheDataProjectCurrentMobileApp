@@ -15,12 +15,14 @@ namespace TheDataProject
         {
             Title = "Facility";
             Facilities = new ObservableCollection<Facility>();
-            LoadFacilitiesCommand = new Command(async () => await ExecuteFacilitiesCommand());
+            LoadFacilitiesCommand = new Command<int>(async (int userId) => await ExecuteFacilitiesCommand(userId));
             UpdateFacilityCommand = new Command<Facility>(async (Facility facility) => await ExecuteUpdateFacilityCommand(facility));
         }
-
-        async Task ExecuteFacilitiesCommand()
+        
+        public async Task ExecuteFacilitiesCommand(int userId)
         {
+            ObservableCollection<Facility> facilities = new ObservableCollection<Facility>();
+
             if (IsBusy)
                 return;
 
@@ -29,11 +31,7 @@ namespace TheDataProject
             try
             {
                 Facilities.Clear();
-                var facilities = await DataStore.GetFacilitysAsync(true);
-                foreach (var facility in facilities)
-                {
-                    Facilities.Add(facility);
-                }
+                Facilities = await DataStore.GetFacilitysAsync(userId);               
             }
             catch (Exception ex)
             {
@@ -43,11 +41,12 @@ namespace TheDataProject
             {
                 IsBusy = false;
             }
+            //return Facilities;
         }
 
-        async Task ExecuteUpdateFacilityCommand(Facility facility)
+        public async Task<bool> ExecuteUpdateFacilityCommand(Facility facility)
         {
-            await DataStore.UpdateFacilityAsync(facility);
+            return await DataStore.UpdateFacilityAsync(facility);
         }
     }
 }

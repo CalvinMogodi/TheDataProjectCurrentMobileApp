@@ -92,7 +92,7 @@
         android:id="@+id/location_linearlayout"
         android:orientation="horizontal">
         <TextView
-            android:text="Latitude: 4578.3225"
+            android:text="Latitude: 0"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="180dp"
@@ -100,7 +100,7 @@
             android:paddingLeft="10dp"
             android:id="@+id/tvf_latitude" />
         <TextView
-            android:text="Longitude: -12454.215"
+            android:text="Longitude: 0"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="180dp"

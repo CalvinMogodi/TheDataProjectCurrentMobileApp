@@ -13,7 +13,7 @@ namespace TheDataProject.Droid
         {
             base.OnCreate(savedInstanceState);
 
-            //var newIntent = new Intent(this, typeof(LoginActivity));
+           // var newIntent = new Intent(this, typeof(LoginActivity));
             var newIntent = new Intent(this, typeof(MainActivity));
             newIntent.AddFlags(ActivityFlags.ClearTop);
             newIntent.AddFlags(ActivityFlags.SingleTop);

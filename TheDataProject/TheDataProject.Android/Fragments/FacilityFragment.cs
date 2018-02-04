@@ -6,6 +6,9 @@ using Android.Widget;
 using Android.Support.V4.Widget;
 using Android.App;
 using Android.Content;
+using TheDataProject.Droid.Helpers;
+using Android.Graphics.Drawables;
+using Android.Graphics;
 
 namespace TheDataProject.Droid
 {
@@ -16,6 +19,7 @@ namespace TheDataProject.Droid
 
         BrowseFacilitiesAdapter adapter;
         SwipeRefreshLayout refresher;
+        RecyclerView recyclerView;
 
         ProgressBar progress;
         public static FacilitiesViewModel ViewModel { get; set; }
@@ -32,7 +36,7 @@ namespace TheDataProject.Droid
             ViewModel = new FacilitiesViewModel();
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
-            var recyclerView =
+            recyclerView =
                 view.FindViewById<RecyclerView>(Resource.Id.facilityRecyclerView);
 
             recyclerView.HasFixedSize = true;
@@ -47,15 +51,27 @@ namespace TheDataProject.Droid
             return view;
         }
 
-        public override void OnStart()
+        public async override void OnStart()
         {
             base.OnStart();
 
+            
+
+            if (ViewModel.Facilities.Count == 0) {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
+                await ViewModel.ExecuteFacilitiesCommand(1);
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+                             
+                if (ViewModel.Facilities.Count == 0)
+                {
+                    messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
+                }                
+                messageDialog.HideLoading();
+            }
+
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
-
-            if (ViewModel.Facilities.Count == 0)
-                ViewModel.LoadFacilitiesCommand.Execute(null);
         }
 
         public override void OnStop()
@@ -74,16 +90,21 @@ namespace TheDataProject.Droid
             Activity.StartActivity(intent);
         }
 
-        void Refresher_Refresh(object sender, EventArgs e)
+        async void Refresher_Refresh(object sender, EventArgs e)
         {
-            ViewModel.LoadFacilitiesCommand.Execute(null);
+            await ViewModel.ExecuteFacilitiesCommand(1);
+            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
             refresher.Refreshing = false;
+            refresher.Refresh += Refresher_Refresh;
+            adapter.ItemClick += Adapter_ItemClick;
         }
 
         public void BecameVisible()
         {
 
         }
+
+       
     }
 
     class BrowseFacilitiesAdapter : BaseRecycleViewAdapter
@@ -123,6 +144,11 @@ namespace TheDataProject.Droid
             var myHolder = holder as MyViewHolder;
             myHolder.TextView.Text = item.Name;
             myHolder.DetailTextView.Text = item.ClientCode;
+            Bitmap bitmap = ((BitmapDrawable)myHolder.ImageView.Drawable).Bitmap;
+            if (bitmap != null)
+            {
+                myHolder.ImageView.SetImageBitmap(bitmap);
+            }
         }
 
         public override int ItemCount => viewModel.Facilities.Count;
@@ -132,12 +158,14 @@ namespace TheDataProject.Droid
     {
         public TextView TextView { get; set; }
         public TextView DetailTextView { get; set; }
+        public ImageView ImageView { get; set; }
 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
             TextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text1);
             DetailTextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text2);
+            ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

@@ -22,25 +22,29 @@ namespace TheDataProject.ViewModels
             ChangePasswordCommand = new Command<User>(async (User user) => await ExecuteChangePasswordCommand(user));
         }
 
-        async Task ExecuteLoginCommand(User user)
+        public async Task<User> ExecuteLoginCommand(User user)
         {
+            User = new User();
             if (IsBusy)
-                return;
+                return User;
 
             IsBusy = true;
 
             try
             {
-               await DataStore.LoginUser(user);
+               User = await DataStore.LoginUser(user);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                return User;
             }
             finally
             {
                 IsBusy = false;
             }
+
+            return User;
         }
 
         async Task ExecuteChangePasswordCommand(User user)

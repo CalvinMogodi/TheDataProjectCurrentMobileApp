@@ -11,48 +11,41 @@ using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Android.Util;
+using Android.Provider;
+using Android.Content.PM;
 
 namespace TheDataProject.Droid.Helpers
 {
-    public class ImageManager
+    public static class ImageManager
     {
-        private Context mContext;
-        public ImageManager(Context context)
-        {
-            this.mContext = context;
-        }
-        public Bitmap ConvertStringToBitMap(String encodedString)
-        {
-            try
+
+        public static Bitmap LoadAndResizeBitmap(this string fileName, int width, int height)
             {
-                byte[] encodeByte = Base64.Decode(encodedString, Base64.Default);
-                Bitmap bitmap = BitmapFactory.DecodeByteArray(encodeByte, 0, encodeByte.Length);
+                // First we get the the dimensions of the file on disk
+                BitmapFactory.Options options = new BitmapFactory.Options { InJustDecodeBounds = true };
+                BitmapFactory.DecodeFile(fileName, options);
 
-                int targetWidth = 60;
-                int targetHeight = 60;
-                Bitmap targetBitmap = Bitmap.CreateBitmap(targetWidth,
-                                    targetHeight, Bitmap.Config.Argb8888);
+                // Next we calculate the ratio that we need to resize the image by
+                // to fit the requested dimensions.
+                int outHeight = options.OutHeight;
+                int outWidth = options.OutWidth;
+                int inSampleSize = 1;
 
-                Canvas canvas = new Canvas(targetBitmap);
-                Path path = new Path();
-                path.AddCircle(((float)targetWidth - 1) / 2,
-                    ((float)targetHeight - 1) / 2,
-                    (Math.Min(((float)targetWidth),
-                    ((float)targetHeight)) / 2),
-                    Path.Direction.Ccw);
+                if (outHeight > height || outWidth > width)
+                {
+                    inSampleSize = outWidth > outHeight
+                                       ? outHeight / height
+                                       : outWidth / width;
+                }
 
-                canvas.ClipPath(path);
-                Bitmap sourceBitmap = bitmap;
-                canvas.DrawBitmap(sourceBitmap,
-                    new Rect(0, 0, sourceBitmap.Width,
-                    sourceBitmap.Height),
-                    new Rect(0, 0, targetWidth, targetHeight), null);
-                return targetBitmap;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
+                // Now we will load the image and have BitmapFactory resize it for us.
+                options.InSampleSize = inSampleSize;
+                options.InJustDecodeBounds = false;
+                Bitmap resizedBitmap = BitmapFactory.DecodeFile(fileName, options);
+
+                return resizedBitmap;
+          
         }
+        
     }
 }

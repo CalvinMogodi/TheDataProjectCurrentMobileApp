@@ -34,7 +34,10 @@ namespace TheDataProject.Droid
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
             viewModel = new FacilityDetailViewModel(item);
 
-            adapter = new TabsAdapter(this, SupportFragmentManager);
+            Bundle mybundle = new Bundle();
+            mybundle.PutString("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
+
+            adapter = new TabsAdapter(this, SupportFragmentManager, mybundle);
             pager = FindViewById<ViewPager>(Resource.Id.viewpager);
             var tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             pager.Adapter = adapter;
@@ -87,11 +90,13 @@ namespace TheDataProject.Droid
         class TabsAdapter : FragmentStatePagerAdapter
         {
             string[] titles;
+            public static Bundle newbundle;
 
             public override int Count => titles.Length;
 
-            public TabsAdapter(Context context, Android.Support.V4.App.FragmentManager fm) : base(fm)
+            public TabsAdapter(Context context, Android.Support.V4.App.FragmentManager fm, Bundle mybundle) : base(fm)
             {
+                newbundle = mybundle;
                 titles = context.Resources.GetTextArray(Resource.Array.facilitySections);
             }
 
@@ -102,7 +107,7 @@ namespace TheDataProject.Droid
             {
                 switch (position)
                 {
-                    case 0: return FacilityInformationFragment.NewInstance();
+                    case 0: return FacilityInformationFragment.NewInstance(newbundle);
                     case 1: return FacilityBuildingFragment.NewInstance();
                 }
                 return null;

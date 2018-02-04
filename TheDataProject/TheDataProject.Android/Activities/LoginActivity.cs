@@ -22,6 +22,7 @@ namespace TheDataProject.Droid.Activities
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class LoginActivity : Activity
     {
+       
         EditText username, password;
         TextView message;
         Button cancelBtn, signInBtn;
@@ -67,24 +68,24 @@ namespace TheDataProject.Droid.Activities
             var _user = new User()
             {
                 Username = username.Text,
-                Password = encryptionHelper.Encrypt(password.Text, "Passw0rd@SendMe"),
+                Password = password.Text,
             };
+            
+            User user = await ViewModel.ExecuteLoginCommand(_user);
 
-            // await ViewModel.ChangePasswordAsync(_user, Convert.ToInt32(oneTimePin.Text.Trim()));
-
-            //if (ViewModel.Respond.ErrorOccurred)
-            //    message.Text = ViewModel.Respond.Error.Message;
-            //else
-            //{
-            message.Text = "Loged In";
-            var newIntent = new Intent(this, typeof(MainActivity));
-            newIntent.AddFlags(ActivityFlags.ClearTop);
-            newIntent.AddFlags(ActivityFlags.SingleTop);
+            if (user.RespondMessage != null)
+                message.Text = user.RespondMessage;
+            else
+            {
+                message.Text = "Loged In";
+                var newIntent = new Intent(this, typeof(MainActivity));
+                newIntent.AddFlags(ActivityFlags.ClearTop);
+                newIntent.AddFlags(ActivityFlags.SingleTop);
 
             StartActivity(newIntent);
-            Finish();
-            //    Finish();
-            //}
+            
+                Finish();
+            }
 
             messageDialog.HideLoading();
         }

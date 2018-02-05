@@ -36,31 +36,38 @@
             style="@style/Widget.CardContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center"
-              android:orientation="horizontal">
-            <ImageView
-                android:src="@drawable/noimage_placeholder"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:paddingLeft="20dp"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/imgf_facilityphoto" />
-            <android.support.design.widget.TextInputLayout
-               android:id="@+id/name_layout"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content">
-              <android.support.design.widget.TextInputEditText
-                  android:layout_width="match_parent"
-                  android:inputType="text"
-                  android:hint="Name"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/etb_name" />
-            </android.support.design.widget.TextInputLayout>
-          </LinearLayout>
-           
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageView
+                    android:src="@drawable/noimage_placeholder"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:paddingLeft="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/imgb_buildingphoto" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/name_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:hint="Name"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etb_name" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+          <TextView
+                android:text="Building Type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
             <Spinner
                 android:id="@+id/sf_buildingtype"
                 android:layout_width="match_parent"
@@ -72,6 +79,14 @@
                 android:spinnerMode="dialog"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:gravity="bottom" />
+          <TextView
+                android:text="Building Standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
             <Spinner
                 android:id="@+id/sf_buildingstandard"
                 android:layout_width="match_parent"
@@ -127,13 +142,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/etb_totalimprovedaream2" />
             </android.support.design.widget.TextInputLayout>
-          <Switch
-            style="?android:textAppearanceMedium"
-            android:id="@+id/sf_heritage"
-            android:paddingBottom="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Heritage?" />       
+            <Switch
+                style="?android:textAppearanceMedium"
+                android:id="@+id/sf_heritage"
+                android:paddingBottom="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Heritage?" />
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/occupationyear_layout"
                 android:layout_width="match_parent"
@@ -144,88 +159,97 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/etb_occupationyear" />
             </android.support.design.widget.TextInputLayout>
-          <Spinner
-               android:id="@+id/sf_disabledaccesss"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="12dp"
-               android:layout_marginRight="12dp"
-               android:layout_marginBottom="12dp"
-               android:entries="@array/disabledaccesss"
-               android:spinnerMode="dialog"
-               style="@style/Widget.AppCompat.Spinner.Underlined"
-               android:gravity="bottom" />
-          <android.support.design.widget.TextInputLayout
+          <TextView
+                android:text="Disabled Accesss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
+            <Spinner
+                android:id="@+id/sf_disabledaccesss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="12dp"
+                android:entries="@array/disabledaccesss"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:gravity="bottom" />
+            <android.support.design.widget.TextInputLayout
                 android:id="@+id/disabledcomment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:inputType="text"
-                android:hint="Disabled Comment"
-                android:layout_height="wrap_content"
-                android:id="@+id/etb_disabledcomment" />
-          </android.support.design.widget.TextInputLayout>
-          <android.support.design.widget.TextInputLayout
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:hint="Disabled Comment"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etb_disabledcomment" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:id="@+id/constructiondescription_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:inputType="text"
-                android:hint="Construction Description"
-                android:layout_height="wrap_content"
-                android:id="@+id/etb_constructiondescription" />
-          </android.support.design.widget.TextInputLayout>
-          <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:gravity="left"
-       android:orientation="horizontal">
-            <TextView
-                android:text="GPS Coordinate"
-                android:layout_gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:hint="Construction Description"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etb_constructiondescription" />
+            </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:gravity="left"
                 android:orientation="horizontal">
-              <android.support.design.widget.FloatingActionButton
-                  android:id="@+id/gpscaddlocation_button"
-                  android:layout_height="30dp"
-                  android:src="@drawable/ic_add"
-                  android:background="#9f6800"
-                  android:layout_gravity="center|right"
-                  android:layout_margin="@dimen/fab_margin"
-                  android:layout_width="30dp" />
+                <TextView
+                    android:text="GPS Coordinate"
+                    android:layout_gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/gpscaddlocation_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:elevation="4dp"
+                        android:src="@drawable/ic_add"
+                        android:background="#9f6800"
+                        android:layout_gravity="center|right"
+                        android:layout_margin="@dimen/fab_margin" />
+                </LinearLayout>
             </LinearLayout>
-          </LinearLayout>
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center"
-              android:id="@+id/location_linearlayout"
-              android:orientation="horizontal">
-            <TextView
-                android:text="Latitude: 4578.3225"
-                android:layout_gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="180dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:id="@+id/tvb_latitude" />
-            <TextView
-                android:text="Longitude: -12454.215"
-                android:layout_gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="180dp"
-                android:paddingRight="10dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvb_longitude" />
-          </LinearLayout>
+                android:gravity="center"
+                android:id="@+id/blocation_linearlayout"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="Latitude: 0"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:id="@+id/tvb_latitude" />
+                <TextView
+                    android:text="Longitude: 0"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_width="180dp"
+                    android:paddingRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvb_longitude" />
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.FloatingActionButton

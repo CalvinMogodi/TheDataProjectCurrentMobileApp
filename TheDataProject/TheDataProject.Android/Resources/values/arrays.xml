@@ -54,13 +54,11 @@
   </string-array>
 
   <string-array name="yesno">
-    <item>Please Select</item>
     <item>Yes</item>
     <item>No</item>
   </string-array>
 
   <string-array name="zoningtypes">
-    <item>Please Select Zone</item>
     <item>Agriculture</item>
     <item>business 1</item>
     <item>Business 2</item>
@@ -86,7 +84,6 @@
   </string-array>
 
   <string-array name="buildingtypes">
-    <item>Please Select Building Type</item>
     <item>Community Hall</item>
     <item>Carport</item>
     <item>Courthouse</item>
@@ -131,7 +128,6 @@
   </string-array>
 
   <string-array name="buildingstandards">
-    <item>Please Select Building Standard</item>
     <item>S5 - Highly sensitive purpose with critical results (e.g. hospital operating theatre) or high profile public building (e.g. Parliament House).</item>
     <item>S4 - Good public presentation and a high-quality working/living environment are necessary (e.g. CBD building, Multi unit dwellings,Retail units).</item>
     <item>S3 - Functionally-focused 	building 	(e.g. laboratory, public carparks).  </item>
@@ -140,7 +136,6 @@
   </string-array>
 
   <string-array name="disabledaccesss">
-    <item>Please Select Disabled Accesss</item>
     <item>Complies with regulation entirely, ideal situation</item>
     <item>Does not comply all of the regulation and minimum effort would be required to rectify </item>
     <item>Does not comply with regulation with moderate changes required to achieve compliance </item>

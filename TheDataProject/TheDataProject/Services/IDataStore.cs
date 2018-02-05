@@ -12,7 +12,7 @@ namespace TheDataProject
         Task<ObservableCollection<F>> GetFacilitysAsync(int userId);
 
         Task<bool> AddBuildingAsync(B building);
-        Task<B> GetBuildingAsync(int id);
+        Task<bool> UpdateBuildingAsync(B building);
         Task<ObservableCollection<B>> GetBuildingsAsync(bool forceRefresh = false);
 
         Task<U> LoginUser(U user);

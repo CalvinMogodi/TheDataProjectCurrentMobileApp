@@ -145,6 +145,9 @@
     <AndroidResource Include="Resources\layout\dialog_facility_information_municipal_roll.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\dialog_numberpicker.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\activity_main.axml">
@@ -310,9 +313,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_greenAdd.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\dialog_numberpicker.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\dialog_select_image.xml">

@@ -39,6 +39,25 @@
             android:layout_height="wrap_content"
             android:id="@+id/etf_suburb" />
     </android.support.design.widget.TextInputLayout>
+  <android.support.design.widget.TextInputLayout
+     android:id="@+id/region_layout"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content">
+    <android.support.design.widget.TextInputEditText
+        android:layout_width="match_parent"
+        android:inputType="text"
+        android:hint="Region"
+        android:layout_height="wrap_content"
+        android:id="@+id/etf_region" />
+  </android.support.design.widget.TextInputLayout>
+  <TextView
+                android:text="Province"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
     <Spinner
         android:id="@+id/sf_province"
         android:layout_width="match_parent"
@@ -47,6 +66,14 @@
         android:spinnerMode="dialog"
         style="@style/Widget.AppCompat.Spinner.Underlined"
         android:gravity="bottom" />
+  <TextView
+                android:text="Local Municipality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
     <Spinner
         android:id="@+id/sf_localmunicipality"
         android:layout_width="match_parent"

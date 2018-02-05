@@ -33,7 +33,7 @@ namespace TheDataProject.Droid.Fragments
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton
             , takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         ProgressBar progress;
-        EditText streetAddress, suburb, fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
+        EditText streetAddress, suburb,region ,fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
         Spinner settlementtype, province, localmunicipality, zoning;
         AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
         LayoutInflater Inflater;
@@ -257,6 +257,7 @@ namespace TheDataProject.Droid.Fragments
         {
             streetAddress = dialog.FindViewById<EditText>(Resource.Id.etf_streetAddress);
             suburb = dialog.FindViewById<EditText>(Resource.Id.etf_suburb);
+            region = dialog.FindViewById<EditText>(Resource.Id.etf_region);
             province = dialog.FindViewById<Spinner>(Resource.Id.sf_province);
             localmunicipality = dialog.FindViewById<Spinner>(Resource.Id.sf_localmunicipality);
             locationCancelButton = dialog.FindViewById<Button>(Resource.Id.dfil_cancelbutton);
@@ -277,6 +278,7 @@ namespace TheDataProject.Droid.Fragments
             {
                 streetAddress.Enabled = true;
                 suburb.Enabled = true;
+                region.Enabled = true;
                 province.Enabled = true;
                 localmunicipality.Enabled = true;
                 locationDoneButton.Enabled = true;
@@ -286,6 +288,7 @@ namespace TheDataProject.Droid.Fragments
             else {
                 streetAddress.Enabled = false;
                 suburb.Enabled = false;
+                region.Enabled = false;
                 province.Enabled = false;
                 localmunicipality.Enabled = false;
                 locationDoneButton.Enabled = false;
@@ -315,48 +318,22 @@ namespace TheDataProject.Droid.Fragments
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
         {
             locationlinearlayout.Visibility = ViewStates.Visible;
-            LocationManager locationManager = Application.Context.GetSystemService(Context.LocationService) as LocationManager;
+            GPSTracker GPSTracker = new GPSTracker();
 
-            Location location = null;
-            // getting GPS status
-
-            bool isGPSEnabled = locationManager.IsProviderEnabled(LocationManager.GpsProvider);
-            bool isNetworkEnabled = locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
-            bool isPassiveProviderEnabled = locationManager.IsProviderEnabled(LocationManager.PassiveProvider);
-
-            if (!isGPSEnabled && !isNetworkEnabled && !isPassiveProviderEnabled)
+            Location location = GPSTracker.GPSCoordinate();
+            if (!GPSTracker.isLocationGPSEnabled)
             {
-                MessageDialog messageDialog = new MessageDialog();
-                messageDialog.SendToast("GPS is not enabled");
                 ShowSettingsAlert();
             }
-            else
-            {
-                if (isGPSEnabled)
-                {
-                    location = locationManager.GetLastKnownLocation(LocationManager.GpsProvider);
-                }
-                if (isNetworkEnabled)
-                {
-                    if (location == null)
-                        location = locationManager.GetLastKnownLocation(LocationManager.NetworkProvider);
-                }
-                if (isPassiveProviderEnabled)
-                {
-                    if (location == null)
-                        location = locationManager.GetLastKnownLocation(LocationManager.PassiveProvider);
-                }
+            tvfLatitude.Text = location.Latitude.ToString();
+            tvfLongitude.Text = location.Longitude.ToString();
 
-                tvfLatitude.Text = location.Latitude.ToString();
-                tvfLongitude.Text = location.Longitude.ToString();
-            }
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
         }
-
         private void LocationCancelButton_Click(object sender, EventArgs e)
         {
             locationDialog.Cancel();
@@ -368,6 +345,7 @@ namespace TheDataProject.Droid.Fragments
             facility.Location.LocalMunicipality = localmunicipality.SelectedItem.ToString();
             facility.Location.StreetAddress = streetAddress.Text;
             facility.Location.Suburb = suburb.Text;
+            facility.Location.Region = region.Text;
             facility.Location.Coordinates = new Models.GPSCoordinate() {
                 Longitude = tvfLatitude.Text,
                 Latitude = tvfLongitude.Text,

@@ -24,9 +24,7 @@ namespace TheDataProject
         {
             
             client = new HttpClient();
-            client.MaxResponseContentBufferSize = 256000;
-
-            
+            client.MaxResponseContentBufferSize = 256000;            
         }
 
         public async Task<bool> UpdateFacilityAsync(Facility facility)
@@ -66,15 +64,50 @@ namespace TheDataProject
             return await Task.FromResult(facilities);
         }
 
-        public Task<bool> AddBuildingAsync(Building building)
+        public async Task<bool> AddBuildingAsync(Building building)
         {
-            buildings.Add(building);
-            return Task.FromResult(true);
+            string restUrl = "http://154.0.170.81:89/api/Building/AddBulding";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isAdded = false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(building);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var _content = await response.Content.ReadAsStringAsync();
+                    isAdded = JsonConvert.DeserializeObject<bool>(_content);
+                }
+            }
+            catch (Exception ex)
+            {
+                return isAdded;
+            }
+            return await Task.FromResult(isAdded);
         }
 
-        public async Task<Building> GetBuildingAsync(int id)
+        public async Task<bool> UpdateBuildingAsync(Building building)
         {
-            return await Task.FromResult(buildings.FirstOrDefault(s => s.Id == id));
+            string restUrl = "http://154.0.170.81:89/api/Building/UpdateFacility";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isUpdated = false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(building);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PutAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var _content = await response.Content.ReadAsStringAsync();
+                    isUpdated = JsonConvert.DeserializeObject<bool>(_content);
+                }
+            }
+            catch (Exception ex)
+            {
+                return isUpdated;
+            }
+            return await Task.FromResult(isUpdated);
         }
 
         public async Task<ObservableCollection<Building>> GetBuildingsAsync(bool forceRefresh = false)

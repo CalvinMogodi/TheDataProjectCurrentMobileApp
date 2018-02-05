@@ -13,6 +13,7 @@ namespace TheDataProject.Models
         public string StreetAddress { get; set; }
         public string Suburb { get; set; }
         public string Province { get; set; }
+        public string Region { get; set; }
         public GPSCoordinate Coordinates { get; set; }
         public BoundryPolygon BoundaryPolygon { get; set; }
     }

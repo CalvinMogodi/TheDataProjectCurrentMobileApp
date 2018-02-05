@@ -49,26 +49,16 @@ namespace TheDataProject.ViewModels
             }
         }
 
-        async Task AddBuildingAsync(Building building)
+        public async Task<bool> AddBuildingAsync(Building building)
         {
-            if (IsBusy)
-                return;
+            Buildings.Add(building);
+            return await DataStore.AddBuildingAsync(building);           
+        }
 
-            IsBusy = true;
-
-            try
-            {
-                Buildings.Add(building);
-                await DataStore.AddBuildingAsync(building);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+        public async Task<bool> UpdateBuildingAsync(Building building)
+        {
+            Buildings.Add(building);
+            return await DataStore.UpdateBuildingAsync(building);
         }
     }
 }

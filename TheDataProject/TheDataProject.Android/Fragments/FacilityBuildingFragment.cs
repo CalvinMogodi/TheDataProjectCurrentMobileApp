@@ -15,18 +15,19 @@ using Android.Support.V7.Widget;
 using TheDataProject.ViewModels;
 using Android.Support.Design.Widget;
 using TheDataProject.Droid.Activities;
+using TheDataProject.Droid.Helpers;
 
 namespace TheDataProject.Droid.Fragments
 {
     public class FacilityBuildingFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-        public static FacilityBuildingFragment NewInstance() => 
+        public static FacilityBuildingFragment NewInstance() =>
             new FacilityBuildingFragment { Arguments = new Bundle() };
 
         BrowseBuildingsAdapter adapter;
         SwipeRefreshLayout refresher;
         FloatingActionButton addButton;
-
+        RecyclerView recyclerView;
         ProgressBar progress;
         public static BuildingsViewModel ViewModel { get; set; }
 
@@ -43,7 +44,7 @@ namespace TheDataProject.Droid.Fragments
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility_building, container, false);
 
-            var recyclerView = view.FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
+            recyclerView = view.FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
             addButton = view.FindViewById<FloatingActionButton>(Resource.Id.addnewBuilding_button);
 
             recyclerView.HasFixedSize = true;
@@ -64,17 +65,27 @@ namespace TheDataProject.Droid.Fragments
             var intent = new Intent(Activity, typeof(AddBuildingActivity)); ;
             StartActivity(intent);
         }
-       
 
-        public override void OnStart()
+
+        public async override void OnStart()
         {
             base.OnStart();
+            if (ViewModel.Buildings.Count == 0)
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
+                await ViewModel.ExecuteBuildingsCommand(1);
+                recyclerView.HasFixedSize = true;
+                recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
+                if (ViewModel.Buildings.Count == 0)
+                {
+                    messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
+                }
+                messageDialog.HideLoading();
+            }
 
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
-
-            if (ViewModel.Buildings.Count == 0)
-                ViewModel.LoadBuildingsCommand.Execute(null);
         }
 
         public override void OnStop()
@@ -93,10 +104,13 @@ namespace TheDataProject.Droid.Fragments
             Activity.StartActivity(intent);
         }
 
-        void Refresher_Refresh(object sender, EventArgs e)
+        async void Refresher_Refresh(object sender, EventArgs e)
         {
-            ViewModel.LoadBuildingsCommand.Execute(null);
+            await ViewModel.ExecuteBuildingsCommand(1);
+            recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
             refresher.Refreshing = false;
+            refresher.Refresh += Refresher_Refresh;
+            adapter.ItemClick += Adapter_ItemClick;
         }
 
         public void BecameVisible()

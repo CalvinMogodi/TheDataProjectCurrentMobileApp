@@ -54,9 +54,6 @@ namespace TheDataProject.Droid
         public async override void OnStart()
         {
             base.OnStart();
-
-            
-
             if (ViewModel.Facilities.Count == 0) {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.ShowLoading();

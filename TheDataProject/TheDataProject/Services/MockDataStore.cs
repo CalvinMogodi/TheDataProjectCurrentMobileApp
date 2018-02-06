@@ -18,13 +18,13 @@ namespace TheDataProject
 
         HttpClient client;
         ObservableCollection<Facility> facilities;
-        List<Building> buildings;
+        ObservableCollection<Building> buildings;
 
         public MockDataStore()
         {
             
             client = new HttpClient();
-            client.MaxResponseContentBufferSize = 256000;            
+           // client.MaxResponseContentBufferSize = 256000;            
         }
 
         public async Task<bool> UpdateFacilityAsync(Facility facility)
@@ -54,13 +54,19 @@ namespace TheDataProject
         {
             string restUrl = "http://154.0.170.81:89/api/Facility/GetFacilitiesByUserId?userId=" + userId;
             var uri = new Uri(string.Format(restUrl, string.Empty));
-            var response = await client.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                facilities = JsonConvert.DeserializeObject<ObservableCollection<Facility>>(content);
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    facilities = JsonConvert.DeserializeObject<ObservableCollection<Facility>>(content);
+                }
+            } catch (Exception ex)
+            {
+                facilities = new ObservableCollection<Facility>();
+                return await Task.FromResult(facilities);
             }
-
             return await Task.FromResult(facilities);
         }
 
@@ -110,9 +116,23 @@ namespace TheDataProject
             return await Task.FromResult(isUpdated);
         }
 
-        public async Task<ObservableCollection<Building>> GetBuildingsAsync(bool forceRefresh = false)
+        public async Task<ObservableCollection<Building>> GetBuildingsAsync(int facilityId)
         {
-            return null;// await Task.FromResult(buildings);
+            string restUrl = "http://154.0.170.81:89/api/Building/GetBuildingByFacilityId?facilityId=" + facilityId;
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            try { 
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    buildings = JsonConvert.DeserializeObject<ObservableCollection<Building>>(content);
+                }
+            } catch (Exception ex){
+                buildings = new ObservableCollection<Building>();
+                return await Task.FromResult(buildings);
+            }
+
+            return await Task.FromResult(buildings);
         }
 
         public async Task<User> LoginUser(User user)

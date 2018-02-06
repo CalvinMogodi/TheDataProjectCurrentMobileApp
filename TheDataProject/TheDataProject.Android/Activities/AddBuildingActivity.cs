@@ -23,15 +23,18 @@ namespace TheDataProject.Droid
     public class AddBuildingActivity : BaseActivity
     {
         FloatingActionButton saveButton, gpscAddLocationButton;
-        EditText title, description, occupationYear;
+        EditText title, description, occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
         TextView tvbLatitude, tvbLongitude;
         ImageView buildingPhoto, iImageViewer;
         NumberPicker numberPicker;
         Button takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         Dialog imageDialog;
+        Spinner buildingType, buildingstandard, disabledAccesss;
         AlertDialog numberPickerAlertDialog;
         TextInputLayout occupationyearLayout;
         LinearLayout locationLinearlayout;
+        Switch heritage;
+        public GPSCoordinate _GPSCoordinates { get; set; }
         public BuildingsViewModel ViewModel { get; set; }
         public static Java.IO.File _file;
         public static Java.IO.File _dir;
@@ -56,7 +59,8 @@ namespace TheDataProject.Droid
                 isEdit = true;
                 SupportActionBar.Title = "Edit Building";
             }
-            else {
+            else
+            {
                 SupportActionBar.Title = "Add New Building";
             }// Create your application here
 
@@ -68,6 +72,18 @@ namespace TheDataProject.Droid
             tvbLatitude = FindViewById<TextView>(Resource.Id.tvb_latitude);
             tvbLongitude = FindViewById<TextView>(Resource.Id.tvb_longitude);
             buildingPhoto = FindViewById<ImageView>(Resource.Id.imgb_buildingphoto);
+            _GPSCoordinates = new GPSCoordinate();
+            buildingName = FindViewById<EditText>(Resource.Id.etb_name);
+            buildingType = FindViewById<Spinner>(Resource.Id.sf_buildingtype);
+            buildingstandard = FindViewById<Spinner>(Resource.Id.sf_buildingstandard);
+            utilisationStatus = FindViewById<EditText>(Resource.Id.etb_utilisationstatus);
+            nooOfFoors = FindViewById<EditText>(Resource.Id.etb_nooffloors);
+            totalFootprintAream2 = FindViewById<EditText>(Resource.Id.etb_totalfootprintaream2);
+            totalImprovedaAeam2 = FindViewById<EditText>(Resource.Id.etb_totalimprovedaream2);
+            heritage = FindViewById<Switch>(Resource.Id.sf_heritage);
+            disabledAccesss = FindViewById<Spinner>(Resource.Id.sf_disabledaccesss);
+            disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
+            constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
 
             locationLinearlayout.Visibility = ViewStates.Gone;
             gpscAddLocationButton.SetBackgroundColor(Android.Graphics.Color.Green);
@@ -78,7 +94,7 @@ namespace TheDataProject.Droid
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
-            buildingPhoto.Click +=  (sender, e) => { ShowImage_Click(); };
+            buildingPhoto.Click += (sender, e) => { ShowImage_Click(); };
         }
 
         void OnOccupationYearSet(object sender, DatePickerDialog.DateSetEventArgs e)
@@ -93,19 +109,34 @@ namespace TheDataProject.Droid
             return true;
         }
 
-        void SaveButton_Click(object sender, EventArgs e)
+        async void SaveButton_Click(object sender, EventArgs e)
         {
-            var item = new Building
+            Building item = new Building
             {
-                Name = title.Text,
-                BuildingNumber = description.Text
+                Name = buildingName.Text,
+                BuildingType = buildingType.SelectedItem.ToString(),
+                BuildingStandard = buildingstandard.SelectedItem.ToString(),
+                Status = utilisationStatus.Text,
+                NumberOfFloors = Convert.ToInt32(nooOfFoors.Text),
+                FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
+                ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
+                Heritage = heritage.Selected.ToString(),
+                OccupationYear = occupationYear.Text,
+                DisabledAccess = disabledAccesss.SelectedItem.ToString(),
+                DisabledComment = disabledComment.Text,
+                ConstructionDescription = constructionDescription.Text,
+                GPSCoordinates = _GPSCoordinates,
+                Photo = building.Photo,
+                CreatedDate = new DateTime(),
+                CreatedUserId = Convert.ToInt32(1),
             };
-            ViewModel.AddBuildingCommand.Execute(item);
+            await ViewModel.AddBuildingAsync(item);
 
             Finish();
         }
 
-        void AddLocation_Click(object sender, EventArgs e) {
+        void AddLocation_Click(object sender, EventArgs e)
+        {
             locationLinearlayout.Visibility = ViewStates.Visible;
             GPSTracker GPSTracker = new GPSTracker();
 
@@ -114,8 +145,13 @@ namespace TheDataProject.Droid
             {
                 ShowSettingsAlert();
             }
-            tvbLatitude.Text = location.Latitude.ToString();
-            tvbLongitude.Text = location.Longitude.ToString();
+            tvbLatitude.Text = "Latitude: " + location.Latitude.ToString();
+            tvbLongitude.Text = "Longitude: " + location.Longitude.ToString();
+            _GPSCoordinates = new GPSCoordinate()
+            {
+                Latitude = location.Latitude.ToString(),
+                Longitude = location.Longitude.ToString()
+            };
 
             if (location == null)
             {
@@ -132,11 +168,11 @@ namespace TheDataProject.Droid
         }
 
         void NumberPickerCancelButton_Click(object sender, EventArgs e)
-        {          
-            
+        {
+
         }
 
-        
+
 
         public void show()
         {
@@ -157,7 +193,7 @@ namespace TheDataProject.Droid
                     numberPickerAlertDialog.Dismiss();
                 }).SetNegativeButton(Resource.String.cancel, delegate
                 {
-                    
+
                 }).Create();
             numberPickerAlertDialog.Show();
         }

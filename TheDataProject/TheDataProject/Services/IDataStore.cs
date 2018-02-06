@@ -13,7 +13,7 @@ namespace TheDataProject
 
         Task<bool> AddBuildingAsync(B building);
         Task<bool> UpdateBuildingAsync(B building);
-        Task<ObservableCollection<B>> GetBuildingsAsync(bool forceRefresh = false);
+        Task<ObservableCollection<B>> GetBuildingsAsync(int facilityId);
 
         Task<U> LoginUser(U user);
         Task<U> ChangePassword(U user);

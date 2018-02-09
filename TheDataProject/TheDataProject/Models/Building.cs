@@ -28,6 +28,6 @@ namespace TheDataProject.Models
         public int CreatedUserId { get; set; }
         public DateTime ModifiedDate { get; set; }
         public int ModifiedUserId { get; set; }
-
+        public Facility Facility { get; set; }
     }
 }

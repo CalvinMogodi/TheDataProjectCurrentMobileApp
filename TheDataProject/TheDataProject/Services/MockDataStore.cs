@@ -137,25 +137,28 @@ namespace TheDataProject
 
         public async Task<User> LoginUser(User user)
         {
-            string RestUrl = "http://154.0.170.81:89/api/User/Login";
+            string RestUrl = "http://154.0.170.81:89/api/User/Login?username="+user.Username+"&password="+ user.Password;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             HttpResponseMessage response = null;
             User _user = new User();
             try
             {
-                var json = JsonConvert.SerializeObject(user);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                response = await client.PutAsync(json, content);
+                response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var _content = await response.Content.ReadAsStringAsync();
                     _user = JsonConvert.DeserializeObject<User>(_content);
+                    if (_user == null)
+                    {
+                        _user = new User()
+                        {
+                            RespondMessage = "Invaild username or password.",
+                        };
+                    }
                 }
-                else if(_user == user) {
-                    _user.RespondMessage = "Invaild username or password.";
-                }
+               
                 else
                 {
                     _user.RespondMessage = "Error occurred: Please try again later.";

@@ -77,12 +77,14 @@ namespace TheDataProject.Droid.Activities
                 message.Text = user.RespondMessage;
             else
             {
-                message.Text = "Loged In";
                 var newIntent = new Intent(this, typeof(MainActivity));
                 newIntent.AddFlags(ActivityFlags.ClearTop);
                 newIntent.AddFlags(ActivityFlags.SingleTop);
+                Context mContext = Android.App.Application.Context;
+                AppPreferences ap = new AppPreferences(mContext);
+                ap.SaveUserId(user.Id.ToString());
 
-            StartActivity(newIntent);
+                StartActivity(newIntent);
             
                 Finish();
             }

@@ -8,6 +8,8 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.Design.Widget;
 using TheDataProject.Droid.Activities;
+using TheDataProject.Droid.Helpers;
+using System;
 
 namespace TheDataProject.Droid
 {
@@ -25,6 +27,15 @@ namespace TheDataProject.Droid
         {
             base.OnCreate(savedInstanceState);
 
+            Context mContext = Android.App.Application.Context;
+            AppPreferences ap = new AppPreferences(mContext);
+            string userId = ap.GetUserId();
+            if (Convert.ToInt32(userId) == 0)
+            {
+                var newIntent = new Intent(this, typeof(LoginActivity));
+                StartActivity(newIntent);
+            }
+
             adapter = new TabsAdapter(this, SupportFragmentManager);
             pager = FindViewById<ViewPager>(Resource.Id.viewpager);
             var tabs = FindViewById<TabLayout>(Resource.Id.tabs);
@@ -41,7 +52,9 @@ namespace TheDataProject.Droid
 
             Toolbar.MenuItemClick += (sender, e) =>
             {
-                var intent = new Intent(this, typeof(LoginActivity)); ;
+                var intent = new Intent(this, typeof(LoginActivity));
+                string _userId = "0";
+                ap.SaveUserId(_userId);
                 StartActivity(intent);
             };
 

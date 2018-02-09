@@ -20,6 +20,7 @@ namespace TheDataProject.Droid
         BrowseFacilitiesAdapter adapter;
         SwipeRefreshLayout refresher;
         RecyclerView recyclerView;
+        int userId;
 
         ProgressBar progress;
         public static FacilitiesViewModel ViewModel { get; set; }
@@ -34,6 +35,9 @@ namespace TheDataProject.Droid
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             ViewModel = new FacilitiesViewModel();
+            Context mContext = Android.App.Application.Context;
+            AppPreferences ap = new AppPreferences(mContext);
+            userId = Convert.ToInt32(ap.GetUserId());
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
             recyclerView =
@@ -56,14 +60,9 @@ namespace TheDataProject.Droid
             base.OnStart();
             if (ViewModel.Facilities.Count == 0) {
                 MessageDialog messageDialog = new MessageDialog();
-                messageDialog.ShowLoading();
-                await ViewModel.ExecuteFacilitiesCommand(1);
-                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
-                             
-                if (ViewModel.Facilities.Count == 0)
-                {
-                    messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
-                }                
+                messageDialog.ShowLoading();                
+                await ViewModel.ExecuteFacilitiesCommand(userId);
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));              
                 messageDialog.HideLoading();
             }
 
@@ -82,14 +81,16 @@ namespace TheDataProject.Droid
         {
             var item = ViewModel.Facilities[e.Position];
             var intent = new Intent(Activity, typeof(FacilityDetailActivity));
-
+            Context mContext = Android.App.Application.Context;
+            AppPreferences ap = new AppPreferences(mContext);
+            ap.SaveFacilityId(item.Id.ToString());
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
         }
 
         async void Refresher_Refresh(object sender, EventArgs e)
         {
-            await ViewModel.ExecuteFacilitiesCommand(1);
+            await ViewModel.ExecuteFacilitiesCommand(userId);
             recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
             refresher.Refreshing = false;
             refresher.Refresh += Refresher_Refresh;

@@ -126,6 +126,10 @@ namespace TheDataProject
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     buildings = JsonConvert.DeserializeObject<ObservableCollection<Building>>(content);
+                    if (buildings == null)
+                    {
+                        buildings = new ObservableCollection<Building>();
+                    }
                 }
             } catch (Exception ex){
                 buildings = new ObservableCollection<Building>();

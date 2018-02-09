@@ -29,6 +29,7 @@ namespace TheDataProject.Droid.Fragments
         FloatingActionButton addButton;
         RecyclerView recyclerView;
         ProgressBar progress;
+        int facilityId;
         public static BuildingsViewModel ViewModel { get; set; }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -41,6 +42,10 @@ namespace TheDataProject.Droid.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             ViewModel = new BuildingsViewModel();
+
+            Context mContext = Android.App.Application.Context;
+            AppPreferences ap = new AppPreferences(mContext);
+            facilityId = Convert.ToInt32(ap.GetFacilityId());
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility_building, container, false);
 
@@ -74,7 +79,7 @@ namespace TheDataProject.Droid.Fragments
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.ShowLoading();
-                await ViewModel.ExecuteBuildingsCommand(1);
+                await ViewModel.ExecuteBuildingsCommand(facilityId);
                 recyclerView.HasFixedSize = true;
                 recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
                 if (ViewModel.Buildings.Count == 0)
@@ -106,7 +111,7 @@ namespace TheDataProject.Droid.Fragments
 
         async void Refresher_Refresh(object sender, EventArgs e)
         {
-            await ViewModel.ExecuteBuildingsCommand(1);
+            await ViewModel.ExecuteBuildingsCommand(facilityId);
             recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
             refresher.Refreshing = false;
             refresher.Refresh += Refresher_Refresh;

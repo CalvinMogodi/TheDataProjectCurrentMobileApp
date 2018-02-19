@@ -104,12 +104,12 @@
             android:orientation="horizontal">
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/gpscaddlocation_button"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_greenAdd"
+                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add"
                 android:background="#9f6800"
                 android:layout_gravity="center|right"
-                android:layout_margin="@dimen/fab_margin"
-                android:layout_width="30dp" />
+                android:layout_margin="@dimen/fab_margin" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -157,8 +157,8 @@
             android:orientation="horizontal">
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/bpaddlocation_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_add"
                 android:background="#9f6800"
                 android:layout_gravity="center|right"

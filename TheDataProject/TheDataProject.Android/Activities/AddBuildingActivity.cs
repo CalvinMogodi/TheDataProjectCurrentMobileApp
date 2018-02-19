@@ -117,7 +117,7 @@ namespace TheDataProject.Droid
             StaticData staticData = new StaticData();
             Building item = new Building
             {
-                Name = buildingName.Text,
+                BuildingName = buildingName.Text,
                 BuildingNumber = staticData.RandomDigits(10),
                 BuildingType = buildingType.SelectedItem.ToString(),
                 BuildingStandard = buildingstandard.SelectedItem.ToString(),
@@ -125,10 +125,9 @@ namespace TheDataProject.Droid
                 NumberOfFloors = Convert.ToInt32(nooOfFoors.Text),
                 FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
                 ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
-                Heritage = heritage.Selected.ToString(),
+                Heritage = heritage.Selected,
                 OccupationYear = occupationYear.Text,
-                //DisabledAccess = disabledAccesss.SelectedItem.ToString(),
-                DisabledAccess = true,
+                DisabledAccess = disabledAccesss.Selected,
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,

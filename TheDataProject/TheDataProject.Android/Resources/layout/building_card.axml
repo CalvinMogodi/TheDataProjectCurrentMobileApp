@@ -15,7 +15,7 @@
         android:orientation="horizontal">
         <LinearLayout
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="top"
             android:layout_width="160dp"
             android:layout_height="wrap_content">
             <TextView
@@ -25,21 +25,21 @@
                 android:paddingTop="@dimen/small_margin"
                 android:paddingLeft="@dimen/small_margin"
                 android:paddingRight="@dimen/small_margin"
-                android:gravity="top"
+                android:gravity="top|left"
                 android:maxLines="1"
                 android:ellipsize="end"
-                style="?android:textAppearanceMedium"
+                style="?android:textAppearanceLarge"
                 tools:text="Title 1" />
             <TextView
                 android:id="@android:id/text2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/contactName"
-                android:gravity="bottom"
+                android:gravity="bottom|left"
                 android:padding="@dimen/small_margin"
                 android:ellipsize="end"
                 android:maxLines="4"
-                style="?android:textAppearanceSmall"
+                style="?android:textAppearanceMedium"
                 tools:text="Description goes here"
                 android:layout_marginRight="0.0dp" />
         </LinearLayout>

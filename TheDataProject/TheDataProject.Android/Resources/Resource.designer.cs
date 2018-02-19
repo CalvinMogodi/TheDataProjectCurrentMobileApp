@@ -1064,32 +1064,32 @@ namespace TheDataProject.Droid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f09004f
-			public const int abc_background_cache_hint_selector_material_dark = 2131296335;
-			
 			// aapt resource value: 0x7f090050
-			public const int abc_background_cache_hint_selector_material_light = 2131296336;
+			public const int abc_background_cache_hint_selector_material_dark = 2131296336;
 			
 			// aapt resource value: 0x7f090051
-			public const int abc_color_highlight_material = 2131296337;
+			public const int abc_background_cache_hint_selector_material_light = 2131296337;
+			
+			// aapt resource value: 0x7f090052
+			public const int abc_color_highlight_material = 2131296338;
 			
 			// aapt resource value: 0x7f090004
 			public const int abc_input_method_navigation_guard = 2131296260;
 			
-			// aapt resource value: 0x7f090052
-			public const int abc_primary_text_disable_only_material_dark = 2131296338;
-			
 			// aapt resource value: 0x7f090053
-			public const int abc_primary_text_disable_only_material_light = 2131296339;
+			public const int abc_primary_text_disable_only_material_dark = 2131296339;
 			
 			// aapt resource value: 0x7f090054
-			public const int abc_primary_text_material_dark = 2131296340;
+			public const int abc_primary_text_disable_only_material_light = 2131296340;
 			
 			// aapt resource value: 0x7f090055
-			public const int abc_primary_text_material_light = 2131296341;
+			public const int abc_primary_text_material_dark = 2131296341;
 			
 			// aapt resource value: 0x7f090056
-			public const int abc_search_url_text = 2131296342;
+			public const int abc_primary_text_material_light = 2131296342;
+			
+			// aapt resource value: 0x7f090057
+			public const int abc_search_url_text = 2131296343;
 			
 			// aapt resource value: 0x7f090005
 			public const int abc_search_url_text_normal = 2131296261;
@@ -1100,11 +1100,11 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f090007
 			public const int abc_search_url_text_selected = 2131296263;
 			
-			// aapt resource value: 0x7f090057
-			public const int abc_secondary_text_material_dark = 2131296343;
-			
 			// aapt resource value: 0x7f090058
-			public const int abc_secondary_text_material_light = 2131296344;
+			public const int abc_secondary_text_material_dark = 2131296344;
+			
+			// aapt resource value: 0x7f090059
+			public const int abc_secondary_text_material_light = 2131296345;
 			
 			// aapt resource value: 0x7f09004a
 			public const int accent = 2131296330;
@@ -1126,6 +1126,9 @@ namespace TheDataProject.Droid
 			
 			// aapt resource value: 0x7f09000d
 			public const int background_material_light = 2131296269;
+			
+			// aapt resource value: 0x7f09004d
+			public const int black = 2131296333;
 			
 			// aapt resource value: 0x7f09000e
 			public const int bright_foreground_disabled_material_dark = 2131296270;
@@ -1163,8 +1166,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f090003
 			public const int cardview_shadow_start_color = 2131296259;
 			
-			// aapt resource value: 0x7f09004e
-			public const int darkgray = 2131296334;
+			// aapt resource value: 0x7f09004f
+			public const int darkgray = 2131296335;
 			
 			// aapt resource value: 0x7f09003e
 			public const int design_fab_shadow_end_color = 2131296318;
@@ -1208,8 +1211,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f090019
 			public const int dim_foreground_material_light = 2131296281;
 			
-			// aapt resource value: 0x7f09004d
-			public const int easternblue = 2131296333;
+			// aapt resource value: 0x7f09004e
+			public const int easternblue = 2131296334;
 			
 			// aapt resource value: 0x7f09001a
 			public const int foreground_material_dark = 2131296282;
@@ -1319,11 +1322,11 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f09003b
 			public const int switch_thumb_disabled_material_light = 2131296315;
 			
-			// aapt resource value: 0x7f090059
-			public const int switch_thumb_material_dark = 2131296345;
-			
 			// aapt resource value: 0x7f09005a
-			public const int switch_thumb_material_light = 2131296346;
+			public const int switch_thumb_material_dark = 2131296346;
+			
+			// aapt resource value: 0x7f09005b
+			public const int switch_thumb_material_light = 2131296347;
 			
 			// aapt resource value: 0x7f09003c
 			public const int switch_thumb_normal_material_dark = 2131296316;

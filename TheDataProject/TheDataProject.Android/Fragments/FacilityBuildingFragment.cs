@@ -159,7 +159,7 @@ namespace TheDataProject.Droid.Fragments
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
-            myHolder.TextView.Text = item.Name;
+            myHolder.TextView.Text = item.BuildingName;
             myHolder.DetailTextView.Text = item.BuildingNumber;
         }
 

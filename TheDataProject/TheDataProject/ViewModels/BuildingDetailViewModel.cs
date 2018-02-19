@@ -14,7 +14,7 @@ namespace TheDataProject.ViewModels
         {
             if (building != null)
             {
-                Title = building.Name;
+                Title = building.BuildingName;
                 Building = building;
             }
         }

@@ -19,6 +19,8 @@ using Android.Locations;
 using Android.Provider;
 using Android.Content.PM;
 using Android.Graphics.Drawables;
+using TheDataProject.Models;
+using static Android.Widget.AdapterView;
 
 namespace TheDataProject.Droid.Fragments
 {
@@ -42,10 +44,14 @@ namespace TheDataProject.Droid.Fragments
         ImageView facilityPhoto, iImageViewer;
         LinearLayout locationlinearlayout;
         View view;
-        ListView mListView;
+        ListView bpListView;
+        List<string> itemList;
         Dialog imageDialog;
         FacilityDetailViewModel facilityDetailViewModel;
-
+        public GPSCoordinate _GPSCoordinates;
+        public List<GPSCoordinate> _BoundryPolygonGPSCoordinates;
+        ArrayAdapter<string> arrayAdapter;
+        int oldPosition;
         public static Java.IO.File _file;
         public static Java.IO.File _dir;
         public static Bitmap bitmap;
@@ -106,6 +112,8 @@ namespace TheDataProject.Droid.Fragments
             locationHolder.Click += Location_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
+            _GPSCoordinates = new GPSCoordinate();
+            _BoundryPolygonGPSCoordinates = new List<GPSCoordinate>();
 
             return view;
         }
@@ -266,13 +274,18 @@ namespace TheDataProject.Droid.Fragments
             bpLocationButton = dialog.FindViewById<FloatingActionButton>(Resource.Id.bpaddlocation_button);
             locationlinearlayout = dialog.FindViewById<LinearLayout>(Resource.Id.location_linearlayout);
             tvfLatitude = dialog.FindViewById<TextView>(Resource.Id.tvf_latitude);
-            tvfLongitude = dialog.FindViewById<TextView>(Resource.Id.tvf_longitude);            
+            tvfLongitude = dialog.FindViewById<TextView>(Resource.Id.tvf_longitude);
+            bpListView = dialog.FindViewById<ListView>(Resource.Id.bplistView1);
             locationlinearlayout.Visibility = ViewStates.Gone;
-            
+            itemList = new List<string>();
+
             locationCancelButton.Click += LocationCancelButton_Click;
             locationDoneButton.Click += LocationDoneButton_Click;
             bpLocationButton.Click += BPLocationButton_Click;
             gpsLocationButton.Click += GPSLocationButton_Click;
+
+            Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); bpLocationButton.BackgroundTintList = csl;
+            Android.Content.Res.ColorStateList cslf = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpsLocationButton.BackgroundTintList = cslf;
 
             if (isEdit)
             {
@@ -312,7 +325,44 @@ namespace TheDataProject.Droid.Fragments
 
         private void BPLocationButton_Click(object sender, EventArgs eventArgs)
         {
+            GPSTracker GPSTracker = new GPSTracker();
 
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            if (!GPSTracker.isLocationGPSEnabled)
+            {
+                ShowSettingsAlert();
+            }
+            GPSCoordinate thisGPSCoordinate = new GPSCoordinate()
+            {
+                Latitude = location.Latitude.ToString(),
+                Longitude = location.Longitude.ToString()
+            };
+            _BoundryPolygonGPSCoordinates.Add(thisGPSCoordinate);
+            itemList.Add("Latitude: " + location.Latitude.ToString() + "      Longitude: " + location.Longitude.ToString());
+
+            if (location == null)
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.SendToast("Unable to get location");
+            }
+
+            arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+            bpListView.Adapter = arrayAdapter;
+            bpListView.ItemLongClick += Adapter_ItemSwipe;
+
+        }
+        void Adapter_ItemSwipe(object sender, ItemLongClickEventArgs e)
+        {
+            if (oldPosition != e.Position)
+            {
+                var item = arrayAdapter.GetItem(e.Position);
+                arrayAdapter.Remove(item);
+                //itemList.RemoveAt(e.Position);
+                _BoundryPolygonGPSCoordinates.RemoveAt(e.Position);
+                oldPosition = e.Position;
+                bpListView.Adapter = arrayAdapter;
+                bpListView.ItemLongClick += Adapter_ItemSwipe;
+            }           
         }
 
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
@@ -320,7 +370,7 @@ namespace TheDataProject.Droid.Fragments
             locationlinearlayout.Visibility = ViewStates.Visible;
             GPSTracker GPSTracker = new GPSTracker();
 
-            Location location = GPSTracker.GPSCoordinate();
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
             if (!GPSTracker.isLocationGPSEnabled)
             {
                 ShowSettingsAlert();
@@ -350,13 +400,10 @@ namespace TheDataProject.Droid.Fragments
                 Longitude = tvfLatitude.Text,
                 Latitude = tvfLongitude.Text,
             };
-            facility.GPSCoordinates = new Models.GPSCoordinate() {
-                Longitude = tvfLatitude.Text,
-                Latitude = tvfLongitude.Text,
-            };
             facility.Location.BoundaryPolygon = new Models.BoundryPolygon()
             {
 
+                GPSCoordinates = new List<GPSCoordinate>() { },
             };
             locationDialog.Cancel();
         }
@@ -414,7 +461,7 @@ namespace TheDataProject.Droid.Fragments
         {
             
             facility.ResposiblePerson = new Models.Person();
-            facility.ResposiblePerson.Name = fullname.Text;
+            facility.ResposiblePerson.FullName = fullname.Text;
             facility.ResposiblePerson.Designation = designation.Text;
             facility.ResposiblePerson.PhoneNumber = mobileNumber.Text;
             facility.ResposiblePerson.EmailAddress = emailaddress.Text;

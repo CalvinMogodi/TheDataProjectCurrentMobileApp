@@ -8,12 +8,6 @@ namespace TheDataProject.Models
 {
     public class BoundryPolygon
     {
-        public int Id { get; set; }
-        public string PolygonType { get; set; }
-        public string Remarks { get; set; }
-        public string Actions { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public int CreatedUserId { get; set; }
         public List<GPSCoordinate> GPSCoordinates { get; set; }
     }
 }

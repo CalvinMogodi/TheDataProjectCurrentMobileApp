@@ -41,6 +41,7 @@ namespace TheDataProject.Droid
         public static Bitmap bitmap;
         public bool isFromCamera = false;
         public bool isEdit = false;
+        int facilityId;
         Building building;
         public static readonly int PickImageId = 1000;
 
@@ -50,6 +51,8 @@ namespace TheDataProject.Droid
             base.OnCreate(savedInstanceState);
             building = new Building();
             ViewModel = new BuildingsViewModel();
+            AppPreferences ap = new AppPreferences(Android.App.Application.Context);
+            facilityId = Convert.ToInt32(ap.GetFacilityId());
 
             var data = Intent.GetStringExtra("data");
 
@@ -111,9 +114,11 @@ namespace TheDataProject.Droid
 
         async void SaveButton_Click(object sender, EventArgs e)
         {
+            StaticData staticData = new StaticData();
             Building item = new Building
             {
                 Name = buildingName.Text,
+                BuildingNumber = staticData.RandomDigits(10),
                 BuildingType = buildingType.SelectedItem.ToString(),
                 BuildingStandard = buildingstandard.SelectedItem.ToString(),
                 Status = utilisationStatus.Text,
@@ -122,17 +127,29 @@ namespace TheDataProject.Droid
                 ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
                 Heritage = heritage.Selected.ToString(),
                 OccupationYear = occupationYear.Text,
-                DisabledAccess = disabledAccesss.SelectedItem.ToString(),
+                //DisabledAccess = disabledAccesss.SelectedItem.ToString(),
+                DisabledAccess = true,
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
                 Photo = building.Photo,
                 CreatedDate = new DateTime(),
                 CreatedUserId = Convert.ToInt32(1),
+                Facility = new Facility
+                {
+                    Id = facilityId
+                }
             };
-            await ViewModel.AddBuildingAsync(item);
-
-            Finish();
+            bool isAdded = await ViewModel.AddBuildingAsync(item);
+            MessageDialog messageDialog = new MessageDialog();
+            if (isAdded)
+            {
+                messageDialog.SendToast("Building is added successful.");
+                Finish();
+            }
+            else {
+                messageDialog.SendMessage("Unable to add new building",null);
+            }            
         }
 
         void AddLocation_Click(object sender, EventArgs e)

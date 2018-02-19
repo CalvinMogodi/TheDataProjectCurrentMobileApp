@@ -135,7 +135,10 @@ namespace TheDataProject
                 buildings = new ObservableCollection<Building>();
                 return await Task.FromResult(buildings);
             }
-
+            if (buildings == null)
+            {
+                buildings = new ObservableCollection<Building>();
+            }
             return await Task.FromResult(buildings);
         }
 

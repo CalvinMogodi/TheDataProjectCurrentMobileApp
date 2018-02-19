@@ -104,7 +104,7 @@ namespace TheDataProject.Droid.Fragments
         {
             var item = ViewModel.Buildings[e.Position];
             var intent = new Intent(Activity, typeof(AddBuildingActivity));
-
+            item.Photo = "";
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
         }

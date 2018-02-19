@@ -97,14 +97,14 @@ namespace TheDataProject
 
         public async Task<bool> UpdateBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:89/api/Building/UpdateFacility";
+            string restUrl = "http://154.0.170.81:89/api/Building/UpdateBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isUpdated = false;
             try
             {
                 var json = JsonConvert.SerializeObject(building);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PutAsync(uri, content);
+                var response = await client.PostAsync(uri, content);
                 if (response.IsSuccessStatusCode)
                 {
                     var _content = await response.Content.ReadAsStringAsync();

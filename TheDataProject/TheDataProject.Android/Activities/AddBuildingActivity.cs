@@ -56,16 +56,7 @@ namespace TheDataProject.Droid
 
             var data = Intent.GetStringExtra("data");
 
-            if (data != null)
-            {
-                building = Newtonsoft.Json.JsonConvert.DeserializeObject<Building>(data);
-                isEdit = true;
-                SupportActionBar.Title = "Edit Building";
-            }
-            else
-            {
-                SupportActionBar.Title = "Add New Building";
-            }// Create your application here
+            // Create your application here
 
             saveButton = FindViewById<FloatingActionButton>(Resource.Id.save_button);
             occupationYear = FindViewById<EditText>(Resource.Id.etb_occupationyear);
@@ -93,6 +84,34 @@ namespace TheDataProject.Droid
             occupationYear.Touch += (sender, e) => {
                 show();
             };
+
+            if (data != null)
+            {
+                building = Newtonsoft.Json.JsonConvert.DeserializeObject<Building>(data);
+                isEdit = true;
+                SupportActionBar.Title = "Edit Building";
+                occupationYear.Text = building.OccupationYear;
+                locationLinearlayout.Visibility = ViewStates.Visible;
+                //tvbLatitude.Text = building.GPSCoordinates.Latitude;
+                //tvbLongitude.Text = building.GPSCoordinates.Longitude;
+                //buildingPhoto = building.Photo
+                //_GPSCoordinates = building.GPSCoordinates;
+                buildingName.Text = building.BuildingName;
+                //buildingType.Text = building.BuildingName;
+                //buildingstandard.SelectedItemId = building.BuildingName;
+                utilisationStatus.Text = building.Status;
+                nooOfFoors.Text = Convert.ToString(building.NumberOfFloors);
+                totalFootprintAream2.Text = Convert.ToString(building.FootPrintArea);
+                totalImprovedaAeam2.Text = Convert.ToString(building.ImprovedArea);
+                heritage.Checked = building.Heritage;
+                //disabledAccesss.SelectedItem = building.DisabledAccess;
+                disabledComment.Text = building.DisabledComment;
+                constructionDescription.Text = building.ConstructionDescription;
+            }
+            else
+            {
+                SupportActionBar.Title = "Add New Building";
+            }
             saveButton.Click += SaveButton_Click;
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
@@ -127,6 +146,7 @@ namespace TheDataProject.Droid
 
             Building item = new Building
             {
+                Id = building.Id,
                 BuildingName = buildingName.Text,
                 BuildingNumber = staticData.RandomDigits(10),
                 BuildingType = buildingType.SelectedItem.ToString(),
@@ -149,15 +169,29 @@ namespace TheDataProject.Droid
                     Id = facilityId
                 }
             };
-            bool isAdded = await ViewModel.AddBuildingAsync(item);
+            bool isAdded = false;
+            if (!isEdit)
+                isAdded = await ViewModel.AddBuildingAsync(item);
+            else
+            {
+                isAdded = await ViewModel.UpdateBuildingAsync(item);
+            }
+                
+
             MessageDialog messageDialog = new MessageDialog();
             if (isAdded)
             {
-                messageDialog.SendToast("Building is added successful.");
+                if (!isEdit)
+                    messageDialog.SendToast("Building is added successful.");
+                else
+                    messageDialog.SendToast("Building is updated successful.");
                 Finish();
             }
             else {
-                messageDialog.SendMessage("Unable to add new building",null);
+                if (!isEdit)
+                    messageDialog.SendMessage("Unable to add new building.", null);
+                else
+                    messageDialog.SendMessage("Unable to update building.", null);
             }            
         }
 

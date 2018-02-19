@@ -9,6 +9,7 @@ using Android.Content;
 using TheDataProject.Droid.Helpers;
 using Android.Graphics.Drawables;
 using Android.Graphics;
+using System.Text;
 
 namespace TheDataProject.Droid
 {
@@ -55,6 +56,8 @@ namespace TheDataProject.Droid
             return view;
         }
 
+        
+
         public async override void OnStart()
         {
             base.OnStart();
@@ -84,6 +87,8 @@ namespace TheDataProject.Droid
             Context mContext = Android.App.Application.Context;
             AppPreferences ap = new AppPreferences(mContext);
             ap.SaveFacilityId(item.Id.ToString());
+            item.Photo = Encoding.ASCII.GetBytes(item.IDPicture);
+            item.IDPicture = "";
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
         }
@@ -137,19 +142,76 @@ namespace TheDataProject.Droid
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var item = viewModel.Facilities[position];
+            Context mContext = Android.App.Application.Context;
+            AppPreferences appPreferences = new AppPreferences(mContext);
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
             myHolder.TextView.Text = item.Name;
             myHolder.DetailTextView.Text = item.ClientCode;
-            Bitmap bitmap = ((BitmapDrawable)myHolder.ImageView.Drawable).Bitmap;
+            myHolder.Button.Click += (sender, e) => { Submit_Click(item); };
+            Bitmap bitmap = appPreferences.StringToBitMap(item.IDPicture);
             if (bitmap != null)
             {
                 myHolder.ImageView.SetImageBitmap(bitmap);
             }
         }
 
+        async void Submit_Click(Facility facility)
+        {
+            if (!ValidateForm(facility))
+                return;
+
+            facility.Status = "Submitted";
+            bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
+
+            if (isUpdated)
+            {
+
+            }
+        }
         public override int ItemCount => viewModel.Facilities.Count;
+
+        private bool ValidateForm(Facility facility)
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+
+            bool isValid = true;
+            bool deedsInfoIsRequired = false;
+            bool locationfoIsRequired = false;
+            bool pictureIsRequired = false;
+
+            if (facility.DeedsInfo == null)
+            {
+                deedsInfoIsRequired = true;
+                isValid = false;
+            }
+            if (facility.Location == null)
+            {
+                locationfoIsRequired = true;
+                 isValid = false;
+            }
+            
+            if (!validation.IsRequired(facility.IDPicture))
+            {
+                pictureIsRequired = true;
+                isValid = false;
+            }
+
+            if (deedsInfoIsRequired || locationfoIsRequired || pictureIsRequired)
+            {
+                if (deedsInfoIsRequired && locationfoIsRequired && pictureIsRequired)
+                    messageDialog.SendToast("Please add an image, location information and deeds information");
+                else if (deedsInfoIsRequired)
+                    messageDialog.SendToast("Please capture deeds information");
+                else if(locationfoIsRequired)
+                    messageDialog.SendToast("Please capture location information");
+                else if(pictureIsRequired)
+                    messageDialog.SendToast("Please add an image");
+            }
+            return isValid;
+        }
     }
 
     public class MyViewHolder : RecyclerView.ViewHolder
@@ -157,6 +219,7 @@ namespace TheDataProject.Droid
         public TextView TextView { get; set; }
         public TextView DetailTextView { get; set; }
         public ImageView ImageView { get; set; }
+        public Button Button { get; set; }
 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
@@ -164,6 +227,7 @@ namespace TheDataProject.Droid
             TextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text1);
             DetailTextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text2);
             ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
+            Button = itemView.FindViewById<Button>(Resource.Id.submitfacilitybtn);
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

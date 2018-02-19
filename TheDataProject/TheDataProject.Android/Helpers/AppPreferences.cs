@@ -10,6 +10,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Preferences;
+using Android.Graphics;
+using Android.Util;
 
 namespace TheDataProject.Droid.Helpers
 {
@@ -47,5 +49,17 @@ namespace TheDataProject.Droid.Helpers
             return nameSharedPrefs.GetString(PREFERENCE_ACCESS_KEY, "");
         }
 
+        public Bitmap StringToBitMap(String encodedString)
+        {
+            try
+            {
+                byte[] encodeByte = Base64.Decode(encodedString, Base64.Default);
+                return BitmapFactory.DecodeByteArray(encodeByte, 0, encodeByte.Length);               
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

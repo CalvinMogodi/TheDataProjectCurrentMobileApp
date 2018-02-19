@@ -62,6 +62,9 @@ namespace TheDataProject
                     var content = await response.Content.ReadAsStringAsync();
                     facilities = JsonConvert.DeserializeObject<ObservableCollection<Facility>>(content);
                 }
+                else if (response == null) {
+                    facilities = new ObservableCollection<Facility>();
+                }
             } catch (Exception ex)
             {
                 facilities = new ObservableCollection<Facility>();
@@ -72,7 +75,7 @@ namespace TheDataProject
 
         public async Task<bool> AddBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:89/api/Building/AddBulding";
+            string restUrl = "http://154.0.170.81:89/api/Building/AddBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isAdded = false;
             try
@@ -82,8 +85,7 @@ namespace TheDataProject
                 var response = await client.PostAsync(uri, content);
                 if (response.IsSuccessStatusCode)
                 {
-                    var _content = await response.Content.ReadAsStringAsync();
-                    isAdded = JsonConvert.DeserializeObject<bool>(_content);
+                    isAdded = true;
                 }
             }
             catch (Exception ex)

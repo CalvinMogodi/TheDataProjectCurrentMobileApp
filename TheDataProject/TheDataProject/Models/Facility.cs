@@ -23,5 +23,6 @@ namespace TheDataProject
         public int CreatedUserId { get; set; }
         public DateTime ModifiedDate { get; set; }
         public int? ModifiedUserId { get; set; }
+        public byte[] Photo { get; set; }
     }
 }

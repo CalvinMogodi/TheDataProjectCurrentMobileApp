@@ -242,13 +242,16 @@ namespace TheDataProject.Droid.Fragments
             facility.SettlementType = settlementtype.SelectedItem.ToString();
             facility.Zoning = zoning.SelectedItem.ToString();
             bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
+            MessageDialog messageDialog = new MessageDialog();
             if (isUpdated)
             {
+               
                 editButton.Visibility = ViewStates.Visible;
                 saveButton.Visibility = ViewStates.Gone;
+                messageDialog.SendToast("Facility is updated successful.");
             }
             else {
-
+                messageDialog.SendToast("Facility is not updated successful.");
             }
             this.isEdit = false;
         }
@@ -258,6 +261,69 @@ namespace TheDataProject.Droid.Fragments
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(Application.Context);
             Intent intent = new Intent(Android.Provider.Settings.ActionLocationSourceSettings);
             StartActivity(intent);
+        }
+        
+        private bool ValidateLocation()
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
+            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
+
+            bool isValid = true;
+
+            if (!validation.IsRequired(streetAddress.Text))
+            {
+                streetAddress.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(suburb.Text))
+            {
+                suburb.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (facility.Location != null)
+            {
+                if (facility.Location.Coordinates != null)
+                {
+                    messageDialog.SendToast("Please add an image of the building");
+                    isValid = false;
+                }
+                   
+            }
+            return isValid;
+        }
+
+        private bool ValidateDeedInfo()
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
+            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
+
+            bool isValid = true;
+
+            if (!validation.IsRequired(erfNumber.Text))
+            {
+                erfNumber.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(titleDeedNumber.Text))
+            {
+                titleDeedNumber.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(extentm2.Text))
+            {
+                extentm2.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(ownerInformation.Text))
+            {
+                ownerInformation.SetError("This field is required", icon);
+                isValid = false;
+            }
+            return isValid;
         }
 
         #region Location 
@@ -391,6 +457,9 @@ namespace TheDataProject.Droid.Fragments
 
         private void LocationDoneButton_Click(object sender, EventArgs e)
         {
+            if (!ValidateLocation())
+                return;
+
             facility.Location = new Models.Location();
             facility.Location.LocalMunicipality = localmunicipality.SelectedItem.ToString();
             facility.Location.StreetAddress = streetAddress.Text;
@@ -402,7 +471,6 @@ namespace TheDataProject.Droid.Fragments
             };
             facility.Location.BoundaryPolygon = new Models.BoundryPolygon()
             {
-
                 GPSCoordinates = new List<GPSCoordinate>() { },
             };
             locationDialog.Cancel();
@@ -520,6 +588,8 @@ namespace TheDataProject.Droid.Fragments
 
         private void DeedDoneButton_Click(object sender, EventArgs e)
         {
+            if (!ValidateDeedInfo())
+                return;
             facility.DeedsInfo = new Models.DeedsInfo();
             facility.DeedsInfo.ErFNumber = erfNumber.Text;
             facility.DeedsInfo.TitleDeedNumber = titleDeedNumber.Text;

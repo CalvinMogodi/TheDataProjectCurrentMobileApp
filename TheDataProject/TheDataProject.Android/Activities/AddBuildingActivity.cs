@@ -88,9 +88,9 @@ namespace TheDataProject.Droid
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
 
+            Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
             locationLinearlayout.Visibility = ViewStates.Gone;
-            gpscAddLocationButton.SetBackgroundColor(Android.Graphics.Color.Green);
-            occupationYear.Click += (sender, e) => {
+            occupationYear.Touch += (sender, e) => {
                 show();
             };
             saveButton.Click += SaveButton_Click;
@@ -114,7 +114,17 @@ namespace TheDataProject.Droid
 
         async void SaveButton_Click(object sender, EventArgs e)
         {
+            if (!ValidateForm())
+                return;
             StaticData staticData = new StaticData();
+
+            int numberOfFloors = 0;
+            bool isHeritage = false;
+            if (!String.IsNullOrEmpty(nooOfFoors.Text))
+                numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
+            if (heritage.Checked)
+                isHeritage = true;
+
             Building item = new Building
             {
                 BuildingName = buildingName.Text,
@@ -122,12 +132,12 @@ namespace TheDataProject.Droid
                 BuildingType = buildingType.SelectedItem.ToString(),
                 BuildingStandard = buildingstandard.SelectedItem.ToString(),
                 Status = utilisationStatus.Text,
-                NumberOfFloors = Convert.ToInt32(nooOfFoors.Text),
+                NumberOfFloors = numberOfFloors,
                 FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
                 ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
-                Heritage = heritage.Selected,
+                Heritage = isHeritage,
                 OccupationYear = occupationYear.Text,
-                DisabledAccess = disabledAccesss.Selected,
+                DisabledAccess = disabledAccesss.Selected.ToString(),
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
@@ -169,6 +179,7 @@ namespace TheDataProject.Droid
                 Longitude = location.Longitude.ToString()
             };
 
+            building.GPSCoordinates = _GPSCoordinates;
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
@@ -321,6 +332,67 @@ namespace TheDataProject.Droid
             isFromCamera = false;
         }
 
+        private bool ValidateForm()
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
+            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
+
+            bool isValid = true;
+            bool photoIsRequired = false;
+            bool GPSCoordinatesIsRequired = false;
+
+
+            if (!validation.IsRequired(building.Photo))
+            {
+                photoIsRequired = true;
+                isValid = false;
+            }
+            if (!validation.IsRequired(buildingName.Text))
+            {
+                buildingName.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(utilisationStatus.Text))
+            {
+                utilisationStatus.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(constructionDescription.Text))
+            {
+                constructionDescription.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(totalFootprintAream2.Text))
+            {
+                totalFootprintAream2.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(totalImprovedaAeam2.Text))
+            {
+                totalImprovedaAeam2.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (building.GPSCoordinates == null)
+            {
+                GPSCoordinatesIsRequired = true;
+                isValid = false;
+            }
+
+            if (photoIsRequired || GPSCoordinatesIsRequired)
+            {
+                if (photoIsRequired && GPSCoordinatesIsRequired)
+                    messageDialog.SendToast("Please add an image of the building and GPS coordinates");
+                else if (photoIsRequired || !GPSCoordinatesIsRequired)
+                    messageDialog.SendToast("Please add an image of the building");
+                else if(!photoIsRequired || GPSCoordinatesIsRequired)
+                    messageDialog.SendToast("Please add GPS coordinates");
+               
+            }
+
+            return isValid;
+        }
         #endregion #endregion 
     }
 }

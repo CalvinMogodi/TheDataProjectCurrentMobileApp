@@ -19,7 +19,7 @@ namespace TheDataProject.Models
         public double ImprovedArea { get; set; }
         public bool Heritage { get; set; }
         public string OccupationYear { get; set; }
-        public bool DisabledAccess { get; set; }
+        public string DisabledAccess { get; set; }
         public string DisabledComment { get; set; }
         public string ConstructionDescription { get; set; }
         public GPSCoordinate GPSCoordinates { get; set; }

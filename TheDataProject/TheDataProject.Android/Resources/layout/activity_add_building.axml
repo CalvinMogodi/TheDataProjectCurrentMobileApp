@@ -60,7 +60,7 @@
                         android:id="@+id/etb_name" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-          <TextView
+            <TextView
                 android:text="Building Type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:spinnerMode="dialog"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:gravity="bottom" />
-          <TextView
+            <TextView
                 android:text="Building Standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/etb_occupationyear" />
             </android.support.design.widget.TextInputLayout>
-          <TextView
+            <TextView
                 android:text="Disabled Accesss"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

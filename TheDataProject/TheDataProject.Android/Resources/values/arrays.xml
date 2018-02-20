@@ -60,6 +60,7 @@
   </string-array>
 
   <string-array name="zoningtypes">
+    <item> </item>
     <item>Agriculture</item>
     <item>business 1</item>
     <item>Business 2</item>

@@ -57,7 +57,6 @@ namespace TheDataProject.Droid.Fragments
         public static Bitmap bitmap;
         public bool isFromCamera = false;
         public bool isEdit = false;
-
         public static FacilitiesViewModel ViewModel { get; set; }
         public Facility facility;
         public static FacilityInformationFragment NewInstance(Bundle mybundle) => 
@@ -358,6 +357,35 @@ namespace TheDataProject.Droid.Fragments
             locationlinearlayout.Visibility = ViewStates.Gone;
             itemList = new List<string>();
 
+            if (facility.Location != null)
+            {
+                streetAddress.Text = facility.Location.StreetAddress;
+                suburb.Text = facility.Location.StreetAddress;
+                region.Text = facility.Location.StreetAddress;
+                province.SetSelection(GetIndex(province, facility.Location.Province));
+                localmunicipality.SetSelection(GetIndex(localmunicipality, facility.Location.LocalMunicipality));
+
+                if (facility.Location.GPSCoordinates != null)
+                {
+                    locationlinearlayout.Visibility = ViewStates.Visible;
+                    tvfLatitude.Text = facility.Location.GPSCoordinates.Latitude;
+                    tvfLongitude.Text = facility.Location.GPSCoordinates.Longitude;
+                }
+
+                if (facility.Location.BoundaryPolygon != null)
+                {
+                    foreach (var BoundaryPolygon in facility.Location.BoundaryPolygon.GPSCoordinates)
+                    {
+                        _BoundryPolygonGPSCoordinates.Add(BoundaryPolygon);
+                        itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + "      Longitude: " + BoundaryPolygon.Longitude.ToString());
+                    }                   
+                    arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+                    bpListView.Adapter = arrayAdapter;
+                    bpListView.ItemLongClick += Adapter_ItemSwipe;
+                }
+            }
+             
+
             locationCancelButton.Click += LocationCancelButton_Click;
             locationDoneButton.Click += LocationDoneButton_Click;
             bpLocationButton.Click += BPLocationButton_Click;
@@ -513,6 +541,14 @@ namespace TheDataProject.Droid.Fragments
             responsiblePersonCancelButton = dialog.FindViewById<Button>(Resource.Id.dfirp_cancelbutton);
             responsiblePersonDoneButton = dialog.FindViewById<Button>(Resource.Id.dfirp_donebutton);
 
+            if (facility.ResposiblePerson != null)
+            {
+                fullname.Text = facility.ResposiblePerson.FullName;
+                designation.Text = facility.ResposiblePerson.Designation;
+                mobileNumber.Text = facility.ResposiblePerson.PhoneNumber;
+                emailaddress.Text = facility.ResposiblePerson.EmailAddress;
+            }
+
             responsiblePersonCancelButton.Click += ResponsiblePersonCancelButton_Click;
             responsiblePersonDoneButton.Click += ResponsiblePersonDoneButton_Click;
 
@@ -573,6 +609,14 @@ namespace TheDataProject.Droid.Fragments
             deedCancelButton = dialog.FindViewById<Button>(Resource.Id.dfid_cancelbutton);
             deedDoneButton = dialog.FindViewById<Button>(Resource.Id.dfid_donebutton);
 
+            if (facility.DeedsInfo != null)
+            {
+                erfNumber.Text = facility.DeedsInfo.ErFNumber;
+                titleDeedNumber.Text = facility.DeedsInfo.TitleDeedNumber;
+                extentm2.Text = facility.DeedsInfo.Extent;
+                ownerInformation.Text = facility.DeedsInfo.OwnerInfomation;
+
+            }
             deedCancelButton.Click += DeedCancelButton_Click;
             deedDoneButton.Click += DeedDoneButton_Click;
 

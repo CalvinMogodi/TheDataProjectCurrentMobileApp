@@ -44,6 +44,7 @@ namespace TheDataProject.Droid
         public bool isFromCamera = false;
         public bool isEdit = false;
         int facilityId;
+        int userId;
         Building building;
         List<string> fileNames = new List<string>();
         public static readonly int PickImageId = 1000;
@@ -56,6 +57,7 @@ namespace TheDataProject.Droid
             ViewModel = new BuildingsViewModel();
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);
             facilityId = Convert.ToInt32(ap.GetFacilityId());
+            userId = Convert.ToInt32(ap.GetUserId());
 
             var data = Intent.GetStringExtra("data");
             // Create your application here
@@ -155,12 +157,8 @@ namespace TheDataProject.Droid
             StaticData staticData = new StaticData();
 
             int numberOfFloors = 0;
-            bool isHeritage = false;
             if (!String.IsNullOrEmpty(nooOfFoors.Text))
                 numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
-            if (heritage.Checked)
-                isHeritage = true;
-
             string photoNames = "";
             foreach (var filename in fileNames)
             {
@@ -172,14 +170,14 @@ namespace TheDataProject.Droid
             {
                 Id = building.Id,
                 BuildingName = buildingName.Text,
-                BuildingNumber = staticData.RandomDigits(10),
+                BuildingNumber = building.Id == 0 ? facilityId + staticData.RandomDigits(10) : building.BuildingNumber,
                 BuildingType = buildingType.SelectedItem.ToString(),
                 BuildingStandard = buildingstandard.SelectedItem.ToString(),
                 Status = utilisationStatus.Text,
                 NumberOfFloors = numberOfFloors,
                 FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
                 ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
-                Heritage = isHeritage,
+                Heritage = heritage.Checked == true ? true :false,
                 OccupationYear = occupationYear.Text,
                 DisabledAccess = disabledAccesss.Selected.ToString(),
                 DisabledComment = disabledComment.Text,
@@ -187,7 +185,8 @@ namespace TheDataProject.Droid
                 GPSCoordinates = _GPSCoordinates,
                 Photo = photoNames,
                 CreatedDate = new DateTime(),
-                CreatedUserId = Convert.ToInt32(1),
+                CreatedUserId = userId,
+                ModifiedUserId = isEdit == true ? userId : 0,
                 Facility = new Facility
                 {
                     Id = facilityId

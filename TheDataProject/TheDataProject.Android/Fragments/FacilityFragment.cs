@@ -58,16 +58,6 @@ namespace TheDataProject.Droid
             return view;
         }
 
-        //public async override void OnResume()
-        //{
-        //    base.OnResume();
-        //    await ViewModel.ExecuteFacilitiesCommand(userId);
-        //    recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
-        //    refresher.Refreshing = false;
-        //    refresher.Refresh += Refresher_Refresh;
-        //    adapter.ItemClick += Adapter_ItemClick;
-        //}
-
         public async override void OnStart()
         {
             base.OnStart();
@@ -101,7 +91,6 @@ namespace TheDataProject.Droid
             Context mContext = Android.App.Application.Context;
             AppPreferences ap = new AppPreferences(mContext);
             ap.SaveFacilityId(item.Id.ToString());
-            //item.Photo = Encoding.ASCII.GetBytes(item.IDPicture);
             item.Buildings = new List<Building>();
             item.IDPicture = "";
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));

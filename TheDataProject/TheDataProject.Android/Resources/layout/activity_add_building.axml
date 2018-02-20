@@ -105,7 +105,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:inputType="numberDecimal"
-                    android:hint="Utilisation Status"
+                    android:hint="Utilisation Status %"
                     android:layout_height="wrap_content"
                     android:id="@+id/etb_utilisationstatus" />
             </android.support.design.widget.TextInputLayout>

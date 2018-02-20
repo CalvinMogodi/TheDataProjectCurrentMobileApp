@@ -77,6 +77,11 @@ namespace TheDataProject.Droid
             return true;
         }
 
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            Recreate();
+        }
         protected override void OnStart()
         {
             base.OnStart();

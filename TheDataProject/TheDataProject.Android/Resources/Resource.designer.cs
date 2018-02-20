@@ -2561,8 +2561,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f0700d4
 			public const int sf_settlementtype = 2131165396;
 			
-			// aapt resource value: 0x7f0700d6
-			public const int sf_zoning = 2131165398;
+			// aapt resource value: 0x7f0700d5
+			public const int sf_zoning = 2131165397;
 			
 			// aapt resource value: 0x7f070053
 			public const int shortcut = 2131165267;
@@ -2690,8 +2690,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f0700ae
 			public const int tvf_latitude = 2131165358;
 			
-			// aapt resource value: 0x7f0700d5
-			public const int tvf_locationholder = 2131165397;
+			// aapt resource value: 0x7f0700d6
+			public const int tvf_locationholder = 2131165398;
 			
 			// aapt resource value: 0x7f0700af
 			public const int tvf_longitude = 2131165359;

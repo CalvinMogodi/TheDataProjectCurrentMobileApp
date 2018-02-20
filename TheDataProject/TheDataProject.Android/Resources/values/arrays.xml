@@ -49,8 +49,9 @@
   </string-array>
 
   <string-array name="localmunicipalities">
-    <item>1</item>
-    <item>2</item>
+    <item>City Of Ekurhuleni</item>
+    <item>City Of Johannesburg</item>
+    <item>City Of Tshwane</item>    
   </string-array>
 
   <string-array name="yesno">

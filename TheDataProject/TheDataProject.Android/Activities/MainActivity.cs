@@ -62,6 +62,12 @@ namespace TheDataProject.Droid
             SupportActionBar.SetHomeButtonEnabled(false);
         }
 
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            Recreate();
+        }
+
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.top_menus, menu);

@@ -13,7 +13,6 @@ namespace TheDataProject
         public string SettlementType { get; set; }
         public string Zoning { get; set; }      
         public string IDPicture { get; set; }
-        public BoundryPolygon Polygon { get; set; }
         public DeedsInfo DeedsInfo { get; set; }
         public Person ResposiblePerson { get; set; }
         public Location Location { get; set; }

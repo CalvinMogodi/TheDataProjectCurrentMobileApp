@@ -15,6 +15,8 @@ using Android.Graphics;
 using System.IO;
 using Android.Util;
 using Android.Graphics.Drawables;
+using System.Collections.Generic;
+using Java.Util;
 
 namespace TheDataProject.Droid
 {
@@ -43,6 +45,7 @@ namespace TheDataProject.Droid
         public bool isEdit = false;
         int facilityId;
         Building building;
+        List<string> fileNames = new List<string>();
         public static readonly int PickImageId = 1000;
 
         protected override int LayoutResource => Resource.Layout.activity_add_building;
@@ -55,7 +58,6 @@ namespace TheDataProject.Droid
             facilityId = Convert.ToInt32(ap.GetFacilityId());
 
             var data = Intent.GetStringExtra("data");
-
             // Create your application here
 
             saveButton = FindViewById<FloatingActionButton>(Resource.Id.save_button);
@@ -91,20 +93,22 @@ namespace TheDataProject.Droid
                 isEdit = true;
                 SupportActionBar.Title = "Edit Building";
                 occupationYear.Text = building.OccupationYear;
-                locationLinearlayout.Visibility = ViewStates.Visible;
-                //tvbLatitude.Text = building.GPSCoordinates.Latitude;
-                //tvbLongitude.Text = building.GPSCoordinates.Longitude;
-                //buildingPhoto = building.Photo
-                //_GPSCoordinates = building.GPSCoordinates;
+                if (building.GPSCoordinates != null)
+                {
+                    tvbLatitude.Text = "Latitude: " + building.GPSCoordinates.Latitude;
+                    tvbLongitude.Text = "Longitude: " + building.GPSCoordinates.Longitude;
+                    _GPSCoordinates = building.GPSCoordinates;
+                    locationLinearlayout.Visibility = ViewStates.Visible;
+                }                
                 buildingName.Text = building.BuildingName;
-                //buildingType.Text = building.BuildingName;
-                //buildingstandard.SelectedItemId = building.BuildingName;
+                buildingType.SetSelection(GetIndex(buildingType, building.BuildingType));
+                buildingstandard.SetSelection(GetIndex(buildingstandard, building.BuildingName));
+                disabledAccesss.SetSelection(GetIndex(buildingstandard, building.DisabledAccess));
                 utilisationStatus.Text = building.Status;
                 nooOfFoors.Text = Convert.ToString(building.NumberOfFloors);
                 totalFootprintAream2.Text = Convert.ToString(building.FootPrintArea);
                 totalImprovedaAeam2.Text = Convert.ToString(building.ImprovedArea);
                 heritage.Checked = building.Heritage;
-                //disabledAccesss.SelectedItem = building.DisabledAccess;
                 disabledComment.Text = building.DisabledComment;
                 constructionDescription.Text = building.ConstructionDescription;
             }
@@ -117,6 +121,19 @@ namespace TheDataProject.Droid
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
             buildingPhoto.Click += (sender, e) => { ShowImage_Click(); };
+        }
+
+        private int GetIndex(Spinner spinner, String myString)
+        {
+            int index = 0;
+            for (int i = 0; i < spinner.Count; i++)
+            {
+                if (spinner.GetItemAtPosition(i).Equals(myString))
+                {
+                    index = i;
+                }
+            }
+            return index;
         }
 
         void OnOccupationYearSet(object sender, DatePickerDialog.DateSetEventArgs e)
@@ -144,6 +161,13 @@ namespace TheDataProject.Droid
             if (heritage.Checked)
                 isHeritage = true;
 
+            string photoNames = "";
+            foreach (var filename in fileNames)
+            {
+                photoNames = String.Format("{0},{1}",photoNames,fileNames);
+            }
+            
+            SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
             Building item = new Building
             {
                 Id = building.Id,
@@ -161,7 +185,7 @@ namespace TheDataProject.Droid
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
-                Photo = building.Photo,
+                Photo = photoNames,
                 CreatedDate = new DateTime(),
                 CreatedUserId = Convert.ToInt32(1),
                 Facility = new Facility
@@ -312,11 +336,29 @@ namespace TheDataProject.Droid
         {
             _dir = new Java.IO.File(
                 Android.OS.Environment.GetExternalStoragePublicDirectory(
-                    Android.OS.Environment.DirectoryPictures), "CameraAppDemo");
+                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
             if (!_dir.Exists())
             {
                 _dir.Mkdirs();
             }
+        }
+
+        public void SaveImage(Bitmap bitmap)
+        {
+            try
+            {
+                var fileName = String.Format("building_{0}", Guid.NewGuid());
+                fileNames.Add(fileName);
+                using (var os = new FileStream(_dir+"/"+fileName, FileMode.CreateNew))
+                {
+                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            
         }
 
         public void ShowImage_Click()

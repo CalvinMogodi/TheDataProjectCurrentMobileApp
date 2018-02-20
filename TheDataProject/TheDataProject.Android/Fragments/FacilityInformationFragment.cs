@@ -284,7 +284,7 @@ namespace TheDataProject.Droid.Fragments
             }
             if (facility.Location != null)
             {
-                if (facility.Location.Coordinates != null)
+                if (facility.Location.GPSCoordinates != null)
                 {
                     messageDialog.SendToast("Please add an image of the building");
                     isValid = false;
@@ -465,13 +465,13 @@ namespace TheDataProject.Droid.Fragments
             facility.Location.StreetAddress = streetAddress.Text;
             facility.Location.Suburb = suburb.Text;
             facility.Location.Region = region.Text;
-            facility.Location.Coordinates = new Models.GPSCoordinate() {
+            facility.Location.GPSCoordinates = new Models.GPSCoordinate() {
                 Longitude = tvfLatitude.Text,
                 Latitude = tvfLongitude.Text,
             };
             facility.Location.BoundaryPolygon = new Models.BoundryPolygon()
             {
-                GPSCoordinates = new List<GPSCoordinate>() { },
+                GPSCoordinates = _BoundryPolygonGPSCoordinates
             };
             locationDialog.Cancel();
         }

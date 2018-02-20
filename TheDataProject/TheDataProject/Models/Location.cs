@@ -14,7 +14,7 @@ namespace TheDataProject.Models
         public string Suburb { get; set; }
         public string Province { get; set; }
         public string Region { get; set; }
-        public GPSCoordinate Coordinates { get; set; }
+        public GPSCoordinate GPSCoordinates { get; set; }
         public BoundryPolygon BoundaryPolygon { get; set; }
     }
 }

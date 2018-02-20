@@ -81,11 +81,7 @@ namespace TheDataProject.Droid.Fragments
                 messageDialog.ShowLoading();
                 await ViewModel.ExecuteBuildingsCommand(facilityId);
                 recyclerView.HasFixedSize = true;
-                recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
-                if (ViewModel.Buildings.Count == 0)
-                {
-                    messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
-                }
+                recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));                
                 messageDialog.HideLoading();
             }
 

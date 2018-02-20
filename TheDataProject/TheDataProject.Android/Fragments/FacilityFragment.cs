@@ -75,7 +75,11 @@ namespace TheDataProject.Droid
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.ShowLoading();                
                 await ViewModel.ExecuteFacilitiesCommand(userId);
-                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));              
+                if (ViewModel.Facilities.Count == 0)
+                {
+                    messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
+                }
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));                
                 messageDialog.HideLoading();
             }
 
@@ -158,8 +162,27 @@ namespace TheDataProject.Droid
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
-            myHolder.TextView.Text = item.Name;
-            myHolder.DetailTextView.Text = item.ClientCode;
+            myHolder.FacilityName.Text = item.Name;
+            myHolder.ClientCode.Text = item.ClientCode;
+            
+            if (item.Location != null)
+            {
+                myHolder.StreetAddress.Text = String.Format("Address: {0}",item.Location.StreetAddress);
+                myHolder.Suburb.Text = String.Format("               {0}",item.Location.Suburb);
+                if (item.Location.GPSCoordinates != null)
+                {
+                    myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+                }
+            }
+
+            myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", 0,0);
+            if (item.Location != null)
+            {
+                if (item.Location.GPSCoordinates != null) {
+                    myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+                }
+            }
+            
             myHolder.Button.Click += (sender, e) => { Submit_Click(item); };
             Bitmap bitmap = appPreferences.StringToBitMap(item.IDPicture);
             if (bitmap != null)
@@ -227,16 +250,22 @@ namespace TheDataProject.Droid
 
     public class MyViewHolder : RecyclerView.ViewHolder
     {
-        public TextView TextView { get; set; }
-        public TextView DetailTextView { get; set; }
+        public TextView ClientCode { get; set; }
+        public TextView FacilityName { get; set; }
+        public TextView StreetAddress { get; set; }
+        public TextView Suburb { get; set; }
+        public TextView Location { get; set; }
         public ImageView ImageView { get; set; }
         public Button Button { get; set; }
 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
-            TextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text1);
-            DetailTextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text2);
+            FacilityName = itemView.FindViewById<TextView>(Resource.Id.f_text1);
+            ClientCode = itemView.FindViewById<TextView>(Resource.Id.f_text2);
+            StreetAddress = itemView.FindViewById<TextView>(Resource.Id.f_text3);
+            Suburb = itemView.FindViewById<TextView>(Resource.Id.f_text5);
+            Location = itemView.FindViewById<TextView>(Resource.Id.f_text4);
             ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
             Button = itemView.FindViewById<Button>(Resource.Id.submitfacilitybtn);
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });

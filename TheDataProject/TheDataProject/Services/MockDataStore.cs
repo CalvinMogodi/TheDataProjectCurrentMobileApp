@@ -107,8 +107,7 @@ namespace TheDataProject
                 var response = await client.PostAsync(uri, content);
                 if (response.IsSuccessStatusCode)
                 {
-                    var _content = await response.Content.ReadAsStringAsync();
-                    isUpdated = JsonConvert.DeserializeObject<bool>(_content);
+                    isUpdated = true;
                 }
             }
             catch (Exception ex)

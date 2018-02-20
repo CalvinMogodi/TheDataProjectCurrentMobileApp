@@ -99,8 +99,8 @@ namespace TheDataProject.Droid.Fragments
                 facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
                 clientCode.Text = facility.ClientCode;
                 facilityName.Text = facility.Name;
-                //settlementtype.SelectedItem = facility.SettlementType;
-                //zoning.SelectedItem = facility.Zoning;
+                settlementtype.SetSelection(GetIndex(settlementtype, facility.SettlementType));
+                zoning.SetSelection(GetIndex(zoning, facility.Zoning));
             }
             settlementtype.Enabled = false;
             zoning.Enabled = false;
@@ -116,6 +116,19 @@ namespace TheDataProject.Droid.Fragments
             _BoundryPolygonGPSCoordinates = new List<GPSCoordinate>();
 
             return view;
+        }
+
+        private int GetIndex(Spinner spinner, String myString)
+        {
+            int index = 0;
+            for (int i = 0; i < spinner.Count; i++)
+            {
+                if (spinner.GetItemAtPosition(i).Equals(myString))
+                {
+                    index = i;
+                }
+            }
+            return index;
         }
 
         private void CreateDirectoryForPictures()

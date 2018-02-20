@@ -178,6 +178,11 @@ namespace TheDataProject.Droid
             {
                 myHolder.ImageView.SetImageBitmap(bitmap);
             }
+
+            //AppPreferences ap = new AppPreferences(Android.App.Application.Context);
+            //Bitmap bit = ap.SetImageBitmap(ap.CreateDirectoryForPictures() + "/" + item.IDPicture);
+            //if (bit != null)
+            //    myHolder.ImageView.SetImageBitmap(bit);
         }
 
         async void Submit_Click(Facility facility)

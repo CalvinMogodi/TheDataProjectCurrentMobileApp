@@ -61,5 +61,35 @@ namespace TheDataProject.Droid.Helpers
                 return null;
             }
         }
+
+        public Bitmap SetImageBitmap(string filePath)
+        {
+            try
+            {
+                if (System.IO.File.Exists(filePath))
+                {
+                    var image = new Java.IO.File(filePath);
+                    return BitmapFactory.DecodeFile(image.AbsolutePath);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public Java.IO.File CreateDirectoryForPictures()
+        {
+            Java.IO.File _dir = new Java.IO.File(
+                Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
+            if (!_dir.Exists())
+            {
+                _dir.Mkdirs();
+            }
+
+            return _dir;
+        }
     }
 }

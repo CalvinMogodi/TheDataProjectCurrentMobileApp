@@ -46,7 +46,6 @@ namespace TheDataProject.Droid
         int facilityId;
         int userId;
         Building building;
-        List<string> fileNames = new List<string>();
         public static readonly int PickImageId = 1000;
 
         protected override int LayoutResource => Resource.Layout.activity_add_building;
@@ -83,6 +82,7 @@ namespace TheDataProject.Droid
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
 
+            ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
             locationLinearlayout.Visibility = ViewStates.Gone;
             occupationYear.Touch += (sender, e) => {
@@ -113,6 +113,11 @@ namespace TheDataProject.Droid
                 heritage.Checked = building.Heritage;
                 disabledComment.Text = building.DisabledComment;
                 constructionDescription.Text = building.ConstructionDescription;
+
+                Bitmap bit = SetImageBitmap(_dir + "/" + building.Photo);
+                if (bit != null)
+                    buildingPhoto.SetImageBitmap(bit);
+
             }
             else
             {
@@ -123,6 +128,23 @@ namespace TheDataProject.Droid
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
             buildingPhoto.Click += (sender, e) => { ShowImage_Click(); };
+        }
+
+        public Bitmap SetImageBitmap(string filePath)
+        {
+            try
+            {
+                if (System.IO.File.Exists(filePath))
+                {
+                    var image = new Java.IO.File(filePath);
+                    return BitmapFactory.DecodeFile(image.AbsolutePath);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         private int GetIndex(Spinner spinner, String myString)
@@ -159,13 +181,8 @@ namespace TheDataProject.Droid
             int numberOfFloors = 0;
             if (!String.IsNullOrEmpty(nooOfFoors.Text))
                 numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
-            string photoNames = "";
-            foreach (var filename in fileNames)
-            {
-                photoNames = String.Format("{0},{1}",photoNames,fileNames);
-            }
-            
-            SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
+            string fileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
+
             Building item = new Building
             {
                 Id = building.Id,
@@ -183,7 +200,7 @@ namespace TheDataProject.Droid
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
-                Photo = photoNames,
+                Photo = fileName,
                 CreatedDate = new DateTime(),
                 CreatedUserId = userId,
                 ModifiedUserId = isEdit == true ? userId : 0,
@@ -263,10 +280,9 @@ namespace TheDataProject.Droid
             LayoutInflater inflater = (LayoutInflater)Application.Context.GetSystemService(Context.LayoutInflaterService);
             View npView = inflater.Inflate(Resource.Layout.dialog_numberpicker, null);
             numberPicker = npView.FindViewById<NumberPicker>(Resource.Id.numberPicker1);
-            numberPicker.MaxValue = 2200;
-            numberPicker.MinValue = 1950;
+            numberPicker.MaxValue = new DateTime().Year;
+            numberPicker.MinValue = 1900;
             numberPicker.SetGravity(GravityFlags.Center);
-            //numberPicker.SetBackgroundColor(Android.Graphics.Color.LightGray);
             numberPicker.WrapSelectorWheel = true;
             numberPicker.SetScrollContainer(true);
             numberPickerAlertDialog = new AlertDialog.Builder(this).SetTitle("Occupation Year").SetView(npView)
@@ -274,10 +290,9 @@ namespace TheDataProject.Droid
                 {
                     occupationYear.Text = numberPicker.Value.ToString();
                     numberPickerAlertDialog.Dismiss();
-                    numberPickerAlertDialog.Dismiss();
                 }).SetNegativeButton(Resource.String.cancel, delegate
                 {
-
+                    numberPickerAlertDialog.Dismiss();
                 }).Create();
             numberPickerAlertDialog.Show();
         }
@@ -331,33 +346,25 @@ namespace TheDataProject.Droid
             GC.Collect();
         }
 
-        private void CreateDirectoryForPictures()
-        {
-            _dir = new Java.IO.File(
-                Android.OS.Environment.GetExternalStoragePublicDirectory(
-                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
-            if (!_dir.Exists())
-            {
-                _dir.Mkdirs();
-            }
-        }
+        
 
-        public void SaveImage(Bitmap bitmap)
+        public string SaveImage(Bitmap bitmap)
         {
+            string fileName;
             try
             {
-                var fileName = String.Format("building_{0}", Guid.NewGuid());
-                fileNames.Add(fileName);
+                fileName = String.Format("building_{0}", Guid.NewGuid());
                 using (var os = new FileStream(_dir+"/"+fileName, FileMode.CreateNew))
                 {
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
                 }
+                return fileName;
             }
             catch (Exception ex)
             {
-                
+                return "";
             }
-            
+            return "";
         }
 
         public void ShowImage_Click()
@@ -365,9 +372,9 @@ namespace TheDataProject.Droid
 
             imageDialog = new Dialog(this);
             imageDialog.SetContentView(Resource.Layout.dialog_select_image);
-            CreateDirectoryForPictures();
+            
             takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
-            iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
+            iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);           
             Bitmap bitmap = ((BitmapDrawable)buildingPhoto.Drawable).Bitmap;
             if (bitmap != null)
             {

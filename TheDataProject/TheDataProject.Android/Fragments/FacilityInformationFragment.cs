@@ -360,8 +360,8 @@ namespace TheDataProject.Droid.Fragments
             if (facility.Location != null)
             {
                 streetAddress.Text = facility.Location.StreetAddress;
-                suburb.Text = facility.Location.StreetAddress;
-                region.Text = facility.Location.StreetAddress;
+                suburb.Text = facility.Location.Suburb;
+                region.Text = facility.Location.Region;
                 province.SetSelection(GetIndex(province, facility.Location.Province));
                 localmunicipality.SetSelection(GetIndex(localmunicipality, facility.Location.LocalMunicipality));
 

@@ -16,6 +16,7 @@ using TheDataProject.ViewModels;
 using Android.Support.Design.Widget;
 using TheDataProject.Droid.Activities;
 using TheDataProject.Droid.Helpers;
+using Android.Graphics;
 
 namespace TheDataProject.Droid.Fragments
 {
@@ -100,7 +101,6 @@ namespace TheDataProject.Droid.Fragments
         {
             var item = ViewModel.Buildings[e.Position];
             var intent = new Intent(Activity, typeof(AddBuildingActivity));
-            item.Photo = "";            
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
         }
@@ -136,6 +136,7 @@ namespace TheDataProject.Droid.Fragments
             };
         }
 
+        
         // Create new views (invoked by the layout manager)
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
@@ -151,12 +152,16 @@ namespace TheDataProject.Droid.Fragments
         // Replace the contents of a view (invoked by the layout manager)
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            var item = viewModel.Buildings[position];
-
+            var item = viewModel.Buildings[position];            
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
             myHolder.TextView.Text = item.BuildingName;
             myHolder.DetailTextView.Text = item.BuildingNumber;
+
+            AppPreferences ap = new AppPreferences(Android.App.Application.Context);
+            Bitmap bit = ap.SetImageBitmap(ap.CreateDirectoryForPictures() + "/" + item.Photo);
+            if (bit != null)
+                myHolder.ImageView.SetImageBitmap(bit);            
         }
 
         public override int ItemCount => viewModel.Buildings.Count;
@@ -166,12 +171,16 @@ namespace TheDataProject.Droid.Fragments
     {
         public TextView TextView { get; set; }
         public TextView DetailTextView { get; set; }
+        public ImageView ImageView { get; set; }
 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
             TextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text1);
             DetailTextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text2);
+            DetailTextView = itemView.FindViewById<TextView>(Android.Resource.Id.Text2);
+            ImageView = itemView.FindViewById<ImageView>(Resource.Id.buildings_photo);
+            
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

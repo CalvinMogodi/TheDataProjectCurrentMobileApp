@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="300dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:gravity="center">
@@ -39,25 +39,25 @@
             android:layout_height="wrap_content"
             android:id="@+id/etf_suburb" />
     </android.support.design.widget.TextInputLayout>
-  <android.support.design.widget.TextInputLayout
-     android:id="@+id/region_layout"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content">
-    <android.support.design.widget.TextInputEditText
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/region_layout"
         android:layout_width="match_parent"
-        android:inputType="text"
-        android:hint="Region"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:hint="Region"
+            android:layout_height="wrap_content"
+            android:id="@+id/etf_region" />
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:text="Province"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etf_region" />
-  </android.support.design.widget.TextInputLayout>
-  <TextView
-                android:text="Province"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/small_margin"
-                android:paddingLeft="@dimen/small_margin"
-                android:paddingRight="@dimen/small_margin"
-                style="?android:textAppearanceSmall" />
+        android:paddingTop="@dimen/small_margin"
+        android:paddingLeft="@dimen/small_margin"
+        android:paddingRight="@dimen/small_margin"
+        style="?android:textAppearanceSmall" />
     <Spinner
         android:id="@+id/sf_province"
         android:layout_width="match_parent"
@@ -66,14 +66,14 @@
         android:spinnerMode="dialog"
         style="@style/Widget.AppCompat.Spinner.Underlined"
         android:gravity="bottom" />
-  <TextView
-                android:text="Local Municipality"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/small_margin"
-                android:paddingLeft="@dimen/small_margin"
-                android:paddingRight="@dimen/small_margin"
-                style="?android:textAppearanceSmall" />
+    <TextView
+        android:text="Local Municipality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingLeft="@dimen/small_margin"
+        android:paddingRight="@dimen/small_margin"
+        style="?android:textAppearanceSmall" />
     <Spinner
         android:id="@+id/sf_localmunicipality"
         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
             android:orientation="horizontal">
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/gpscaddlocation_button"
-                 android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add"
                 android:background="#9f6800"
@@ -165,12 +165,12 @@
                 android:layout_margin="@dimen/fab_margin" />
         </LinearLayout>
     </LinearLayout>
- <ListView  
-    android:minWidth="25px"  
-    android:minHeight="25px"  
-    android:layout_width="match_parent"  
-    android:layout_height="match_parent"  
-    android:id="@+id/bplistView1" />
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bplistView1" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"

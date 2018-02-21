@@ -12,6 +12,7 @@ using Android.Graphics;
 using System.Text;
 using TheDataProject.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TheDataProject.Droid
 {
@@ -171,18 +172,16 @@ namespace TheDataProject.Droid
                     myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
                 }
             }
-            
-            myHolder.Button.Click += (sender, e) => { Submit_Click(item); };
-            Bitmap bitmap = appPreferences.StringToBitMap(item.IDPicture);
-            if (bitmap != null)
-            {
-                myHolder.ImageView.SetImageBitmap(bitmap);
-            }
 
-            //AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-            //Bitmap bit = ap.SetImageBitmap(ap.CreateDirectoryForPictures() + "/" + item.IDPicture);
-            //if (bit != null)
-            //    myHolder.ImageView.SetImageBitmap(bit);
+            if (item.IDPicture != null)
+            {
+                List<string> imageNames = item.IDPicture.Split(',').ToList();
+
+                AppPreferences ap = new AppPreferences(Android.App.Application.Context);
+                Bitmap bit = ap.SetImageBitmap(ap.CreateDirectoryForPictures() + "/" + imageNames[0]);
+                if (bit != null)
+                    myHolder.ImageView.SetImageBitmap(bit);
+            }
         }
 
         async void Submit_Click(Facility facility)

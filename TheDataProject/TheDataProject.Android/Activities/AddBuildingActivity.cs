@@ -330,14 +330,20 @@ namespace TheDataProject.Droid
                     iImageViewer.SetImageBitmap(bitmap);
                     iImageViewer.DrawingCacheEnabled = true;
                     iImageViewer.BuildDrawingCache();
+                    MemoryStream stream = new MemoryStream();
+                    bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
                 }
             }
             else
             {
-                Android.Net.Uri uri = data.Data;
-                iImageViewer.SetImageURI(uri);
-                iImageViewer.DrawingCacheEnabled = true;
-                iImageViewer.BuildDrawingCache();
+                if (data != null)
+                {
+                    Android.Net.Uri uri = data.Data;
+                    iImageViewer.SetImageURI(uri);
+                    iImageViewer.DrawingCacheEnabled = true;
+                    iImageViewer.BuildDrawingCache();
+                }
+               
             }
 
             GC.Collect();

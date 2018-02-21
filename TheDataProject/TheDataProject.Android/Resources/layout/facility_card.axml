@@ -14,7 +14,7 @@
         android:orientation="horizontal">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="300dp"
+            android:layout_width="400dp"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/f_text2"

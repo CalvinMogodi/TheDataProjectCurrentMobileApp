@@ -118,9 +118,9 @@ namespace TheDataProject.Droid.Fragments
                     if (bit != null)
                         facilityPhoto.SetImageBitmap(bit);
                 }
-                if (!String.IsNullOrEmpty(imageNames[1]))
+                if (imageNames.Count == 2)
                 {
-                    Bitmap bit = ap.SetImageBitmap(_dir + "/" + imageNames[0]);
+                    Bitmap bit = ap.SetImageBitmap(_dir + "/" + imageNames[1]);
                     if (bit != null)
                         secondFacilityPhoto.SetImageBitmap(bit);
                 }

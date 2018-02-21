@@ -93,7 +93,6 @@ namespace TheDataProject.Droid
             AppPreferences ap = new AppPreferences(mContext);
             ap.SaveFacilityId(item.Id.ToString());
             item.Buildings = new List<Building>();
-            item.IDPicture = "";
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
             Activity.StartActivity(intent);
         }
@@ -154,7 +153,12 @@ namespace TheDataProject.Droid
             var myHolder = holder as MyViewHolder;
             myHolder.FacilityName.Text = item.Name;
             myHolder.ClientCode.Text = item.ClientCode;
-            
+            myHolder.Button.Click += (sender, e) => {
+                Submit_Click(item);
+            };
+            myHolder.Location.Click += (sender, e) => {
+                Open_Map(item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+            };
             if (item.Location != null)
             {
                 myHolder.StreetAddress.Text = String.Format("Address: {0}",item.Location.StreetAddress);
@@ -184,6 +188,13 @@ namespace TheDataProject.Droid
             }
         }
 
+        async void Open_Map(string latitude, string longitude) {           
+            
+            string labelLocation = "Facility Location";
+            String urlAddress = "http://maps.google.com/maps?q=" + latitude + "," + longitude + "(" + labelLocation + ")&iwloc=A&hl=es";
+            Intent intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(urlAddress));
+            activity.StartActivity(intent);
+        }
         async void Submit_Click(Facility facility)
         {
             if (!ValidateForm(facility))

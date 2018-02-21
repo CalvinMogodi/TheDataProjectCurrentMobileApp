@@ -35,6 +35,7 @@ namespace TheDataProject.Droid
         AlertDialog numberPickerAlertDialog;
         TextInputLayout occupationyearLayout;
         LinearLayout locationLinearlayout;
+
         Switch heritage;
         public GPSCoordinate _GPSCoordinates { get; set; }
         public BuildingsViewModel ViewModel { get; set; }
@@ -43,6 +44,7 @@ namespace TheDataProject.Droid
         public static Bitmap bitmap;
         public bool isFromCamera = false;
         public bool isEdit = false;
+        public bool PhotoIsChanged = false;
         int facilityId;
         int userId;
         Building building;
@@ -82,12 +84,12 @@ namespace TheDataProject.Droid
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
 
-            ap.CreateDirectoryForPictures();
+            _dir = ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
             locationLinearlayout.Visibility = ViewStates.Gone;
-            occupationYear.Touch += (sender, e) => {
-                show();
-            };
+            //occupationYear.Touch += (sender, e) => {
+            //    show();
+            //};
 
             if (data != null)
             {
@@ -181,7 +183,10 @@ namespace TheDataProject.Droid
             int numberOfFloors = 0;
             if (!String.IsNullOrEmpty(nooOfFoors.Text))
                 numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
-            string fileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
+
+            string fileName = "";
+            if (PhotoIsChanged)
+                fileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
 
             Building item = new Building
             {
@@ -200,7 +205,7 @@ namespace TheDataProject.Droid
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
-                Photo = fileName,
+                Photo = PhotoIsChanged == true ? fileName: building.Photo,
                 CreatedDate = new DateTime(),
                 CreatedUserId = userId,
                 ModifiedUserId = isEdit == true ? userId : 0,
@@ -300,11 +305,11 @@ namespace TheDataProject.Droid
         #region Image 
         private void TakeAPicture(object sender, EventArgs eventArgs)
         {
+            isFromCamera = true;
             Intent intent = new Intent(MediaStore.ActionImageCapture);
             _file = new Java.IO.File(_dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
             intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_file));
-            StartActivityForResult(intent, 0);
-            isFromCamera = true;
+            StartActivityForResult(intent, 0);            
         }
 
 
@@ -323,11 +328,8 @@ namespace TheDataProject.Droid
                 if (bitmap != null)
                 {
                     iImageViewer.SetImageBitmap(bitmap);
-                    MemoryStream stream = new MemoryStream();
-                    bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
-                    byte[] byteArray = stream.ToArray();
-                    building.Photo = Base64.EncodeToString(byteArray, 0);
-                    bitmap = null;
+                    iImageViewer.DrawingCacheEnabled = true;
+                    iImageViewer.BuildDrawingCache();
                 }
             }
             else
@@ -336,11 +338,6 @@ namespace TheDataProject.Droid
                 iImageViewer.SetImageURI(uri);
                 iImageViewer.DrawingCacheEnabled = true;
                 iImageViewer.BuildDrawingCache();
-                Android.Graphics.Bitmap bm = iImageViewer.GetDrawingCache(true);
-                MemoryStream stream = new MemoryStream();
-                bm.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
-                byte[] byteArray = stream.ToArray();
-                building.Photo = Base64.EncodeToString(byteArray, 0);
             }
 
             GC.Collect();
@@ -364,7 +361,6 @@ namespace TheDataProject.Droid
             {
                 return "";
             }
-            return "";
         }
 
         public void ShowImage_Click()
@@ -403,15 +399,17 @@ namespace TheDataProject.Droid
                 buildingPhoto.SetImageBitmap(bitmap);
             }
             imageDialog.Dismiss();
+            building.Photo = "new Image";
+            PhotoIsChanged = true;
         }
 
         private void SelectAPicture(object sender, EventArgs eventArgs)
         {
+            isFromCamera = false;
             Intent Intent = new Intent();
             Intent.SetType("image/*");
             Intent.SetAction(Intent.ActionGetContent);
             StartActivityForResult(Intent.CreateChooser(Intent, "Select Picture"), PickImageId);
-            isFromCamera = false;
         }
 
         private bool ValidateForm()

@@ -13,7 +13,7 @@ using TheDataProject.Models;
 
 namespace TheDataProject
 {
-    public class MockDataStore : IDataStore<Facility, Building, User>
+    public class MockDataStore : IDataStore<Facility, Building, User, Picture>
     {
 
         HttpClient client;
@@ -184,6 +184,66 @@ namespace TheDataProject
         public Task<User> ChangePassword(User user)
         {
             return Task.FromResult(user);
+        }
+
+        public async Task<bool> SaveImage(List<Picture> pictures)
+        {
+             string restUrl = "http://154.0.170.81:89/api/Building/SaveImage";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isSaved= false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(pictures);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.MaxResponseContentBufferSize = 256000;
+                var response = await client.PostAsync(uri, content);
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    isSaved = true;
+                //}
+            }
+            catch (Exception ex)
+            {
+                return isSaved;
+            }
+            return await Task.FromResult(isSaved);
+        }
+
+        public async Task<Picture> GetImage(string fileName)
+        {
+            string RestUrl = "http://154.0.170.81:89/api/Building/GetImage?pictureGuid=" + fileName;
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            HttpResponseMessage response = null;
+            Picture _picture = new Picture();
+            try
+            {
+                response = await client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var _content = await response.Content.ReadAsStringAsync();
+                    _picture = JsonConvert.DeserializeObject<Picture>(_content);
+                    if (_picture == null)
+                    {
+                        _picture = new Picture();
+                    }
+                }
+
+                else
+                {
+                    if (_picture == null)
+                    {
+                        _picture = new Picture();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return _picture;
+            }
+
+            return _picture;
         }
     }
 

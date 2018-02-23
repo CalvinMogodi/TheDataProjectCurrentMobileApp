@@ -49,11 +49,10 @@ namespace TheDataProject.Droid.Helpers
             return nameSharedPrefs.GetString(PREFERENCE_ACCESS_KEY, "");
         }
 
-        public Bitmap StringToBitMap(String encodedString)
+        public Bitmap ByteToBitMap(byte[] encodeByte)
         {
             try
             {
-                byte[] encodeByte = Base64.Decode(encodedString, Base64.Default);
                 return BitmapFactory.DecodeByteArray(encodeByte, 0, encodeByte.Length);               
             }
             catch (Exception e)
@@ -91,6 +90,7 @@ namespace TheDataProject.Droid.Helpers
 
             return _dir;
         }
+
 
 
     }

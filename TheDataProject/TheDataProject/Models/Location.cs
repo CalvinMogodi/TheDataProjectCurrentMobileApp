@@ -15,6 +15,6 @@ namespace TheDataProject.Models
         public string Province { get; set; }
         public string Region { get; set; }
         public GPSCoordinate GPSCoordinates { get; set; }
-        public BoundryPolygon BoundaryPolygon { get; set; }
+        public List<BoundryPolygon> BoundryPolygon { get; set; }
     }
 }

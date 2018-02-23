@@ -8,7 +8,7 @@ namespace TheDataProject
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Facility, Building, User> DataStore => ServiceLocator.Instance.Get<IDataStore<Facility, Building, User>>() ?? new MockDataStore();
+        public IDataStore<Facility, Building, User, Picture> DataStore => ServiceLocator.Instance.Get<IDataStore<Facility, Building, User, Picture>>() ?? new MockDataStore();
 
         bool isBusy = false;
         public bool IsBusy

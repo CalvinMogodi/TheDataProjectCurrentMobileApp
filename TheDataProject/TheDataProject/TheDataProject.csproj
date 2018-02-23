@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\BuildingsViewModel.cs" />
     <Compile Include="ViewModels\FacilityDetailViewModel.cs" />
     <Compile Include="ViewModels\FacilitiesViewModel.cs" />
+    <Compile Include="ViewModels\PictureViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -49,7 +49,7 @@ namespace TheDataProject.Droid.Fragments
         Dialog imageDialog;
         FacilityDetailViewModel facilityDetailViewModel;
         public GPSCoordinate _GPSCoordinates;
-        public List<GPSCoordinate> _BoundryPolygonGPSCoordinates;
+        public List<BoundryPolygon> _BoundryPolygons;
         ArrayAdapter<string> arrayAdapter;
         int oldPosition;
         public static Java.IO.File _file;
@@ -137,7 +137,7 @@ namespace TheDataProject.Droid.Fragments
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
             _GPSCoordinates = new GPSCoordinate();
-            _BoundryPolygonGPSCoordinates = new List<GPSCoordinate>();
+            _BoundryPolygons = new List<BoundryPolygon>();
 
             return view;
         }
@@ -175,8 +175,8 @@ namespace TheDataProject.Droid.Fragments
                 Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
                 mediaScanIntent.SetData(contentUri);
                 Application.Context.SendBroadcast(mediaScanIntent);
-                int height = Resources.DisplayMetrics.HeightPixels;
-                int width = iImageViewer.Height;
+                int height = Resources.DisplayMetrics.HeightPixels/4;
+                int width = iImageViewer.Width;
                 bitmap = _file.Path.LoadAndResizeBitmap(width, height);
                 if (bitmap != null)
                 {
@@ -447,11 +447,12 @@ namespace TheDataProject.Droid.Fragments
                     tvfLongitude.Text = facility.Location.GPSCoordinates.Longitude;
                 }
 
-                if (facility.Location.BoundaryPolygon != null)
+                if (facility.Location.BoundryPolygon != null)
                 {
-                    foreach (var BoundaryPolygon in facility.Location.BoundaryPolygon.GPSCoordinates)
+                    _BoundryPolygons = new List<BoundryPolygon>();
+                    foreach (var BoundaryPolygon in facility.Location.BoundryPolygon)
                     {
-                        _BoundryPolygonGPSCoordinates.Add(BoundaryPolygon);
+                        _BoundryPolygons.Add(BoundaryPolygon);
                         itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + "      Longitude: " + BoundaryPolygon.Longitude.ToString());
                     }                   
                     arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -514,12 +515,12 @@ namespace TheDataProject.Droid.Fragments
             {
                 ShowSettingsAlert();
             }
-            GPSCoordinate thisGPSCoordinate = new GPSCoordinate()
+            BoundryPolygon BoundryPolygon = new BoundryPolygon()
             {
                 Latitude = location.Latitude.ToString(),
                 Longitude = location.Longitude.ToString()
             };
-            _BoundryPolygonGPSCoordinates.Add(thisGPSCoordinate);
+            _BoundryPolygons.Add(BoundryPolygon);
             itemList.Add("Latitude: " + location.Latitude.ToString() + "      Longitude: " + location.Longitude.ToString());
 
             if (location == null)
@@ -540,7 +541,7 @@ namespace TheDataProject.Droid.Fragments
                 var item = arrayAdapter.GetItem(e.Position);
                 arrayAdapter.Remove(item);
                 //itemList.RemoveAt(e.Position);
-                _BoundryPolygonGPSCoordinates.RemoveAt(e.Position);
+                _BoundryPolygons.RemoveAt(e.Position);
                 oldPosition = e.Position;
                 bpListView.Adapter = arrayAdapter;
                 bpListView.ItemLongClick += Adapter_ItemSwipe;
@@ -585,10 +586,7 @@ namespace TheDataProject.Droid.Fragments
                 Longitude = tvfLatitude.Text,
                 Latitude = tvfLongitude.Text,
             };
-            facility.Location.BoundaryPolygon = new Models.BoundryPolygon()
-            {
-                GPSCoordinates = _BoundryPolygonGPSCoordinates
-            };
+            facility.Location.BoundryPolygon = _BoundryPolygons;
             locationDialog.Cancel();
         }
         #endregion #endregion 

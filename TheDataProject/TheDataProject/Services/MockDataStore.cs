@@ -13,7 +13,7 @@ using TheDataProject.Models;
 
 namespace TheDataProject
 {
-    public class MockDataStore : IDataStore<Facility, Building, User, Picture>
+    public class MockDataStore : IDataStore<Facility, Building, User, Picture, DBPicture>
     {
 
         HttpClient client;
@@ -223,10 +223,13 @@ namespace TheDataProject
                 if (response.IsSuccessStatusCode)
                 {
                     var _content = await response.Content.ReadAsStringAsync();
-                    _picture = JsonConvert.DeserializeObject<Picture>(_content);
-                    if (_picture == null)
+                    var str = JsonConvert.DeserializeObject<string>(_content);
+                    if (str != null)
                     {
-                        _picture = new Picture();
+                        _picture = new Picture() {
+                            Name = fileName,
+                            File = str,
+                        };
                     }
                 }
 

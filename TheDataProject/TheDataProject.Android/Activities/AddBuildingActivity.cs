@@ -125,11 +125,12 @@ namespace TheDataProject.Droid
                     Models.Picture picture = await pictureViewModel.ExecuteGetPictureCommand(building.Photo);
                     if (picture != null)
                     {
-                    //var _bit = ap.ByteToBitMap(picture.File);
-                    //if (_bit != null)
-                    //    SaveImage(_bit, building.Photo);
+                    var _bit = ap.StringToBitMap(picture.File);
+                    if (_bit != null)
+                        SaveImage(_bit, building.Photo);
+                    buildingPhoto.SetImageBitmap(_bit);
                 }
-              //  }
+                //  }
 
             }
             else
@@ -353,8 +354,9 @@ namespace TheDataProject.Droid
 
             if (resultCode == Result.Ok)
             {
-                iImageViewer.SetImageURI(data.Data);
-                buildingPhoto.SetImageURI(data.Data);
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver , data.Data);
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 120, 120, false));
+                buildingPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 120, 120, false));
             }
         }
 

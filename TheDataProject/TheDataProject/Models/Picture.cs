@@ -11,4 +11,10 @@ namespace TheDataProject.Models
         public string Name { get; set; }
         public string File { get; set; }
     }
+
+    public class DBPicture
+    {
+        public string Name { get; set; }
+        public byte[] File { get; set; }
+    }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TheDataProject
 {
-    public interface IDataStore<F, B, U, P>
+    public interface IDataStore<F, B, U, P, DBP>
     {
         Task<bool> UpdateFacilityAsync(F facility);
         Task<F> GetFacilityAsync(int id);

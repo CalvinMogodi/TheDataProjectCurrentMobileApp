@@ -41,7 +41,7 @@ namespace TheDataProject.Droid.Fragments
         AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
         LayoutInflater Inflater;
         CardView locationHolder, responsiblepersonHolder, deedHolder;
-        TextView clientCode, facilityName, tvfLatitude, tvfLongitude;
+        TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText;
         ImageView facilityPhoto, iImageViewer, secondFacilityPhoto;
         LinearLayout locationlinearlayout;
         View view;
@@ -56,7 +56,7 @@ namespace TheDataProject.Droid.Fragments
         int oldPosition;
         public static Java.IO.File _file;
         public static Java.IO.File _dir;
-        public static Bitmap bitmap;
+        public static Bitmap bitmapnew;
         public bool IsFirstPhoto = false;
         public bool FirstPhotoIsChanged = false;
         public bool SecondPhotoIsChanged = false;
@@ -84,7 +84,7 @@ namespace TheDataProject.Droid.Fragments
             editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
             saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
             clientCode = view.FindViewById<TextView>(Resource.Id.tvf_clientcode);
-            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);
+            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);            
             settlementtype = view.FindViewById<Spinner>(Resource.Id.sf_settlementtype);
             zoning = view.FindViewById<Spinner>(Resource.Id.sf_zoning);
             locationHolder = view.FindViewById<CardView>(Resource.Id.tvf_locationholder);
@@ -103,7 +103,7 @@ namespace TheDataProject.Droid.Fragments
             facility = new Facility();
 
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-            _dir = ap.CreateDirectoryForPictures();
+           
             var data = Arguments.GetString("data");
 
             if (data != null)
@@ -200,45 +200,13 @@ namespace TheDataProject.Droid.Fragments
             return index;
         }
 
-        private void TakeAPicture(object sender, EventArgs eventArgs)
-        {            
-            Intent intent = new Intent(MediaStore.ActionImageCapture);
-            _file = new Java.IO.File(_dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
-            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_file));
-            StartActivityForResult(intent, 1888);
-        }
-        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-
-            base.OnActivityResult(requestCode, resultCode, data);
-           if(requestCode == 1888) {
-                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
-                mediaScanIntent.SetData(contentUri);
-                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, contentUri);
-                if (bitmap != null)
-                {
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
-                    secondFacilityPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
-                    imageDialog.Dismiss();
-                }
-            }
-            else
-            {
-                if (data != null)
-                {
-                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
-                }
-            }
-        }
+        
         public void ShowImage_Click(bool isFirstImage)
         {
             IsFirstPhoto = isFirstImage;
             imageDialog = new Dialog(Activity);
             imageDialog.SetContentView(Resource.Layout.dialog_select_image);   
-            //takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
+            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
             iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
             if (isFirstImage)
             {
@@ -259,7 +227,6 @@ namespace TheDataProject.Droid.Fragments
             selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
             siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
             siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
-            //takeaphotoButton.Click += TakeAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;
@@ -512,6 +479,7 @@ namespace TheDataProject.Droid.Fragments
             locationlinearlayout = dialog.FindViewById<LinearLayout>(Resource.Id.location_linearlayout);
             tvfLatitude = dialog.FindViewById<TextView>(Resource.Id.tvf_latitude);
             tvfLongitude = dialog.FindViewById<TextView>(Resource.Id.tvf_longitude);
+            boundaryPolygonsText = dialog.FindViewById<TextView>(Resource.Id.boundaryPolygonsText);
             bpListView = dialog.FindViewById<ListView>(Resource.Id.bplistView1);
             locationlinearlayout.Visibility = ViewStates.Gone;
             itemList = new List<string>();
@@ -538,11 +506,13 @@ namespace TheDataProject.Droid.Fragments
                     {
                         _BoundryPolygons.Add(BoundaryPolygon);
                         itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + "      Longitude: " + BoundaryPolygon.Longitude.ToString());
-                    }                   
+                    }            
+                    
                     arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
                     bpListView.Adapter = arrayAdapter;
                     bpListView.ItemLongClick += Adapter_ItemSwipe;
                 }
+                boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
             }
              
 
@@ -612,7 +582,7 @@ namespace TheDataProject.Droid.Fragments
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
-
+            boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
             arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
             bpListView.Adapter = arrayAdapter;
             bpListView.ItemLongClick += Adapter_ItemSwipe;
@@ -624,8 +594,9 @@ namespace TheDataProject.Droid.Fragments
             {
                 var item = arrayAdapter.GetItem(e.Position);
                 arrayAdapter.Remove(item);
-                //itemList.RemoveAt(e.Position);
-                _BoundryPolygons.RemoveAt(e.Position);
+                itemList.Remove(item);
+                _BoundryPolygons.RemoveAt(e.Position);                
+                boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 oldPosition = e.Position;
                 bpListView.Adapter = arrayAdapter;
                 bpListView.ItemLongClick += Adapter_ItemSwipe;

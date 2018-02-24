@@ -25,7 +25,7 @@ namespace TheDataProject.Droid.Activities
        
         EditText username, password;
         TextView message;
-        Button cancelBtn, signInBtn;
+        Button signInBtn, signInOffLineBtn;
 
         
         public bool FormIsValid { get; set; }
@@ -49,8 +49,9 @@ namespace TheDataProject.Droid.Activities
             password = FindViewById<EditText>(Resource.Id.etlogin_password);            
             message = FindViewById<TextView>(Resource.Id.tvlogin_message);
             signInBtn = FindViewById<Button>(Resource.Id.btnlogin_signin);
-
-            signInBtn.SetBackgroundColor(Android.Graphics.Color.ParseColor("#101e45"));         
+            signInOffLineBtn = FindViewById<Button>(Resource.Id.btnlogin_signinoffline);
+            
+            signInBtn.SetBackgroundColor(Android.Graphics.Color.ParseColor("#101e45"));
             ViewModel = new LoginViewModel();
             signInBtn.Click += SignIn_Click;
         }

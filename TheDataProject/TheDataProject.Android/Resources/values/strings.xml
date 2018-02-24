@@ -6,6 +6,7 @@
   <string name="tab2">Information</string>
   <string name="tab3">Buildings</string>
 	<string name="signin">Sign In</string>
+  <string name="signinoffline">Sign In Off Line</string>
   <string name="done">Done</string>
   <string name="submit">Submit</string>
   <string name="cancel">Cancel</string>

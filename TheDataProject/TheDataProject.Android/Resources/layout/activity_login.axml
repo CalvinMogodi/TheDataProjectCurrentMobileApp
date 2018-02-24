@@ -52,11 +52,17 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
+      <Button
+        android:text="@string/signinoffline"
+        android:backgroundTint="@color/primary"
+        android:id="@+id/btnlogin_signinoffline"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content" />
         <Button
             android:text="@string/signin"
             android:backgroundTint="@color/primary"
             android:id="@+id/btnlogin_signin"
-            android:layout_width="350dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <TextView

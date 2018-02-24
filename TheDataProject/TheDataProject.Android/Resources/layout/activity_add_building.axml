@@ -161,7 +161,7 @@
                     android:id="@+id/etb_occupationyear" />
             </android.support.design.widget.TextInputLayout>
             <TextView
-                android:text="Disabled Accesss"
+                android:text="Disabled Access"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/small_margin"

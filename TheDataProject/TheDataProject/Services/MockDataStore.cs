@@ -39,7 +39,7 @@ namespace TheDataProject
             if (response.IsSuccessStatusCode)
             {
                 var _content = await response.Content.ReadAsStringAsync();
-                isUpdated = JsonConvert.DeserializeObject<bool>(_content);
+                isUpdated = true;
             }
 
             return await Task.FromResult(isUpdated);

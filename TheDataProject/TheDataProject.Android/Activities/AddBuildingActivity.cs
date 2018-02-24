@@ -117,20 +117,21 @@ namespace TheDataProject.Droid
                 disabledComment.Text = building.DisabledComment;
                 constructionDescription.Text = building.ConstructionDescription;
 
-                //Bitmap bit = SetImageBitmap(_dir + "/" + building.Photo);
-                //if (bit != null)
-                //    buildingPhoto.SetImageBitmap(bit);
-                //else if (bit == null && !String.IsNullOrEmpty(building.Photo)) {
+                Bitmap bit = SetImageBitmap(_dir + "/" + building.Photo);
+                if (bit != null)
+                    buildingPhoto.SetImageBitmap(bit);
+                else if (bit == null && !String.IsNullOrEmpty(building.Photo))
+                {
                     PictureViewModel pictureViewModel = new PictureViewModel();
                     Models.Picture picture = await pictureViewModel.ExecuteGetPictureCommand(building.Photo);
                     if (picture != null)
                     {
-                    var _bit = ap.StringToBitMap(picture.File);
-                    if (_bit != null)
-                        SaveImage(_bit, building.Photo);
-                    buildingPhoto.SetImageBitmap(_bit);
+                        var _bit = ap.StringToBitMap(picture.File);
+                        if (_bit != null)
+                            SaveImage(_bit, building.Photo);
+                        buildingPhoto.SetImageBitmap(_bit);
+                    }
                 }
-                //  }
 
             }
             else
@@ -188,6 +189,8 @@ namespace TheDataProject.Droid
 
         async void SaveButton_Click(object sender, EventArgs e)
         {
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.ShowLoading();
             if (!ValidateForm())
                 return;
             StaticData staticData = new StaticData();
@@ -234,8 +237,6 @@ namespace TheDataProject.Droid
                 isAdded = await ViewModel.UpdateBuildingAsync(item);
             }
                 
-
-            MessageDialog messageDialog = new MessageDialog();
             if (isAdded)
             {
                 if (PhotoIsChanged) {
@@ -261,7 +262,7 @@ namespace TheDataProject.Droid
                 
             
                 }
-                    
+                messageDialog.HideLoading();
                 if (!isEdit)
                     messageDialog.SendToast("Building is added successful.");
                 else
@@ -269,6 +270,7 @@ namespace TheDataProject.Droid
                 Finish();
             }
             else {
+                messageDialog.HideLoading();
                 if (!isEdit)
                     messageDialog.SendMessage("Unable to add new building.", null);
                 else
@@ -314,8 +316,6 @@ namespace TheDataProject.Droid
 
         }
 
-
-
         public void show()
         {
             LayoutInflater inflater = (LayoutInflater)Application.Context.GetSystemService(Context.LayoutInflaterService);
@@ -351,48 +351,31 @@ namespace TheDataProject.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-
-            if (resultCode == Result.Ok)
+            if (isFromCamera)
             {
-                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver , data.Data);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 120, 120, false));
-                buildingPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 120, 120, false));
+                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
+                mediaScanIntent.SetData(contentUri);
+                Application.Context.SendBroadcast(mediaScanIntent);
+                bitmap = _file.Path.LoadAndResizeBitmap(300, 300);
+                if (bitmap != null)
+                {
+                    iImageViewer.SetImageBitmap(bitmap);
+                    GC.Collect();
+                }
             }
+            else
+            {
+                if (resultCode == Result.Ok)
+                {
+                    if (data != null)
+                    {
+                        Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver, data.Data);
+                        iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                    }
+                }
+            }           
         }
-
-        //protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-        //{
-        //    base.OnActivityResult(requestCode, resultCode, data);
-        //    if (isFromCamera)
-        //    {
-        //        Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-        //        Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
-        //        mediaScanIntent.SetData(contentUri);
-        //        Application.Context.SendBroadcast(mediaScanIntent);
-        //        int height = Resources.DisplayMetrics.HeightPixels/4;
-        //        int width = iImageViewer.Width;
-        //        bitmap = _file.Path.LoadAndResizeBitmap(width, height);
-        //        if (bitmap != null)
-        //        {
-        //            iImageViewer.SetImageBitmap(bitmap);
-        //            MemoryStream stream = new MemoryStream();
-        //            bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (data != null)
-        //        {
-        //            Android.Net.Uri uri = data.Data;
-        //            iImageViewer.SetImageURI(uri);
-        //            iImageViewer.DrawingCacheEnabled = true;
-        //            iImageViewer.BuildDrawingCache();
-        //        }
-               
-        //    }
-
-        //    GC.Collect();
-        //}
 
         public void SaveImage(Bitmap bitmap,string fileName)
         {
@@ -469,6 +452,7 @@ namespace TheDataProject.Droid
 
         private void SelectAPicture(object sender, EventArgs eventArgs)
         {
+            isFromCamera = false;
             var imageIntent = new Intent();
             imageIntent.SetType("image/*");
             imageIntent.SetAction(Intent.ActionGetContent);

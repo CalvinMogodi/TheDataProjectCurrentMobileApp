@@ -13,6 +13,8 @@ using System.Text;
 using TheDataProject.Models;
 using System.Collections.Generic;
 using System.Linq;
+using TheDataProject.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace TheDataProject.Droid
 {
@@ -123,6 +125,7 @@ namespace TheDataProject.Droid
         {
             this.viewModel = viewModel;
             this.activity = activity;
+            View itemViewList;
 
             this.viewModel.Facilities.CollectionChanged += (sender, args) =>
             {
@@ -137,7 +140,6 @@ namespace TheDataProject.Droid
             View itemView = null;
             var id = Resource.Layout.facility_card;
             itemView = LayoutInflater.From(parent.Context).Inflate(id, parent, false);
-
             var vh = new MyViewHolder(itemView, OnClick, OnLongClick);
             return vh;
         }
@@ -197,28 +199,56 @@ namespace TheDataProject.Droid
         }
         async void Submit_Click(Facility facility)
         {
-            if (!ValidateForm(facility))
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.ShowLoading();
+            BuildingsViewModel ViewModel = new BuildingsViewModel();
+            await ViewModel.ExecuteBuildingsCommand(facility.Id);
+            var buildings = ViewModel.Buildings;
+
+            if (!ValidateForm(facility, buildings, messageDialog))
+            {
+                messageDialog.HideLoading();
                 return;
+            }               
 
             facility.Status = "Submitted";
             bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
 
             if (isUpdated)
             {
-
+                viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
+                messageDialog.SendToast("Facility is submitted for approval.");
+            }
+            else {
+                messageDialog.SendToast("Unable to submitted facility for approval.");
             }
         }
         public override int ItemCount => viewModel.Facilities.Count;
 
-        private bool ValidateForm(Facility facility)
+        private bool ValidateForm(Facility facility, ObservableCollection<Building> buildings, MessageDialog messageDialog)
         {
-            Validations validation = new Validations();
-            MessageDialog messageDialog = new MessageDialog();
+            Validations validation = new Validations();           
 
             bool isValid = true;
             bool deedsInfoIsRequired = false;
             bool locationfoIsRequired = false;
             bool pictureIsRequired = false;
+            bool buildingPictureIsRequired = false;
+            bool buildingLocationIsRequired = false;
+
+            foreach (var building in buildings)
+            {
+                if (String.IsNullOrEmpty(building.Photo))
+                {
+                    buildingPictureIsRequired = true;
+                    isValid = false;
+                }
+                if (building.GPSCoordinates == null)
+                {
+                    buildingLocationIsRequired = true;
+                    isValid = false;
+                }
+            }
 
             if (facility.DeedsInfo == null)
             {
@@ -237,16 +267,22 @@ namespace TheDataProject.Droid
                 isValid = false;
             }
 
-            if (deedsInfoIsRequired || locationfoIsRequired || pictureIsRequired)
+            if (deedsInfoIsRequired || locationfoIsRequired || pictureIsRequired || buildingLocationIsRequired || buildingPictureIsRequired) 
             {
                 if (deedsInfoIsRequired && locationfoIsRequired && pictureIsRequired)
                     messageDialog.SendToast("Please add an image, location information and deeds information");
                 else if (deedsInfoIsRequired)
-                    messageDialog.SendToast("Please capture deeds information");
+                    messageDialog.SendToast("Please capture deeds information.");
                 else if(locationfoIsRequired)
-                    messageDialog.SendToast("Please capture location information");
+                    messageDialog.SendToast("Please capture location information.");
                 else if(pictureIsRequired)
-                    messageDialog.SendToast("Please add an image");
+                    messageDialog.SendToast("Please add an image.");
+                else if (buildingPictureIsRequired && buildingLocationIsRequired)
+                    messageDialog.SendToast("Please add an image and location for all the buildings.");
+                else if (buildingPictureIsRequired)
+                    messageDialog.SendToast("Please add an image for all the buildings.");
+                else if (buildingLocationIsRequired)
+                    messageDialog.SendToast("Please add location for all the buildings.");
             }
             return isValid;
         }

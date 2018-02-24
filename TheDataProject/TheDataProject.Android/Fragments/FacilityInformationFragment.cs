@@ -324,29 +324,33 @@ namespace TheDataProject.Droid.Fragments
 
             facility.SettlementType = settlementtype.SelectedItem.ToString();
             facility.Zoning = zoning.SelectedItem.ToString();
-            imageNames = new List<string>();
             if (FirstPhotoIsChanged)
             {
-                string fileName = SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
-                imageNames.Add(fileName);
+                string thisFileName = SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
+                imageNames.Add(thisFileName);
             }
             if (SecondPhotoIsChanged)
             {
-                string fileName = SaveImage(((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap);
-                imageNames.Add(fileName);
+                var _fileName = String.Format("facility_{0}", Guid.NewGuid());
+                SaveImage(((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap, _fileName);
+                imageNames.Add(_fileName);
             }
-            facility.IDPicture = "";
-
-            foreach (var name in imageNames)
+            if (FirstPhotoIsChanged || SecondPhotoIsChanged)
             {
-                if (String.IsNullOrEmpty(facility.IDPicture))
-                    facility.IDPicture = name;
-                else
-                    facility.IDPicture = facility.IDPicture + "," + name;
+                facility.IDPicture = "";
+
+                foreach (var name in imageNames)
+                {
+                    if (String.IsNullOrEmpty(facility.IDPicture))
+                        facility.IDPicture = name;
+                    else
+                        facility.IDPicture = facility.IDPicture + "," + name;
+                }
             }
+            
 
             bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
-            if (true)
+            if (isUpdated)
             {
                 PictureViewModel pictureViewModel = new PictureViewModel();
                 List<Models.Picture> pictures = new List<Models.Picture>();
@@ -408,15 +412,15 @@ namespace TheDataProject.Droid.Fragments
 
         public string SaveImage(Bitmap bitmap)
         {
-            string fileName;
+            string _fileName;
             try
             {
-                fileName = String.Format("facility_{0}", Guid.NewGuid());
-                using (var os = new FileStream(_dir + "/" + fileName, FileMode.CreateNew))
+                _fileName = String.Format("facility_{0}", Guid.NewGuid());
+                using (var os = new FileStream(_dir + "/" + _fileName, FileMode.CreateNew))
                 {
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
                 }
-                return fileName;
+                return _fileName;
             }
             catch (Exception ex)
             {
@@ -660,6 +664,7 @@ namespace TheDataProject.Droid.Fragments
 
             facility.Location = new Models.Location();
             facility.Location.LocalMunicipality = localmunicipality.SelectedItem.ToString();
+            facility.Location.Province = province.SelectedItem.ToString();
             facility.Location.StreetAddress = streetAddress.Text;
             facility.Location.Suburb = suburb.Text;
             facility.Location.Region = region.Text;

@@ -371,7 +371,7 @@ namespace TheDataProject.Droid
                     if (data != null)
                     {
                         Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver, data.Data);
-                        iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                        iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap,300, 300, false));
                     }
                 }
             }           

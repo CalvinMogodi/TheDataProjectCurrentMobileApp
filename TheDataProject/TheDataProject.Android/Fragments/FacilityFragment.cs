@@ -213,7 +213,7 @@ namespace TheDataProject.Droid
 
             facility.Status = "Submitted";
             bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
-
+            messageDialog.HideLoading();
             if (isUpdated)
             {
                 viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());

@@ -26,8 +26,8 @@ namespace TheDataProject.Droid
         BrowseFacilitiesAdapter adapter;
         SwipeRefreshLayout refresher;
         RecyclerView recyclerView;
+        EditText searchedTxt;
         int userId;
-
         ProgressBar progress;
         public static FacilitiesViewModel ViewModel { get; set; }
 
@@ -46,8 +46,10 @@ namespace TheDataProject.Droid
             userId = Convert.ToInt32(ap.GetUserId());
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
-            recyclerView =
-                view.FindViewById<RecyclerView>(Resource.Id.facilityRecyclerView);
+            recyclerView = view.FindViewById<RecyclerView>(Resource.Id.facilityRecyclerView);
+            searchedTxt = view.FindViewById<EditText>(Resource.Id.searchedTxt);
+
+            searchedTxt.TextChanged += Search_Facilities;
 
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
@@ -61,6 +63,35 @@ namespace TheDataProject.Droid
             return view;
         }
 
+        void Search_Facilities(object sender, EventArgs e)
+        {
+            if (searchedTxt.Text.Trim().Length > 1)
+            {
+                var newList = ViewModel.OriginalFacilities.Where(f => f.Name.Contains(searchedTxt.Text.Trim()) || f.ClientCode.Contains(searchedTxt.Text.Trim()));
+                ViewModel.Facilities = new ObservableCollection<Facility>();
+                foreach (var item in newList)
+                {
+                    ViewModel.Facilities.Add(item);
+                }
+
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+                refresher.Refreshing = false;
+                refresher.Refresh += Refresher_Refresh;
+                adapter.ItemClick += Adapter_ItemClick;
+            }
+            else {
+                ViewModel.Facilities = new ObservableCollection<Facility>();
+                foreach (var item in ViewModel.OriginalFacilities)
+                {
+                    ViewModel.Facilities.Add(item);
+                }
+
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+                refresher.Refreshing = false;
+                refresher.Refresh += Refresher_Refresh;
+                adapter.ItemClick += Adapter_ItemClick;
+            }
+        }
         public async override void OnStart()
         {
             base.OnStart();
@@ -217,6 +248,7 @@ namespace TheDataProject.Droid
             if (isUpdated)
             {
                 viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
+                viewModel.OriginalFacilities.Remove(viewModel.OriginalFacilities.Where(s => s.Id == facility.Id).Single());
                 messageDialog.SendToast("Facility is submitted for approval.");
             }
             else {

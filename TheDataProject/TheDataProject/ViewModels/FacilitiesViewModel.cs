@@ -8,6 +8,7 @@ namespace TheDataProject
     public class FacilitiesViewModel : BaseViewModel
     {
         public ObservableCollection<Facility> Facilities { get; set; }
+        public ObservableCollection<Facility> OriginalFacilities { get; set; }
         public Command LoadFacilitiesCommand { get; set; }
         public Command UpdateFacilityCommand { get; set; }
 
@@ -15,6 +16,7 @@ namespace TheDataProject
         {
             Title = "Facility";
             Facilities = new ObservableCollection<Facility>();
+            OriginalFacilities = new ObservableCollection<Facility>();
             LoadFacilitiesCommand = new Command<int>(async (int userId) => await ExecuteFacilitiesCommand(userId));
             UpdateFacilityCommand = new Command<Facility>(async (Facility facility) => await ExecuteUpdateFacilityCommand(facility));
         }
@@ -22,7 +24,9 @@ namespace TheDataProject
         public async Task ExecuteFacilitiesCommand(int userId)
         {
             Facilities.Clear();
-            Facilities = await DataStore.GetFacilitysAsync(userId);  
+            OriginalFacilities.Clear();
+            Facilities = await DataStore.GetFacilitysAsync(userId);
+            OriginalFacilities = Facilities;
         }
 
         public async Task<bool> ExecuteUpdateFacilityCommand(Facility facility)

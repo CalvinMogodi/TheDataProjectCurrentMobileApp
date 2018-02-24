@@ -34,7 +34,7 @@
     <item name="colorButtonNormal">@color/black</item>
   </style>
   <style name="button_custom" parent="@android:style/Widget.Button">
-    <item name="colorButtonNormal">@color/easternblue</item>
+    <item name="colorButtonNormal">@color/primary</item>
     <item name="android:textColor">@android:color/white</item>
   </style>
 	<style name="Widget.CardContent" parent="android:Widget">

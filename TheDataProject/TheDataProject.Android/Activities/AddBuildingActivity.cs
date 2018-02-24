@@ -107,8 +107,8 @@ namespace TheDataProject.Droid
                 }                
                 buildingName.Text = building.BuildingName;
                 buildingType.SetSelection(GetIndex(buildingType, building.BuildingType));
-                buildingstandard.SetSelection(GetIndex(buildingstandard, building.BuildingName));
-                disabledAccesss.SetSelection(GetIndex(buildingstandard, building.DisabledAccess));
+                buildingstandard.SetSelection(GetIndex(buildingstandard, building.BuildingStandard));
+                disabledAccesss.SetSelection(GetIndex(disabledAccesss, building.DisabledAccess));
                 utilisationStatus.Text = building.Status;
                 nooOfFoors.Text = Convert.ToString(building.NumberOfFloors);
                 totalFootprintAream2.Text = Convert.ToString(building.FootPrintArea);
@@ -191,14 +191,19 @@ namespace TheDataProject.Droid
         {
             MessageDialog messageDialog = new MessageDialog();
             messageDialog.ShowLoading();
+
             if (!ValidateForm())
+            {
+                messageDialog.HideLoading();
                 return;
+            }
+            
+               
             StaticData staticData = new StaticData();
 
             int numberOfFloors = 0;
             if (!String.IsNullOrEmpty(nooOfFoors.Text))
                 numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
-
             
             if (PhotoIsChanged)
                 FileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
@@ -216,7 +221,7 @@ namespace TheDataProject.Droid
                 ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
                 Heritage = heritage.Checked == true ? true :false,
                 OccupationYear = occupationYear.Text,
-                DisabledAccess = disabledAccesss.Selected.ToString(),
+                DisabledAccess = disabledAccesss.SelectedItem.ToString(),
                 DisabledComment = disabledComment.Text,
                 ConstructionDescription = constructionDescription.Text,
                 GPSCoordinates = _GPSCoordinates,
@@ -272,9 +277,9 @@ namespace TheDataProject.Droid
             else {
                 messageDialog.HideLoading();
                 if (!isEdit)
-                    messageDialog.SendMessage("Unable to add new building.", null);
+                    messageDialog.SendToast("Unable to add new building.");
                 else
-                    messageDialog.SendMessage("Unable to update building.", null);
+                    messageDialog.SendToast("Unable to update building.");
             }            
         }
 
@@ -361,6 +366,7 @@ namespace TheDataProject.Droid
                 if (bitmap != null)
                 {
                     iImageViewer.SetImageBitmap(bitmap);
+                    imageDialog.Dismiss();
                     GC.Collect();
                 }
             }
@@ -416,7 +422,7 @@ namespace TheDataProject.Droid
             imageDialog = new Dialog(this);
             imageDialog.SetContentView(Resource.Layout.dialog_select_image);
             
-            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
+            //takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
             iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);           
             Bitmap bitmap = ((BitmapDrawable)buildingPhoto.Drawable).Bitmap;
             if (bitmap != null)
@@ -426,7 +432,7 @@ namespace TheDataProject.Droid
             selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
             siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
             siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
-            takeaphotoButton.Click += TakeAPicture;
+            //takeaphotoButton.Click += TakeAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;
@@ -469,13 +475,7 @@ namespace TheDataProject.Droid
             bool isValid = true;
             bool photoIsRequired = false;
             bool GPSCoordinatesIsRequired = false;
-
-
-            if (!validation.IsRequired(building.Photo))
-            {
-                photoIsRequired = true;
-                isValid = false;
-            }
+                        
             if (!validation.IsRequired(buildingName.Text))
             {
                 buildingName.SetError("This field is required", icon);
@@ -499,11 +499,6 @@ namespace TheDataProject.Droid
             if (!validation.IsRequired(totalImprovedaAeam2.Text))
             {
                 totalImprovedaAeam2.SetError("This field is required", icon);
-                isValid = false;
-            }
-            if (building.GPSCoordinates == null)
-            {
-                GPSCoordinatesIsRequired = true;
                 isValid = false;
             }
             return isValid;

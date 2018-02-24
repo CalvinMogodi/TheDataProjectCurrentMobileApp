@@ -31,7 +31,7 @@
                     android:layout_height="80dp"
                     android:paddingLeft="20dp"
                     android:layout_gravity="center_horizontal"
-                    android:id="@+id/facilitysecondphoto" />
+                    android:id="@+id/facilitysecondphotoinfo" />
                 <LinearLayout
                     android:orientation="vertical"
                     android:gravity="center"

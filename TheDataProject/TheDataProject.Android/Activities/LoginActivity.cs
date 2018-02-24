@@ -50,7 +50,7 @@ namespace TheDataProject.Droid.Activities
             message = FindViewById<TextView>(Resource.Id.tvlogin_message);
             signInBtn = FindViewById<Button>(Resource.Id.btnlogin_signin);
 
-            signInBtn.SetBackgroundColor(Android.Graphics.Color.Tan);
+            signInBtn.SetBackgroundColor(Android.Graphics.Color.ParseColor("#101e45"));         
             ViewModel = new LoginViewModel();
             signInBtn.Click += SignIn_Click;
         }

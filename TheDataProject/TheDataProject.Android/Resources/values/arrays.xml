@@ -16,28 +16,6 @@
 
   <string-array name="provinces">
     <item>Gauteng</item>
-    <item>Central District</item>
-    <item>Ghanzi District</item>
-    <item>Kalagadi District</item>
-    <item>Kgatleng District</item>
-    <item>Kweneng District</item>
-    <item>North East District</item>
-    <item>North-West District</item>
-    <item>South East District</item>
-    <item>Southern District</item>
-    <item>Caprivi Regional Council</item>
-    <item>Erongo Regional Council</item>
-    <item>Hardap Regional Council</item>
-    <item>Karas Regional Council</item>
-    <item>Kavango Regional Council</item>
-    <item>Khomas Regional Council</item>
-    <item>Kunene Regional Council</item>
-    <item>Ohangwena Regional Council</item>
-    <item>Omaheke Regional Council</item>
-    <item>Omusati Regional Council</item>
-    <item>Oshana Regional Council</item>
-    <item>Oshikoto regional Council</item>
-    <item>Otjozondjupa Regional Council</item>
     <item>Eastern Cape</item>
     <item>Free State</item>    
     <item>KwaZulu-Natal</item>

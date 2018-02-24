@@ -91,7 +91,7 @@ namespace TheDataProject.Droid.Fragments
             responsiblepersonHolder = view.FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
             deedHolder = view.FindViewById<CardView>(Resource.Id.tvf_deedholder);
             facilityPhoto = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
-            secondFacilityPhoto = view.FindViewById<ImageView>(Resource.Id.facilitysecondphoto);
+            secondFacilityPhoto = view.FindViewById<ImageView>(Resource.Id.facilitysecondphotoinfo);
 
             facilityPhoto.Click += (sender, e) => {
                 ShowImage_Click(true);
@@ -113,10 +113,9 @@ namespace TheDataProject.Droid.Fragments
                 facilityName.Text = facility.Name;
                 settlementtype.SetSelection(GetIndex(settlementtype, facility.SettlementType));
                 zoning.SetSelection(GetIndex(zoning, facility.Zoning));
-                imageNames = facility.IDPicture.Split(',').ToList();
-                GetImages(ap);
-
-
+                imageNames = facility.IDPicture == null ? new List<string>() :facility.IDPicture.Split(',').ToList();
+                if (imageNames.Count > 0)
+                    GetImages(ap);
             }
             settlementtype.Enabled = false;
             zoning.Enabled = false;
@@ -215,15 +214,15 @@ namespace TheDataProject.Droid.Fragments
             base.OnActivityResult(requestCode, resultCode, data);
            if(requestCode == 1888) {
                 Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-                    Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
-                    mediaScanIntent.SetData(contentUri);
-                    Application.Context.SendBroadcast(mediaScanIntent);
-                    bitmap = _file.Path.LoadAndResizeBitmap(300, 300);
-                    if (bitmap != null)
-                    {
-                        iImageViewer.SetImageBitmap(bitmap);
-                        GC.Collect();
-                    }
+                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
+                mediaScanIntent.SetData(contentUri);
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, contentUri);
+                if (bitmap != null)
+                {
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                    secondFacilityPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                    imageDialog.Dismiss();
+                }
             }
             else
             {
@@ -239,7 +238,7 @@ namespace TheDataProject.Droid.Fragments
             IsFirstPhoto = isFirstImage;
             imageDialog = new Dialog(Activity);
             imageDialog.SetContentView(Resource.Layout.dialog_select_image);   
-            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
+            //takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
             iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
             if (isFirstImage)
             {
@@ -260,7 +259,7 @@ namespace TheDataProject.Droid.Fragments
             selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
             siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
             siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
-            takeaphotoButton.Click += TakeAPicture;
+            //takeaphotoButton.Click += TakeAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;

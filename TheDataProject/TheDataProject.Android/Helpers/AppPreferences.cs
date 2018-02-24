@@ -46,7 +46,7 @@ namespace TheDataProject.Droid.Helpers
         }
         public string GetFacilityId() // Return Get the Value  
         {
-            return nameSharedPrefs.GetString(PREFERENCE_ACCESS_KEY, "");
+            return nameSharedPrefs.GetString(PREFERENCE_ACCESS_List, "");
         }
 
         public Bitmap StringToBitMap(String image)

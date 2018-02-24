@@ -55,7 +55,6 @@
         <Button
             android:text="@string/signin"
             android:backgroundTint="@color/primary"
-            android:theme="@style/button_custom"
             android:id="@+id/btnlogin_signin"
             android:layout_width="350dp"
             android:layout_height="wrap_content" />
@@ -63,6 +62,7 @@
     <TextView
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="match_parent"
+        android:theme="@style/button_custom"
         android:layout_height="wrap_content"
         android:textColor="#df3e16"
         android:gravity="center"

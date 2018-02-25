@@ -49,9 +49,7 @@ namespace TheDataProject.Droid.Activities
             username = FindViewById<EditText>(Resource.Id.etlogin_username);
             password = FindViewById<EditText>(Resource.Id.etlogin_password);            
             message = FindViewById<TextView>(Resource.Id.tvlogin_message);
-            signInBtn = FindViewById<Button>(Resource.Id.btnlogin_signin);
-            signInOffLineBtn = FindViewById<Button>(Resource.Id.btnlogin_signinoffline);
-            
+            signInBtn = FindViewById<Button>(Resource.Id.btnlogin_signin);            
             signInBtn.SetBackgroundColor(Android.Graphics.Color.ParseColor("#101e45"));
             ViewModel = new LoginViewModel();
             this.SqlLiteManager = new SqlLiteManager();

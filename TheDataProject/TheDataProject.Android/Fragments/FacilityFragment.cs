@@ -54,7 +54,7 @@ namespace TheDataProject.Droid
             searchedTxt.TextChanged += Search_Facilities;
 
             recyclerView.HasFixedSize = true;
-            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));
 
             refresher = view.FindViewById<SwipeRefreshLayout>(Resource.Id.refresher);
             refresher.SetColorSchemeColors(Resource.Color.accent);
@@ -76,7 +76,7 @@ namespace TheDataProject.Droid
                     ViewModel.Facilities.Add(item);
                 }
 
-                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));
                 refresher.Refreshing = false;
                 refresher.Refresh += Refresher_Refresh;
                 adapter.ItemClick += Adapter_ItemClick;
@@ -88,7 +88,7 @@ namespace TheDataProject.Droid
                     ViewModel.Facilities.Add(item);
                 }
 
-                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));
                 refresher.Refreshing = false;
                 refresher.Refresh += Refresher_Refresh;
                 adapter.ItemClick += Adapter_ItemClick;
@@ -112,7 +112,7 @@ namespace TheDataProject.Droid
                 {
                     messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");
                 }
-                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));                
+                recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));                
                 messageDialog.HideLoading();
             }
 
@@ -142,7 +142,7 @@ namespace TheDataProject.Droid
         async void Refresher_Refresh(object sender, EventArgs e)
         {
             await ViewModel.ExecuteFacilitiesCommand(userId);
-            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel));
+            recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));
             refresher.Refreshing = false;
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
@@ -160,11 +160,13 @@ namespace TheDataProject.Droid
     {
         FacilitiesViewModel viewModel;
         Activity activity;
+        int userId = 0;
 
-        public BrowseFacilitiesAdapter(Activity activity, FacilitiesViewModel viewModel)
+        public BrowseFacilitiesAdapter(Activity activity, FacilitiesViewModel viewModel, int _userId)
         {
             this.viewModel = viewModel;
             this.activity = activity;
+            userId = _userId;
             View itemViewList;
 
             this.viewModel.Facilities.CollectionChanged += (sender, args) =>
@@ -263,12 +265,13 @@ namespace TheDataProject.Droid
             }               
 
             facility.Status = "Submitted";
+            facility.ModifiedUserId = userId;
+            facility.ModifiedDate = new DateTime();
             bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
             messageDialog.HideLoading();
             if (isUpdated)
             {
                 viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
-                //viewModel.OriginalFacilities.Remove(viewModel.OriginalFacilities.Where(s => s.Id == facility.Id).Single());
                 messageDialog.SendToast("Facility is submitted for approval.");
             }
             else {

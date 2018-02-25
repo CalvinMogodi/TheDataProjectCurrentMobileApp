@@ -68,8 +68,8 @@ namespace TheDataProject.Droid.Helpers
                 var thisUser = await db.Table<LocalUser>().OrderByDescending(t => t.Username).FirstOrDefaultAsync();
                 if (thisUser != null)
                 {
-                    if (thisUser.Id != user.Id)
-                        await db.UpdateAsync(user);
+                    //if (thisUser.Id != user.Id)
+                    //    await db.UpdateAsync(user);
                 }
                 else {
                     await db.InsertAsync(user);

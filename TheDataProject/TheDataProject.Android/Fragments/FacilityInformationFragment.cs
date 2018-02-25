@@ -44,6 +44,7 @@ namespace TheDataProject.Droid.Fragments
         ImageView facilityPhoto, iImageViewer, secondFacilityPhoto;
         LinearLayout locationlinearlayout;
         View view;
+        int userId;
         ViewGroup Container;
         ListView bpListView;
         List<string> itemList, imageNames;
@@ -106,7 +107,7 @@ namespace TheDataProject.Droid.Fragments
             facility = new Facility();
 
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-           
+            userId = Convert.ToInt32(ap.GetUserId());
             var data = Arguments.GetString("data");
 
             if (data != null)
@@ -367,8 +368,9 @@ namespace TheDataProject.Droid.Fragments
                         facility.IDPicture = facility.IDPicture + "," + name;
                 }
             }
-            
 
+            facility.ModifiedUserId = userId;
+            facility.ModifiedDate = new DateTime();
             bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
             if (isUpdated)
             {

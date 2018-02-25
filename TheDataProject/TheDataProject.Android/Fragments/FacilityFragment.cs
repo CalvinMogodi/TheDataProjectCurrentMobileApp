@@ -29,6 +29,8 @@ namespace TheDataProject.Droid
         EditText searchedTxt;
         int userId;
         ProgressBar progress;
+        AppPreferences ap;
+        public SqlLiteManager SqlLiteManager { get; set; }
         public static FacilitiesViewModel ViewModel { get; set; }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -41,8 +43,8 @@ namespace TheDataProject.Droid
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             ViewModel = new FacilitiesViewModel();
-            Context mContext = Android.App.Application.Context;
-            AppPreferences ap = new AppPreferences(mContext);
+            ap = new AppPreferences(Application.Context);
+            this.SqlLiteManager = new SqlLiteManager();
             userId = Convert.ToInt32(ap.GetUserId());
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
@@ -97,8 +99,15 @@ namespace TheDataProject.Droid
             base.OnStart();
             if (ViewModel.Facilities.Count == 0) {
                 MessageDialog messageDialog = new MessageDialog();
-                messageDialog.ShowLoading();                
-                await ViewModel.ExecuteFacilitiesCommand(userId);
+                messageDialog.ShowLoading();
+                if (ap.IsOnline(Application.Context))
+                {
+                    await ViewModel.ExecuteFacilitiesCommand(userId);
+                    //await this.SqlLiteManager.SyncFacilities(userId);
+                }
+                else {
+                    //await this.SqlLiteManager.GetLocalFacilities(userId);
+                }
                 if (ViewModel.Facilities.Count == 0)
                 {
                     messageDialog.SendMessage("There are no facilities that are assinged to this profile.", "No Facilities Found");

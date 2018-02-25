@@ -100,6 +100,7 @@
     <Compile Include="Helpers\ImageManager.cs" />
     <Compile Include="Helpers\GPSTracker.cs" />
     <Compile Include="Helpers\MessageDialog.cs" />
+    <Compile Include="Helpers\SqlLiteManager.cs" />
     <Compile Include="Helpers\StaticData.cs" />
     <Compile Include="Helpers\Validations.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Activities\BaseActivity.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

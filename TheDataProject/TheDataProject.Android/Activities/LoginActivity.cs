@@ -31,7 +31,8 @@ namespace TheDataProject.Droid.Activities
         public bool FormIsValid { get; set; }
         public User User { get; set; }
         public LoginViewModel ViewModel { get; set; }
-        
+        public SqlLiteManager SqlLiteManager { get; set; }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -53,6 +54,7 @@ namespace TheDataProject.Droid.Activities
             
             signInBtn.SetBackgroundColor(Android.Graphics.Color.ParseColor("#101e45"));
             ViewModel = new LoginViewModel();
+            this.SqlLiteManager = new SqlLiteManager();
             signInBtn.Click += SignIn_Click;
         }
 
@@ -62,29 +64,45 @@ namespace TheDataProject.Droid.Activities
                 return;
 
             MessageDialog messageDialog = new MessageDialog();
+            AppPreferences ap = new AppPreferences(Application.Context);
             messageDialog.ShowLoading();
 
             EncryptionHelper encryptionHelper = new EncryptionHelper();
             message.Text = "";
-            var _user = new User()
+            var user = new User()
             {
                 Username = username.Text,
                 Password = password.Text,
             };
             
-            User user = await ViewModel.ExecuteLoginCommand(_user);
+            if (ap.IsOnline(Application.Context))
+            {
+                user = await ViewModel.ExecuteLoginCommand(user);
+                 this.SqlLiteManager.CreateDatabase();
+                await this.SqlLiteManager.InsertUpdateUser(this.SqlLiteManager.MapUserToLocalUser(user));
+            }
+            else {
+               var locaUser = await SqlLiteManager.GetUser(this.SqlLiteManager.MapUserToLocalUser(user));
+                if (locaUser != null)
+                    user = SqlLiteManager.MapLocalUserToUser(locaUser);
+                else {
+                    user = new User()
+                    {
+                        RespondMessage = "Invaild username or password.",
+                    };
+                }
+            }
 
+            
             if (user.RespondMessage != null)
                 message.Text = user.RespondMessage;
             else
             {
                 var newIntent = new Intent(this, typeof(MainActivity));
                 newIntent.AddFlags(ActivityFlags.ClearTop);
-                newIntent.AddFlags(ActivityFlags.SingleTop);
-                Context mContext = Android.App.Application.Context;
-                AppPreferences ap = new AppPreferences(mContext);
+                newIntent.AddFlags(ActivityFlags.SingleTop);                
                 ap.SaveUserId(user.Id.ToString());
-
+               
                 StartActivity(newIntent);
             
                 Finish();

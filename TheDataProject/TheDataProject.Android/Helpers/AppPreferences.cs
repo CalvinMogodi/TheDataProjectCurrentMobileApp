@@ -12,6 +12,9 @@ using Android.Widget;
 using Android.Preferences;
 using Android.Graphics;
 using Android.Util;
+using Java.Net;
+using Java.IO;
+using Android.Net;
 
 namespace TheDataProject.Droid.Helpers
 {
@@ -105,7 +108,21 @@ namespace TheDataProject.Droid.Helpers
             return _dir;
         }
 
-
+        public bool IsOnline(Context context)
+        {
+            ConnectivityManager cm = (ConnectivityManager)context.GetSystemService(Context.ConnectivityService);
+            // test for connection
+            if (cm.ActiveNetworkInfo != null
+                    && cm.ActiveNetworkInfo.IsAvailable
+                    && cm.ActiveNetworkInfo.IsConnected)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }

@@ -13,5 +13,5 @@ namespace TheDataProject.Models
         public string PhoneNumber { get; set; }
         public string Designation { get; set; }
         public string EmailAddress { get; set; }
-}
+    }
 }

@@ -31,7 +31,6 @@ namespace TheDataProject.Droid.Fragments
 
         #region Properties 
         public string Photo { get; set; }
-        public static readonly int PickImageId = 1000;
         FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton;
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton
             , takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
@@ -48,11 +47,13 @@ namespace TheDataProject.Droid.Fragments
         ViewGroup Container;
         ListView bpListView;
         List<string> itemList, imageNames;
-        Dialog imageDialog;
+        Dialog imageDialog, sameImageDialog;
         FacilityDetailViewModel facilityDetailViewModel;
         public GPSCoordinate _GPSCoordinates;
         public List<BoundryPolygon> _BoundryPolygons;
         ArrayAdapter<string> arrayAdapter;
+        public static readonly int TakeImageId = 1000;
+        public static readonly int SelectImageId = 2000;
         int oldPosition;
         public static Java.IO.File _file;
         public static Java.IO.File _dir;
@@ -61,6 +62,8 @@ namespace TheDataProject.Droid.Fragments
         public bool FirstPhotoIsChanged = false;
         public bool SecondPhotoIsChanged = false;
         public bool isEdit = false;
+        bool NoPhoto = true;
+        public Java.IO.File _PhotoFile;
         public static FacilitiesViewModel ViewModel { get; set; }
         public Facility facility;
         public static FacilityInformationFragment NewInstance(Bundle mybundle) => 
@@ -205,9 +208,14 @@ namespace TheDataProject.Droid.Fragments
         {
             IsFirstPhoto = isFirstImage;
             imageDialog = new Dialog(Activity);
+
             imageDialog.SetContentView(Resource.Layout.dialog_select_image);   
             takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
             iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
+            selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
+            siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
+            siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
+
             if (isFirstImage)
             {
                 Bitmap bitmap = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
@@ -223,16 +231,16 @@ namespace TheDataProject.Droid.Fragments
                 {
                     iImageViewer.SetImageBitmap(bitmap);
                 }
-            }
-            selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
-            siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
-            siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
+            }            
+            //takeaphotoButton.Click += TakeAPicture;
+            takeaphotoButton.Click += SelectAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;
+            sameImageDialog = imageDialog;
             imageDialog.Show();
         }
-
+       
         private void siCancelButton_Click(object sender, EventArgs eventArgs)
         {                
             imageDialog.Dismiss();
@@ -261,12 +269,57 @@ namespace TheDataProject.Droid.Fragments
             imageDialog.Dismiss();
         }
 
+        public Java.IO.File CreateDirectoryForPictures()
+        {
+            Java.IO.File _dir = new Java.IO.File(
+                Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
+            if (!_dir.Exists())
+            {
+                _dir.Mkdirs();
+            }
+
+            return _dir;
+        }
+
+        private void TakeAPicture(object sender, EventArgs eventArgs)
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            _PhotoFile = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
+            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_PhotoFile));
+            StartActivityForResult(intent, TakeImageId);
+        }      
+
         private void SelectAPicture(object sender, EventArgs eventArgs)
         {
             var imageIntent = new Intent();
             imageIntent.SetType("image/*");
             imageIntent.SetAction(Intent.ActionGetContent);
-            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"), 0);
+            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select Photo"), SelectImageId);
+        }
+
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == TakeImageId && resultCode != 0)
+            {
+                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+
+                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_PhotoFile);
+                mediaScanIntent.SetData(contentUri);
+                Activity.SendBroadcast(mediaScanIntent);
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, contentUri);
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+            }
+            else
+            {
+                if (data != null)
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, data.Data);
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                }
+            }
         }
 
         public void BecameVisible()
@@ -292,8 +345,9 @@ namespace TheDataProject.Droid.Fragments
             facility.Zoning = zoning.SelectedItem.ToString();
             if (FirstPhotoIsChanged)
             {
-                string thisFileName = SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
-                imageNames.Add(thisFileName);
+                var _fileName = String.Format("facility_{0}", Guid.NewGuid());
+                SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap, _fileName);
+                imageNames.Add(_fileName);
             }
             if (SecondPhotoIsChanged)
             {

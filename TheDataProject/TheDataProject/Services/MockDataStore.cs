@@ -197,10 +197,10 @@ namespace TheDataProject
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 client.MaxResponseContentBufferSize = 256000;
                 var response = await client.PostAsync(uri, content);
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    isSaved = true;
-                //}
+                if (response.IsSuccessStatusCode)
+                {
+                    isSaved = true;
+                }
             }
             catch (Exception ex)
             {

@@ -12,7 +12,7 @@ using TheDataProject.Droid.Fragments;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "Facility", ParentActivity = typeof(MainActivity), LaunchMode = LaunchMode.SingleInstance,
+    [Activity(Label = "Facility", ParentActivity = typeof(MainActivity), AlwaysRetainTaskState = true, LaunchMode = LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
     [MetaData("android.support.PARENT_ACTIVITY", Value = ".MainActivity")]
     public class FacilityDetailActivity : BaseActivity

@@ -2372,11 +2372,11 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f07003f
 			public const int image = 2131165247;
 			
-			// aapt resource value: 0x7f0700c0
-			public const int img_selectpicture = 2131165376;
-			
 			// aapt resource value: 0x7f0700c1
-			public const int img_takeaphoto = 2131165377;
+			public const int img_selectpicture = 2131165377;
+			
+			// aapt resource value: 0x7f0700c0
+			public const int img_takeaphoto = 2131165376;
 			
 			// aapt resource value: 0x7f07006d
 			public const int imgb_buildingphoto = 2131165293;

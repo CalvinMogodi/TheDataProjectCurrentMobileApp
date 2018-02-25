@@ -12,6 +12,7 @@ using Android.Widget;
 using SQLite;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace TheDataProject.Droid.Helpers
 {
@@ -39,6 +40,26 @@ namespace TheDataProject.Droid.Helpers
             }
         }
 
+        //public Task<bool> SyncFacilitiesFromAPI() {
+
+        //}
+
+        //public Task<bool> SyncFacilitiesFromSqlLite()
+        //{
+
+        //}
+
+        //public Task<bool> SyncBuildingsFromSqlLite()
+        //{
+
+        //}
+
+        //public Task<bool> SyncBuildingsFromSqlLite()
+        //{
+
+        //}
+
+        #region User
         public async Task<string> InsertUpdateUser(LocalUser user)
         {
             try
@@ -46,9 +67,13 @@ namespace TheDataProject.Droid.Helpers
                 var db = new SQLiteAsyncConnection(dbPath);
                 var thisUser = await db.Table<LocalUser>().OrderByDescending(t => t.Username).FirstOrDefaultAsync();
                 if (thisUser != null)
-                   await db.UpdateAsync(user);
-                else
+                {
+                    if (thisUser.Id != user.Id)
+                        await db.UpdateAsync(user);
+                }
+                else {
                     await db.InsertAsync(user);
+                }
                 return "Single data file inserted or updated";
             }
             catch (SQLiteException ex)
@@ -73,11 +98,11 @@ namespace TheDataProject.Droid.Helpers
         }
 
         public LocalUser MapUserToLocalUser(Models.User user) {
-           return new LocalUser()
+            return new LocalUser()
             {
                 Id = user.Id,
                 Username = user.Username,
-               Password = user.Password,
+                Password = user.Password,
             };
         }
 
@@ -90,8 +115,328 @@ namespace TheDataProject.Droid.Helpers
                 Password = user.Password,
             };
         }
-    }
+        #endregion #User
 
+        #region Facility
+        public async Task<bool> InsertFacilities(ObservableCollection<LocalFacility> facilities)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                await db.InsertAllAsync(facilities);
+                return true;
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateFacility(LocalFacility facility)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                await db.UpdateAsync(facility);
+                return true;
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<ObservableCollection<LocalFacility>> GetFacilities(int userId)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                return new ObservableCollection<LocalFacility>(await db.Table<LocalFacility>().Where(u => u.CreatedUserId == userId).ToListAsync());
+            }
+            catch (SQLiteException ex)
+            {
+                return new ObservableCollection<LocalFacility>();
+            }
+        }
+
+        public LocalFacility MapFacilityToLocalFacility(Facility facility)
+        {
+            LocalFacility LocalFacility = new LocalFacility()
+            {
+                Id = facility.Id,
+                Name = facility.Name,
+                ClientCode = facility.ClientCode,
+                SettlementType = facility.SettlementType,
+                Zoning = facility.Zoning,
+                IDPicture = facility.IDPicture,
+                Status = facility.Status,
+                CreatedDate = facility.CreatedDate,
+                CreatedUserId = facility.CreatedUserId,
+                ModifiedDate = facility.ModifiedDate,
+                ModifiedUserId = facility.ModifiedUserId,
+            };
+            if (facility.DeedsInfo != null)
+            {
+                LocalFacility.LocalDeedsInfo = new LocalDeedsInfo()
+                {
+                    Id = facility.DeedsInfo.Id,
+                    ErFNumber = facility.DeedsInfo.ErFNumber,
+                    TitleDeedNumber = facility.DeedsInfo.TitleDeedNumber,
+                    Extent = facility.DeedsInfo.Extent,
+                    OwnerInfomation = facility.DeedsInfo.OwnerInfomation,
+                };
+            }
+            if (facility.ResposiblePerson != null)
+            {
+                LocalFacility.LocalResposiblePerson = new LocalPerson()
+                {
+                    Id = facility.ResposiblePerson.Id,
+                    FullName = facility.ResposiblePerson.FullName,
+                    PhoneNumber = facility.ResposiblePerson.PhoneNumber,
+                    Designation = facility.ResposiblePerson.Designation,
+                    EmailAddress = facility.ResposiblePerson.EmailAddress,
+                };
+            }
+            if (facility.Location != null)
+            {
+                LocalLocation LocalLocation = new LocalLocation()
+                {
+                    Id = facility.Location.Id,
+                    LocalMunicipality = facility.Location.Id,
+                    StreetAddress = facility.Location.StreetAddress,
+                    Suburb = facility.Location.Suburb,
+                    Province = facility.Location.Province,
+                    Region = facility.Location.Region,
+                };
+                if (facility.Location.GPSCoordinates != null)
+                {
+                    LocalGPSCoordinate LocalGPSCoordinates = new LocalGPSCoordinate()
+                    {
+                        Id = facility.Location.GPSCoordinates.Id,
+                        Longitude = facility.Location.GPSCoordinates.Longitude,
+                        Latitude = facility.Location.GPSCoordinates.Latitude,
+                    };
+                }
+                if (facility.Location.BoundryPolygon != null)
+                {
+                    List<LocalBoundryPolygon> LocalBoundryPolygon = new List<LocalBoundryPolygon>();
+                    foreach (var item in facility.Location.BoundryPolygon)
+                    {
+                        LocalBoundryPolygon.Add(new LocalBoundryPolygon()
+                        {
+                            Longitude = item.Longitude,
+                            Latitude = item.Latitude
+                        });
+                    }
+                }
+            }
+            return LocalFacility;
+        }
+
+        public Facility MapLocalLocalFacilityToFacility(LocalFacility facility)
+        {
+            Facility Facility = new Facility()
+            {
+                Id = facility.Id,
+                Name = facility.Name,
+                ClientCode = facility.ClientCode,
+                SettlementType = facility.SettlementType,
+                Zoning = facility.Zoning,
+                IDPicture = facility.IDPicture,
+                Status = facility.Status,
+                CreatedDate = facility.CreatedDate,
+                CreatedUserId = facility.CreatedUserId,
+                ModifiedDate = facility.ModifiedDate,
+                ModifiedUserId = facility.ModifiedUserId,
+            };
+            if (facility.LocalDeedsInfo != null)
+            {
+                Facility.DeedsInfo = new Models.DeedsInfo()
+                {
+                    Id = facility.LocalDeedsInfo.Id,
+                    ErFNumber = facility.LocalDeedsInfo.ErFNumber,
+                    TitleDeedNumber = facility.LocalDeedsInfo.TitleDeedNumber,
+                    Extent = facility.LocalDeedsInfo.Extent,
+                    OwnerInfomation = facility.LocalDeedsInfo.OwnerInfomation,
+                };
+            }
+            if (facility.LocalResposiblePerson != null)
+            {
+                Facility.ResposiblePerson = new Models.Person()
+                {
+                    Id = facility.LocalResposiblePerson.Id,
+                    FullName = facility.LocalResposiblePerson.FullName,
+                    PhoneNumber = facility.LocalResposiblePerson.PhoneNumber,
+                    Designation = facility.LocalResposiblePerson.Designation,
+                    EmailAddress = facility.LocalResposiblePerson.EmailAddress,
+                };
+            }
+            if (facility.LocalLocation != null)
+            {
+                Models.Location LocalLocation = new Models.Location()
+                {
+                    Id = facility.LocalLocation.Id,
+                    LocalMunicipality = facility.LocalLocation.Id,
+                    StreetAddress = facility.LocalLocation.StreetAddress,
+                    Suburb = facility.LocalLocation.Suburb,
+                    Province = facility.LocalLocation.Province,
+                    Region = facility.LocalLocation.Region,
+                };
+                if (facility.LocalLocation.LocalGPSCoordinates != null)
+                {
+                    Models.GPSCoordinate LocalGPSCoordinates = new Models.GPSCoordinate()
+                    {
+                        Id = facility.LocalLocation.LocalGPSCoordinates.Id,
+                        Longitude = facility.LocalLocation.LocalGPSCoordinates.Longitude,
+                        Latitude = facility.LocalLocation.LocalGPSCoordinates.Latitude,
+                    };
+                }
+                if (facility.LocalLocation.LocalBoundryPolygon != null)
+                {
+                    List<Models.BoundryPolygon> LocalBoundryPolygon = new List<Models.BoundryPolygon>();
+                    foreach (var item in facility.LocalLocation.LocalBoundryPolygon)
+                    {
+                        LocalBoundryPolygon.Add(new Models.BoundryPolygon()
+                        {
+                            Longitude = item.Longitude,
+                            Latitude = item.Latitude
+                        });
+                    }
+                }
+            }
+            return Facility;
+        }
+        #endregion #Facility
+
+        #region Building
+
+        public async Task<bool> InsertBuilding(LocalBuilding building)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                await db.InsertAsync(building);
+                return true;
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateUser(LocalBuilding building)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                await db.UpdateAsync(building);
+                return true;
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
+            }
+        }
+        public async Task<ObservableCollection<LocalBuilding>> GetUser(int facilityId)
+        {
+            try
+            {
+                var db = new SQLiteAsyncConnection(dbPath);
+                return new ObservableCollection<LocalBuilding> (await db.Table<LocalBuilding>().Where(f => f.LocalFacility.Id == facilityId).ToListAsync());
+            }
+            catch (SQLiteException ex)
+            {
+                return new ObservableCollection<LocalBuilding>();
+            }
+        }
+
+        public LocalBuilding MapBuildingToLocalBuilding(Models.Building building)
+        {
+            LocalBuilding LocalBuilding =  new LocalBuilding()
+            {
+                Id = building.Id,
+                BuildingNumber = building.BuildingNumber,
+                BuildingName = building.BuildingName,
+                BuildingType = building.BuildingType,
+                BuildingStandard = building.BuildingStandard,
+                Status = building.Status,
+                NumberOfFloors = building.NumberOfFloors,
+                FootPrintArea = building.FootPrintArea,
+                ImprovedArea = building.ImprovedArea,
+                Heritage = building.Heritage,
+                OccupationYear = building.OccupationYear,
+                DisabledAccess = building.DisabledAccess,
+                DisabledComment = building.DisabledComment,
+                ConstructionDescription = building.ConstructionDescription,
+                Photo = building.Photo,
+                CreatedDate = building.CreatedDate,
+                CreatedUserId = building.CreatedUserId,
+                ModifiedDate = building.ModifiedDate,
+                ModifiedUserId = building.ModifiedUserId,
+            };
+            if (building.Facility != null) {
+                LocalBuilding.LocalFacility = new LocalFacility() {
+                    Id = building.Facility.Id
+                };
+            }
+
+            if (building.GPSCoordinates != null)
+            {
+                LocalBuilding.LocalGPSCoordinate = new LocalGPSCoordinate()
+                {
+                    Id = building.GPSCoordinates.Id,
+                    Longitude = building.GPSCoordinates.Longitude,
+                    Latitude = building.GPSCoordinates.Latitude,
+                };
+            }
+            return LocalBuilding;
+        }
+
+        public Models.Building MapLocalBuildingToBuilding(LocalBuilding building)
+        {
+            Models.Building Building = new Models.Building()
+            {
+                Id = building.Id,
+                BuildingNumber = building.BuildingNumber,
+                BuildingName = building.BuildingName,
+                BuildingType = building.BuildingType,
+                BuildingStandard = building.BuildingStandard,
+                Status = building.Status,
+                NumberOfFloors = building.NumberOfFloors,
+                FootPrintArea = building.FootPrintArea,
+                ImprovedArea = building.ImprovedArea,
+                Heritage = building.Heritage,
+                OccupationYear = building.OccupationYear,
+                DisabledAccess = building.DisabledAccess,
+                DisabledComment = building.DisabledComment,
+                ConstructionDescription = building.ConstructionDescription,
+                Photo = building.Photo,
+                CreatedDate = building.CreatedDate,
+                CreatedUserId = building.CreatedUserId,
+                ModifiedDate = building.ModifiedDate,
+                ModifiedUserId = building.ModifiedUserId,
+            };
+            if (building.LocalFacility != null)
+            {
+                Building.Facility = new Facility()
+                {
+                    Id = building.LocalFacility.Id
+                };
+            }
+
+            if (building.LocalGPSCoordinate != null)
+            {
+                Building.GPSCoordinates = new Models.GPSCoordinate()
+                {
+                    Id = building.LocalGPSCoordinate.Id,
+                    Longitude = building.LocalGPSCoordinate.Longitude,
+                    Latitude = building.LocalGPSCoordinate.Latitude,
+                };
+            }
+            return Building;
+        }
+        #endregion #Building
+    }
     #region Local Models
     public class LocalUser
     {
@@ -147,7 +492,7 @@ namespace TheDataProject.Droid.Helpers
         public int CreatedUserId { get; set; }
         public DateTime ModifiedDate { get; set; }
         public int? ModifiedUserId { get; set; }
-        public Facility Facility { get; set; }
+        public LocalFacility LocalFacility { get; set; }
     }
 
     public class LocalDeedsInfo

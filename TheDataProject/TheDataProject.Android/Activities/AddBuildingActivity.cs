@@ -20,7 +20,8 @@ using Java.Util;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "AddItemActivity", LaunchMode = LaunchMode.SingleInstance,
+    [Activity(Label = "AddItemActivity", 
+        AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class AddBuildingActivity : BaseActivity
     {
@@ -35,7 +36,8 @@ namespace TheDataProject.Droid
         AlertDialog numberPickerAlertDialog;
         TextInputLayout occupationyearLayout;
         LinearLayout locationLinearlayout;
-
+        public static readonly int TakeImageId = 1000;
+        public static readonly int SelectImageId = 2000;
         Switch heritage;
         public GPSCoordinate _GPSCoordinates { get; set; }
         public BuildingsViewModel ViewModel { get; set; }
@@ -49,7 +51,6 @@ namespace TheDataProject.Droid
         int userId;
         string FileName = "";
         Building building;
-        public static readonly int PickImageId = 1000;
 
         protected override int LayoutResource => Resource.Layout.activity_add_building;
         protected async override void OnCreate(Bundle savedInstanceState)
@@ -162,6 +163,59 @@ namespace TheDataProject.Droid
             }
         }
 
+        public Java.IO.File CreateDirectoryForPictures()
+        {
+            Java.IO.File _dir = new Java.IO.File(
+                Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
+            if (!_dir.Exists())
+            {
+                _dir.Mkdirs();
+            }
+
+            return _dir;
+        }
+
+        private void TakeAPicture(object sender, EventArgs eventArgs)
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            _file = new Java.IO.File(_dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
+            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_file));
+            StartActivityForResult(intent, TakeImageId);
+        }
+
+        private void SelectAPicture(object sender, EventArgs eventArgs)
+        {
+            var imageIntent = new Intent();
+            imageIntent.SetType("image/*");
+            imageIntent.SetAction(Intent.ActionGetContent);
+            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select Photo"), SelectImageId);
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == TakeImageId && resultCode != 0)
+            {
+                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+
+                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
+                mediaScanIntent.SetData(contentUri);
+                SendBroadcast(mediaScanIntent);
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, contentUri);
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+            }
+            else
+            {
+                if (data != null)
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, data.Data);
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                }
+            }
+        }
+
         private int GetIndex(Spinner spinner, String myString)
         {
             int index = 0;
@@ -228,7 +282,7 @@ namespace TheDataProject.Droid
                 Photo = PhotoIsChanged == true ? FileName : building.Photo,
                 CreatedDate = new DateTime(),
                 CreatedUserId = userId,
-                ModifiedUserId = isEdit == true ? userId : 0,
+                ModifiedUserId = userId,
                 Facility = new Facility
                 {
                     Id = facilityId
@@ -344,45 +398,7 @@ namespace TheDataProject.Droid
         }
 
         #region Image 
-        private void TakeAPicture(object sender, EventArgs eventArgs)
-        {
-            isFromCamera = true;
-            Intent intent = new Intent(MediaStore.ActionImageCapture);
-            _file = new Java.IO.File(_dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
-            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_file));
-            StartActivityForResult(intent, 0);            
-        }
-
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-            if (isFromCamera)
-            {
-                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_file);
-                mediaScanIntent.SetData(contentUri);
-                Application.Context.SendBroadcast(mediaScanIntent);
-                bitmap = _file.Path.LoadAndResizeBitmap(300, 300);
-                if (bitmap != null)
-                {
-                    iImageViewer.SetImageBitmap(bitmap);
-                    imageDialog.Dismiss();
-                    GC.Collect();
-                }
-            }
-            else
-            {
-                if (resultCode == Result.Ok)
-                {
-                    if (data != null)
-                    {
-                        Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver, data.Data);
-                        iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap,300, 300, false));
-                    }
-                }
-            }           
-        }
-
+        
         public void SaveImage(Bitmap bitmap,string fileName)
         {
             try
@@ -420,9 +436,8 @@ namespace TheDataProject.Droid
         {
 
             imageDialog = new Dialog(this);
-            imageDialog.SetContentView(Resource.Layout.dialog_select_image);
-            
-            //takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
+            imageDialog.SetContentView(Resource.Layout.dialog_select_image);            
+            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
             iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);           
             Bitmap bitmap = ((BitmapDrawable)buildingPhoto.Drawable).Bitmap;
             if (bitmap != null)
@@ -432,7 +447,7 @@ namespace TheDataProject.Droid
             selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
             siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
             siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
-            //takeaphotoButton.Click += TakeAPicture;
+            takeaphotoButton.Click += TakeAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;
@@ -454,17 +469,7 @@ namespace TheDataProject.Droid
             imageDialog.Dismiss();
             building.Photo = "new Image";
             PhotoIsChanged = true;
-        }
-
-        private void SelectAPicture(object sender, EventArgs eventArgs)
-        {
-            isFromCamera = false;
-            var imageIntent = new Intent();
-            imageIntent.SetType("image/*");
-            imageIntent.SetAction(Intent.ActionGetContent);
-            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"), 0);
-        }
-
+        }       
         private bool ValidateForm()
         {
             Validations validation = new Validations();

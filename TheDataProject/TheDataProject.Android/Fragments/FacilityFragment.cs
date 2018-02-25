@@ -185,7 +185,7 @@ namespace TheDataProject.Droid
         }
 
         // Replace the contents of a view (invoked by the layout manager)
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        public async override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var item = viewModel.Facilities[position];
             Context mContext = Android.App.Application.Context;
@@ -227,6 +227,17 @@ namespace TheDataProject.Droid
                 Bitmap bit = ap.SetImageBitmap(ap.CreateDirectoryForPictures() + "/" + imageNames[0]);
                 if (bit != null)
                     myHolder.ImageView.SetImageBitmap(bit);
+                else
+                {
+                    PictureViewModel pictureViewModel = new PictureViewModel();
+                    Models.Picture picture = await pictureViewModel.ExecuteGetPictureCommand(imageNames[0]);
+                    if (picture != null)
+                    {
+                        var _bit = ap.StringToBitMap(picture.File);
+                        if (_bit != null)
+                            myHolder.ImageView.SetImageBitmap(_bit);
+                    }
+                }
             }
         }
 
@@ -257,7 +268,7 @@ namespace TheDataProject.Droid
             if (isUpdated)
             {
                 viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
-                viewModel.OriginalFacilities.Remove(viewModel.OriginalFacilities.Where(s => s.Id == facility.Id).Single());
+                //viewModel.OriginalFacilities.Remove(viewModel.OriginalFacilities.Where(s => s.Id == facility.Id).Single());
                 messageDialog.SendToast("Facility is submitted for approval.");
             }
             else {

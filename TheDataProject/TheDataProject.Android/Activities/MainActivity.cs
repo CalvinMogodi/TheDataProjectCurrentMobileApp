@@ -14,7 +14,7 @@ using System;
 namespace TheDataProject.Droid
 {
     [Activity(Label = "@string/app_name", Icon = "@mipmap/icon",
-        LaunchMode = LaunchMode.SingleInstance,
+        AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : BaseActivity
     {

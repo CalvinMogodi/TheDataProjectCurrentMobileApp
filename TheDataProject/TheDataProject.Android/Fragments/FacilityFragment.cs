@@ -256,7 +256,7 @@ namespace TheDataProject.Droid
             messageDialog.ShowLoading();
             BuildingsViewModel ViewModel = new BuildingsViewModel();
             await ViewModel.ExecuteBuildingsCommand(facility.Id);
-            var buildings = ViewModel.Buildings;
+            var buildings = ViewModel.Buildings;           
 
             if (!ValidateForm(facility, buildings, messageDialog))
             {
@@ -273,6 +273,8 @@ namespace TheDataProject.Droid
             {
                 viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
                 messageDialog.SendToast("Facility is submitted for approval.");
+                var myActivity = (MainActivity)this.activity;
+                myActivity.Recreate();
             }
             else {
                 messageDialog.SendToast("Unable to submitted facility for approval.");

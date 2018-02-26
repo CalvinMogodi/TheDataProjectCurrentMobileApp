@@ -73,6 +73,7 @@ namespace TheDataProject.Droid.Fragments
 
         #endregion #endregion 
 
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -234,7 +235,7 @@ namespace TheDataProject.Droid.Fragments
                 }
             }            
             //takeaphotoButton.Click += TakeAPicture;
-            takeaphotoButton.Click += SelectAPicture;
+            takeaphotoButton.Click += TakeAPicture;
             selectPictureButton.Click += SelectAPicture;
             siCancelButton.Click += siCancelButton_Click;
             siDoneButton.Click += siDoneButton_Click;
@@ -311,17 +312,18 @@ namespace TheDataProject.Droid.Fragments
                 mediaScanIntent.SetData(contentUri);
                 Activity.SendBroadcast(mediaScanIntent);
                 Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, contentUri);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
             }
             else
             {
                 if (data != null)
                 {
                     Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
                 }
-            }
+            
         }
+    }
 
         public void BecameVisible()
         {
@@ -561,7 +563,7 @@ namespace TheDataProject.Droid.Fragments
                     foreach (var BoundaryPolygon in facility.Location.BoundryPolygon)
                     {
                         _BoundryPolygons.Add(BoundaryPolygon);
-                        itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + "      Longitude: " + BoundaryPolygon.Longitude.ToString());
+                        itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + " Longitude: " + BoundaryPolygon.Longitude.ToString());
                     }            
                     
                     arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -614,7 +616,8 @@ namespace TheDataProject.Droid.Fragments
             locationDialog.Show();
             locationDialog.SetCanceledOnTouchOutside(false);
             int height = Resources.DisplayMetrics.HeightPixels/ 2;
-            locationDialog.Window.SetLayout(700, height);
+            int width = Resources.DisplayMetrics.WidthPixels;
+            locationDialog.Window.SetLayout(width, height);
             InitializeLocation(locationDialog);
         }
 
@@ -640,7 +643,7 @@ namespace TheDataProject.Droid.Fragments
                     Longitude = location.Longitude.ToString()
                 };
                 _BoundryPolygons.Add(BoundryPolygon);
-                itemList.Add("Latitude: " + location.Latitude.ToString() + "      Longitude: " + location.Longitude.ToString());
+                itemList.Add("Latitude: " + location.Latitude.ToString() + " Longitude: " + location.Longitude.ToString());
 
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);

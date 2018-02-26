@@ -14,7 +14,8 @@ using System;
 namespace TheDataProject.Droid
 {
     [Activity(Label = "@string/app_name", Icon = "@mipmap/icon",
-        AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
+             LaunchMode = LaunchMode.SingleInstance,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : BaseActivity
     {
@@ -66,6 +67,11 @@ namespace TheDataProject.Droid
         {
             base.OnRestart();
             Recreate();
+        }
+
+        public void OnActivityRestart()
+        {
+            OnRestart();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)

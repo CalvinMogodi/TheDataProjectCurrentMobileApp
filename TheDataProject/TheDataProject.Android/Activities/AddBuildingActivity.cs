@@ -204,14 +204,14 @@ namespace TheDataProject.Droid
                 mediaScanIntent.SetData(contentUri);
                 SendBroadcast(mediaScanIntent);
                 Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, contentUri);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
             }
             else
             {
                 if (data != null)
                 {
                     Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 300, 300, false));
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
                 }
             }
         }

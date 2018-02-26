@@ -12,9 +12,8 @@ using TheDataProject.Droid.Fragments;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "Facility", ParentActivity = typeof(MainActivity), AlwaysRetainTaskState = true, LaunchMode = LaunchMode.SingleTop,
+    [Activity(Label = "Facility", AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
-    [MetaData("android.support.PARENT_ACTIVITY", Value = ".MainActivity")]
     public class FacilityDetailActivity : BaseActivity
     {
         /// <summary>
@@ -61,7 +60,7 @@ namespace TheDataProject.Droid
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
         }
-
+             
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {

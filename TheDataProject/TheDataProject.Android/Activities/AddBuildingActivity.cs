@@ -339,7 +339,7 @@ namespace TheDataProject.Droid
 
         void AddLocation_Click(object sender, EventArgs e)
         {
-            locationLinearlayout.Visibility = ViewStates.Visible;
+            
             GPSTracker GPSTracker = new GPSTracker();
 
             Android.Locations.Location location = GPSTracker.GPSCoordinate();
@@ -347,19 +347,23 @@ namespace TheDataProject.Droid
             {
                 ShowSettingsAlert();
             }
-            tvbLatitude.Text = "Latitude: " + location.Latitude.ToString();
-            tvbLongitude.Text = "Longitude: " + location.Longitude.ToString();
-            _GPSCoordinates = new GPSCoordinate()
-            {
-                Latitude = location.Latitude.ToString(),
-                Longitude = location.Longitude.ToString()
-            };
-
-            building.GPSCoordinates = _GPSCoordinates;
+           
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
+            }
+            else {
+                locationLinearlayout.Visibility = ViewStates.Visible;
+                tvbLatitude.Text = "Latitude: " + location.Latitude.ToString();
+                tvbLongitude.Text = "Longitude: " + location.Longitude.ToString();
+                _GPSCoordinates = new GPSCoordinate()
+                {
+                    Latitude = location.Latitude.ToString(),
+                    Longitude = location.Longitude.ToString()
+                };
+
+                building.GPSCoordinates = _GPSCoordinates;
             }
         }
 

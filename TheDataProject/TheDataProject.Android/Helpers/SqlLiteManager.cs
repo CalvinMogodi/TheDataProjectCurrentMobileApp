@@ -40,25 +40,71 @@ namespace TheDataProject.Droid.Helpers
             }
         }
 
-        //public Task<bool> SyncFacilitiesFromAPI() {
+        public async Task<bool> SyncFacilitiesFromAPI(ObservableCollection<Facility> facilities)
+        {
+            bool isSycned = false;
+            var db = new SQLiteAsyncConnection(dbPath);
+            ObservableCollection<LocalFacility> facilitiesToAddOnLocal = new ObservableCollection<LocalFacility>();
+            ObservableCollection<LocalFacility> facilitiesToUpdateOnLocal = new ObservableCollection<LocalFacility>();
+            ObservableCollection<Facility> facilitiesToUpdateOnAPI = new ObservableCollection<Facility>();
+            foreach (var facility in facilities)
+            {
+                var _facility = await db.Table<LocalFacility>().Where(f => f.Id == facility.Id).FirstOrDefaultAsync();
+                if (_facility != null)
+                {
+                    if (_facility.ModifiedDate > facility.ModifiedDate)
+                    {
+                        facilitiesToUpdateOnAPI.Add(MapLocalLocalFacilityToFacility(_facility));
+                    }
+                    else if (_facility.ModifiedDate < facility.ModifiedDate) {
+                        facilitiesToUpdateOnLocal.Add(MapFacilityToLocalFacility(facility));
+                    }
+                }
+                else {
+                    facilitiesToAddOnLocal.Add(_facility);
+                }
+            }
 
-        //}
+            if (facilitiesToAddOnLocal.Count > 0)
+            {
+               await InsertFacilities(facilitiesToAddOnLocal);
+            }
+            if (facilitiesToUpdateOnLocal.Count > 0)
+            {
+                await InsertFacilities(facilitiesToAddOnLocal);
+            }
+            return await Task.FromResult(isSycned);
+        }
 
-        //public Task<bool> SyncFacilitiesFromSqlLite()
-        //{
-
-        //}
-
-        //public Task<bool> SyncBuildingsFromSqlLite()
-        //{
-
-        //}
-
-        //public Task<bool> SyncBuildingsFromSqlLite()
-        //{
-
-        //}
-
+        public async Task<bool> SyncBuildingsFromAPI(ObservableCollection<Models.Building> buildings)
+        {
+            bool isSycned = false;
+            var db = new SQLiteAsyncConnection(dbPath);
+            ObservableCollection<LocalBuilding> buildingsToAddOnLocal = new ObservableCollection<LocalBuilding>();
+            ObservableCollection<LocalBuilding> buildingsToUpdateOnLocal = new ObservableCollection<LocalBuilding>();
+            ObservableCollection<Models.Building> buildingsToUpdateOnAPI = new ObservableCollection<Models.Building>();
+            foreach (var building in buildings)
+            {
+                var _building = await db.Table<LocalBuilding>().Where(f => f.Id == building.Id).FirstOrDefaultAsync();
+                if (_building != null)
+                {
+                    if (_building.ModifiedDate > building.ModifiedDate)
+                    {
+                        buildingsToUpdateOnAPI.Add(MapLocalBuildingToBuilding(_building));
+                    }
+                    else if (_building.ModifiedDate < building.ModifiedDate)
+                    {
+                        buildingsToUpdateOnLocal.Add(MapBuildingToLocalBuilding(building));
+                    }
+                }
+                else
+                {
+                    buildingsToAddOnLocal.Add(_building);
+                }
+            }
+            return await Task.FromResult(isSycned);
+        }
+        
         #region User
         public async Task<string> InsertUpdateUser(LocalUser user)
         {

@@ -613,6 +613,8 @@ namespace TheDataProject.Droid.Fragments
 
             locationDialog.Show();
             locationDialog.SetCanceledOnTouchOutside(false);
+            int height = Resources.DisplayMetrics.HeightPixels/ 2;
+            locationDialog.Window.SetLayout(700, height);
             InitializeLocation(locationDialog);
         }
 
@@ -624,24 +626,28 @@ namespace TheDataProject.Droid.Fragments
             if (!GPSTracker.isLocationGPSEnabled)
             {
                 ShowSettingsAlert();
-            }
-            BoundryPolygon BoundryPolygon = new BoundryPolygon()
-            {
-                Latitude = location.Latitude.ToString(),
-                Longitude = location.Longitude.ToString()
-            };
-            _BoundryPolygons.Add(BoundryPolygon);
-            itemList.Add("Latitude: " + location.Latitude.ToString() + "      Longitude: " + location.Longitude.ToString());
+            }           
 
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
-            boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
-            arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
-            bpListView.Adapter = arrayAdapter;
-            bpListView.ItemLongClick += Adapter_ItemSwipe;
+            else {
+                BoundryPolygon BoundryPolygon = new BoundryPolygon()
+                {
+                    Latitude = location.Latitude.ToString(),
+                    Longitude = location.Longitude.ToString()
+                };
+                _BoundryPolygons.Add(BoundryPolygon);
+                itemList.Add("Latitude: " + location.Latitude.ToString() + "      Longitude: " + location.Longitude.ToString());
+
+                boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
+                arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+                bpListView.Adapter = arrayAdapter;
+                bpListView.ItemLongClick += Adapter_ItemSwipe;
+            }
+            
 
         }
         void Adapter_ItemSwipe(object sender, ItemLongClickEventArgs e)
@@ -661,7 +667,7 @@ namespace TheDataProject.Droid.Fragments
 
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
         {
-            locationlinearlayout.Visibility = ViewStates.Visible;
+            
             GPSTracker GPSTracker = new GPSTracker();
 
             Android.Locations.Location location = GPSTracker.GPSCoordinate();
@@ -669,13 +675,17 @@ namespace TheDataProject.Droid.Fragments
             {
                 ShowSettingsAlert();
             }
-            tvfLatitude.Text = location.Latitude.ToString();
-            tvfLongitude.Text = location.Longitude.ToString();
+           
 
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
+            }
+            else {
+                locationlinearlayout.Visibility = ViewStates.Visible;
+                tvfLatitude.Text = location.Latitude.ToString();
+                tvfLongitude.Text = location.Longitude.ToString();
             }
         }
         private void LocationCancelButton_Click(object sender, EventArgs e)

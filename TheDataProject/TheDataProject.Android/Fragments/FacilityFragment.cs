@@ -103,7 +103,7 @@ namespace TheDataProject.Droid
                 if (ap.IsOnline(Application.Context))
                 {
                     await ViewModel.ExecuteFacilitiesCommand(userId);
-                    //await this.SqlLiteManager.SyncFacilities(userId);
+                   // await this.SqlLiteManager.SyncFacilitiesFromAPI(ViewModel.Facilities);
                 }
                 else {
                     //await this.SqlLiteManager.GetLocalFacilities(userId);
@@ -200,7 +200,7 @@ namespace TheDataProject.Droid
             myHolder.Button.Click += (sender, e) => {
                 Submit_Click(item);
             };
-            myHolder.Location.Click += (sender, e) => {
+            myHolder.Location.LongClick += (sender, e) => {
                 Open_Map(item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
             };
             if (item.Location != null)

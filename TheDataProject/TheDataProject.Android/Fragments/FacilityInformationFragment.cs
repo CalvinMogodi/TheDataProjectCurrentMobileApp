@@ -553,8 +553,8 @@ namespace TheDataProject.Droid.Fragments
                 if (facility.Location.GPSCoordinates != null)
                 {
                     locationlinearlayout.Visibility = ViewStates.Visible;
-                    tvfLatitude.Text = facility.Location.GPSCoordinates.Latitude;
-                    tvfLongitude.Text = facility.Location.GPSCoordinates.Longitude;
+                    tvfLatitude.Text = "Lat: " + facility.Location.GPSCoordinates.Latitude;
+                    tvfLongitude.Text = " Long: " + facility.Location.GPSCoordinates.Longitude;
                 }
 
                 if (facility.Location.BoundryPolygon != null)
@@ -563,7 +563,7 @@ namespace TheDataProject.Droid.Fragments
                     foreach (var BoundaryPolygon in facility.Location.BoundryPolygon)
                     {
                         _BoundryPolygons.Add(BoundaryPolygon);
-                        itemList.Add("Latitude: " + BoundaryPolygon.Latitude.ToString() + " Longitude: " + BoundaryPolygon.Longitude.ToString());
+                        itemList.Add("Lat: " + BoundaryPolygon.Latitude.ToString() + " Long: " + BoundaryPolygon.Longitude.ToString());
                     }            
                     
                     arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -643,7 +643,7 @@ namespace TheDataProject.Droid.Fragments
                     Longitude = location.Longitude.ToString()
                 };
                 _BoundryPolygons.Add(BoundryPolygon);
-                itemList.Add("Latitude: " + location.Latitude.ToString() + " Longitude: " + location.Longitude.ToString());
+                itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
 
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -687,8 +687,8 @@ namespace TheDataProject.Droid.Fragments
             }
             else {
                 locationlinearlayout.Visibility = ViewStates.Visible;
-                tvfLatitude.Text = location.Latitude.ToString();
-                tvfLongitude.Text = location.Longitude.ToString();
+                tvfLatitude.Text = "Lat: " + location.Latitude.ToString();
+                tvfLongitude.Text = "Long: " + location.Longitude.ToString();
             }
         }
         private void LocationCancelButton_Click(object sender, EventArgs e)

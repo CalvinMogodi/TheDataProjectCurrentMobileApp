@@ -101,8 +101,8 @@ namespace TheDataProject.Droid
                 occupationYear.Text = building.OccupationYear;
                 if (building.GPSCoordinates != null)
                 {
-                    tvbLatitude.Text = "Latitude: " + building.GPSCoordinates.Latitude;
-                    tvbLongitude.Text = "Longitude: " + building.GPSCoordinates.Longitude;
+                    tvbLatitude.Text = "Lat: " + building.GPSCoordinates.Latitude;
+                    tvbLongitude.Text = "Long: " + building.GPSCoordinates.Longitude;
                     _GPSCoordinates = building.GPSCoordinates;
                     locationLinearlayout.Visibility = ViewStates.Visible;
                 }                
@@ -355,8 +355,8 @@ namespace TheDataProject.Droid
             }
             else {
                 locationLinearlayout.Visibility = ViewStates.Visible;
-                tvbLatitude.Text = "Latitude: " + location.Latitude.ToString();
-                tvbLongitude.Text = "Longitude: " + location.Longitude.ToString();
+                tvbLatitude.Text = "Lat: " + location.Latitude.ToString();
+                tvbLongitude.Text = "Long: " + location.Longitude.ToString();
                 _GPSCoordinates = new GPSCoordinate()
                 {
                     Latitude = location.Latitude.ToString(),

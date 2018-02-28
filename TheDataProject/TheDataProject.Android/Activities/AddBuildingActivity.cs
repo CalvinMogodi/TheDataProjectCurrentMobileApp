@@ -195,6 +195,7 @@ namespace TheDataProject.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
+            AppPreferences ap = new AppPreferences(Application.Context);
 
             if (requestCode == TakeImageId && resultCode != 0)
             {
@@ -204,14 +205,14 @@ namespace TheDataProject.Droid
                 mediaScanIntent.SetData(contentUri);
                 SendBroadcast(mediaScanIntent);
                 Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, contentUri);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageWidth(bitmap.Height), false));
             }
             else
             {
                 if (data != null)
                 {
                     Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageWidth(bitmap.Height), false));
                 }
             }
         }

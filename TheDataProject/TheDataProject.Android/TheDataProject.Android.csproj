@@ -88,11 +88,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\AddBuildingActivity.cs" />
-    <Compile Include="Activities\FacilityDetailActivity.cs" />
-    <Compile Include="Activities\ForgotPasswordActivity.cs" />
+    <Compile Include="Activities\BuildingsActivity.cs" />
+    <Compile Include="Activities\FacilityInformationActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
     <Compile Include="Fragments\FacilityBuildingFragment.cs" />
-    <Compile Include="Fragments\FacilityInformationFragment.cs" />
     <Compile Include="Fragments\IFragmentVisible.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\AppPreferences.cs" />
@@ -111,8 +110,6 @@
     <Compile Include="Activities\BaseActivity.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
-    <Compile Include="SQLite.cs" />
-    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -150,6 +147,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\dialog_numberpicker.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_buildings.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

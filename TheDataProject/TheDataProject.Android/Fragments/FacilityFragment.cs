@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TheDataProject.ViewModels;
 using System.Collections.ObjectModel;
+using TheDataProject.Droid.Activities;
 
 namespace TheDataProject.Droid
 {
@@ -130,7 +131,8 @@ namespace TheDataProject.Droid
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
             var item = ViewModel.Facilities[e.Position];
-            var intent = new Intent(Activity, typeof(FacilityDetailActivity));
+            // var intent = new Intent(Activity, typeof(FacilityDetailActivity));
+            var intent = new Intent(Activity, typeof(FacilityInformationActivity));
             Context mContext = Android.App.Application.Context;
             AppPreferences ap = new AppPreferences(mContext);
             ap.SaveFacilityId(item.Id.ToString());

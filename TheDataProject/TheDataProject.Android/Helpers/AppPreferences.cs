@@ -94,6 +94,25 @@ namespace TheDataProject.Droid.Helpers
                 return null;
             }
         }
+        public int GetImageWidth(int width)
+        {
+            width = width / 2;
+            if (width > 500)
+            {
+                width = width / 3;
+            }
+            return width;
+        }
+
+        public int GetImageHeight(int height)
+        {
+            height = height / 2;
+            if (height > 600)
+            {
+                height = height / 3;
+            }
+            return height;
+        }
 
         public Java.IO.File CreateDirectoryForPictures()
         {

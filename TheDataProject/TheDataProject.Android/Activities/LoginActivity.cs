@@ -73,23 +73,23 @@ namespace TheDataProject.Droid.Activities
                 Password = password.Text,
             };
             
-            if (ap.IsOnline(Application.Context))
-            {
+            //if (ap.IsOnline(Application.Context))
+            //{
                 user = await ViewModel.ExecuteLoginCommand(user);
-                 this.SqlLiteManager.CreateDatabase();
-                await this.SqlLiteManager.InsertUpdateUser(this.SqlLiteManager.MapUserToLocalUser(user));
-            }
-            else {
-               var locaUser = await SqlLiteManager.GetUser(this.SqlLiteManager.MapUserToLocalUser(user));
-                if (locaUser != null)
-                    user = SqlLiteManager.MapLocalUserToUser(locaUser);
-                else {
-                    user = new User()
-                    {
-                        RespondMessage = "Invaild username or password.",
-                    };
-                }
-            }
+                // this.SqlLiteManager.CreateDatabase();
+                //await this.SqlLiteManager.InsertUpdateUser(this.SqlLiteManager.MapUserToLocalUser(user));
+            //}
+            //else {
+            //   var locaUser = await SqlLiteManager.GetUser(this.SqlLiteManager.MapUserToLocalUser(user));
+            //    if (locaUser != null)
+            //        user = SqlLiteManager.MapLocalUserToUser(locaUser);
+            //    else {
+            //        user = new User()
+            //        {
+            //            RespondMessage = "Invaild username or password.",
+            //        };
+            //    }
+            //}
 
             
             if (user.RespondMessage != null)

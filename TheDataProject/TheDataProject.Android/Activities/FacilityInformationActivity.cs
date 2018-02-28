@@ -7,49 +7,41 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Support.Design.Widget;
-using TheDataProject.Droid.Helpers;
-using System.IO;
 using Android.Graphics;
-using Android.Support.V7.Widget;
-using Android.Locations;
-using Android.Provider;
-using Android.Content.PM;
 using Android.Graphics.Drawables;
+using Android.Provider;
+using Android.Support.Design.Widget;
 using TheDataProject.Models;
-using static Android.Widget.AdapterView;
+using Android.Support.V7.Widget;
+using TheDataProject.Droid.Helpers;
 using TheDataProject.ViewModels;
+using System.IO;
+using Android.Util;
+using static Android.Widget.AdapterView;
 
-namespace TheDataProject.Droid.Fragments
+namespace TheDataProject.Droid.Activities
 {
-    public class FacilityInformationFragment : Android.Support.V4.App.Fragment , IFragmentVisible
+    [Activity(Label = "ForgotPasswordActivity")]
+    public class FacilityInformationActivity : BaseActivity
     {
-
-
-        #region Properties 
         public string Photo { get; set; }
         FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton;
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton
             , takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
-        ProgressBar progress;
-        EditText streetAddress, suburb,region ,fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
+
+        EditText streetAddress, suburb, region, fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
         Spinner settlementtype, province, localmunicipality, zoning;
         AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
-        LayoutInflater Inflater;
         CardView locationHolder, responsiblepersonHolder, deedHolder;
         TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText;
         ImageView facilityPhoto, iImageViewer, secondFacilityPhoto;
         LinearLayout locationlinearlayout;
-        View view;
         int userId;
-        ViewGroup Container;
         ListView bpListView;
         List<string> itemList, imageNames;
         Dialog imageDialog, sameImageDialog;
-        FacilityDetailViewModel facilityDetailViewModel;
         public GPSCoordinate _GPSCoordinates;
         public List<BoundryPolygon> _BoundryPolygons;
         ArrayAdapter<string> arrayAdapter;
@@ -63,40 +55,49 @@ namespace TheDataProject.Droid.Fragments
         public bool FirstPhotoIsChanged = false;
         public bool SecondPhotoIsChanged = false;
         public bool isEdit = false;
-        bool NoPhoto = true;
         public Java.IO.File _PhotoFile;
-        public static FacilitiesViewModel ViewModel { get; set; }
+        FacilitiesViewModel ViewModel;
         public Facility facility;
-        public static FacilityInformationFragment NewInstance(Bundle mybundle) => 
-            new FacilityInformationFragment { Arguments = mybundle };
-       
+        Button buildingsButton;
 
-        #endregion #endregion 
+        protected override int LayoutResource => Resource.Layout.activity_facility;
 
-
-        public override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-        }
-
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
             ViewModel = new FacilitiesViewModel();
+
+            var data = Intent.GetStringExtra("data");           
             
-            Inflater = inflater;
-            Container = container;
-            view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
-            editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
-            saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
-            clientCode = view.FindViewById<TextView>(Resource.Id.tvf_clientcode);
-            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);            
-            settlementtype = view.FindViewById<Spinner>(Resource.Id.sf_settlementtype);
-            zoning = view.FindViewById<Spinner>(Resource.Id.sf_zoning);
-            locationHolder = view.FindViewById<CardView>(Resource.Id.tvf_locationholder);
-            responsiblepersonHolder = view.FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
-            deedHolder = view.FindViewById<CardView>(Resource.Id.tvf_deedholder);
-            facilityPhoto = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
-            secondFacilityPhoto = view.FindViewById<ImageView>(Resource.Id.facilitysecondphotoinfo);
+            buildingsButton = FindViewById<Button>(Resource.Id.buildings_button);
+            buildingsButton.Click += (sender, e) =>
+            {
+                var intent = new Intent(this, typeof(BuildingsActivity));
+                StartActivity(intent);
+            };
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var intent = new Intent(this, typeof(LoginActivity));
+                AppPreferences appPreferences = new AppPreferences(Application.Context);
+                appPreferences.SaveUserId("0");
+                StartActivity(intent);
+            };
+            
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetHomeButtonEnabled(true);
+
+            editButton = FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
+            saveButton = FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
+            clientCode = FindViewById<TextView>(Resource.Id.tvf_clientcode);
+            facilityName = FindViewById<TextView>(Resource.Id.tvf_facilityname);
+            settlementtype = FindViewById<Spinner>(Resource.Id.sf_settlementtype);
+            zoning = FindViewById<Spinner>(Resource.Id.sf_zoning);
+            locationHolder = FindViewById<CardView>(Resource.Id.tvf_locationholder);
+            responsiblepersonHolder = FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
+            deedHolder = FindViewById<CardView>(Resource.Id.tvf_deedholder);
+            facilityPhoto = FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
+            secondFacilityPhoto = FindViewById<ImageView>(Resource.Id.facilitysecondphotoinfo);
 
             facilityPhoto.Click += (sender, e) => {
                 ShowImage_Click(true);
@@ -109,16 +110,16 @@ namespace TheDataProject.Droid.Fragments
 
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);
             userId = Convert.ToInt32(ap.GetUserId());
-            var data = Arguments.GetString("data");
 
             if (data != null)
             {
                 facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
+                SupportActionBar.Title = facility.Name;
                 clientCode.Text = facility.ClientCode;
                 facilityName.Text = facility.Name;
                 settlementtype.SetSelection(GetIndex(settlementtype, facility.SettlementType));
                 zoning.SetSelection(GetIndex(zoning, facility.Zoning));
-                imageNames = facility.IDPicture == null ? new List<string>() :facility.IDPicture.Split(',').ToList();
+                imageNames = facility.IDPicture == null ? new List<string>() : facility.IDPicture.Split(',').ToList();
                 if (imageNames.Count > 0)
                     GetImages(ap);
             }
@@ -134,11 +135,29 @@ namespace TheDataProject.Droid.Fragments
             deedHolder.Click += Deed_Click;
             _GPSCoordinates = new GPSCoordinate();
             _BoundryPolygons = new List<BoundryPolygon>();
+        }     
 
-            return view;
+        private void Location_Click(object sender, EventArgs e)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Get the layout inflater
+            LayoutInflater inflater = this.LayoutInflater;
+            builder.SetView(inflater.Inflate(Resource.Layout.dialog_facility_information_location, null));
+            locationDialog = builder.Create();
+
+            locationDialog.Show();
+            locationDialog.SetCanceledOnTouchOutside(false);
+            int hafh = Resources.DisplayMetrics.HeightPixels / 2;
+            int quater = hafh / 2;
+            int height = hafh + quater;
+            int width = Resources.DisplayMetrics.WidthPixels;
+            locationDialog.Window.SetLayout(width, height);
+            InitializeLocation(locationDialog);
         }
 
-        private async void GetImages(AppPreferences ap) {
+
+        private async void GetImages(AppPreferences ap)
+        {
             if (!String.IsNullOrEmpty(imageNames[0]))
             {
                 Bitmap bit = ap.SetImageBitmap(_dir + "/" + imageNames[0]);
@@ -175,159 +194,6 @@ namespace TheDataProject.Droid.Fragments
                     }
                 }
             }
-        }
-
-        public void SaveImage(Bitmap bitmap, string fileName)
-        {
-            try
-            {
-                fileName = String.Format(fileName);
-                using (var os = new FileStream(_dir + "/" + fileName, FileMode.CreateNew))
-                {
-                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        private int GetIndex(Spinner spinner, String myString)
-        {
-            int index = 0;
-            for (int i = 0; i < spinner.Count; i++)
-            {
-                if (spinner.GetItemAtPosition(i).Equals(myString))
-                {
-                    index = i;
-                }
-            }
-            return index;
-        }
-
-        
-        public void ShowImage_Click(bool isFirstImage)
-        {
-            IsFirstPhoto = isFirstImage;
-            imageDialog = new Dialog(Activity);
-
-            imageDialog.SetContentView(Resource.Layout.dialog_select_image);   
-            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
-            iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
-            selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
-            siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
-            siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
-
-            if (isFirstImage)
-            {
-                Bitmap bitmap = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
-                if (bitmap != null)
-                {
-                    iImageViewer.SetImageBitmap(bitmap);
-                }
-            }
-            else
-            {
-                Bitmap bitmap = ((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap;
-                if (bitmap != null)
-                {
-                    iImageViewer.SetImageBitmap(bitmap);
-                }
-            }            
-            //takeaphotoButton.Click += TakeAPicture;
-            takeaphotoButton.Click += TakeAPicture;
-            selectPictureButton.Click += SelectAPicture;
-            siCancelButton.Click += siCancelButton_Click;
-            siDoneButton.Click += siDoneButton_Click;
-            sameImageDialog = imageDialog;
-            imageDialog.Show();
-        }
-       
-        private void siCancelButton_Click(object sender, EventArgs eventArgs)
-        {                
-            imageDialog.Dismiss();
-        }
-
-        private void siDoneButton_Click(object sender, EventArgs eventArgs)
-        {
-            if (IsFirstPhoto)
-            {
-                Bitmap bitmap = ((BitmapDrawable)iImageViewer.Drawable).Bitmap;
-                if (bitmap != null)
-                {
-                    facilityPhoto.SetImageBitmap(bitmap);
-                }
-                FirstPhotoIsChanged = true;
-            }
-            else
-            {
-                Bitmap bitmap = ((BitmapDrawable)iImageViewer.Drawable).Bitmap;
-                if (bitmap != null)
-                {
-                    secondFacilityPhoto.SetImageBitmap(bitmap);
-                }
-                SecondPhotoIsChanged = true;
-            }
-            imageDialog.Dismiss();
-        }
-
-        public Java.IO.File CreateDirectoryForPictures()
-        {
-            Java.IO.File _dir = new Java.IO.File(
-                Android.OS.Environment.GetExternalStoragePublicDirectory(
-                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
-            if (!_dir.Exists())
-            {
-                _dir.Mkdirs();
-            }
-
-            return _dir;
-        }
-
-        private void TakeAPicture(object sender, EventArgs eventArgs)
-        {
-            Intent intent = new Intent(MediaStore.ActionImageCapture);
-            _PhotoFile = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
-            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_PhotoFile));
-            StartActivityForResult(intent, TakeImageId);
-        }      
-
-        private void SelectAPicture(object sender, EventArgs eventArgs)
-        {
-            var imageIntent = new Intent();
-            imageIntent.SetType("image/*");
-            imageIntent.SetAction(Intent.ActionGetContent);
-            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select Photo"), SelectImageId);
-        }
-
-        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-
-            if (requestCode == TakeImageId && resultCode != 0)
-            {
-                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-
-                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_PhotoFile);
-                mediaScanIntent.SetData(contentUri);
-                Activity.SendBroadcast(mediaScanIntent);
-                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, contentUri);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
-            }
-            else
-            {
-                if (data != null)
-                {
-                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(Activity.ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, 400, 400, false));
-                }
-            
-        }
-    }
-
-        public void BecameVisible()
-        {
-
         }
 
         void EditButton_Click(object sender, EventArgs e)
@@ -379,7 +245,7 @@ namespace TheDataProject.Droid.Fragments
                 PictureViewModel pictureViewModel = new PictureViewModel();
                 List<Models.Picture> pictures = new List<Models.Picture>();
                 if (FirstPhotoIsChanged)
-                {                   
+                {
                     Bitmap _bm = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
                     string file = "";
                     if (_bm != null)
@@ -414,10 +280,10 @@ namespace TheDataProject.Droid.Fragments
                         Name = imageNames[1],
                         File = file,
                     };
-                    
+
                     pictures.Add(picture);
                 }
-                    await pictureViewModel.ExecuteSavePictureCommand(pictures);
+                await pictureViewModel.ExecuteSavePictureCommand(pictures);
 
                 editButton.Visibility = ViewStates.Visible;
                 saveButton.Visibility = ViewStates.Gone;
@@ -427,99 +293,160 @@ namespace TheDataProject.Droid.Fragments
                 messageDialog.HideLoading();
                 messageDialog.SendToast("Facility is updated successful.");
             }
-            else {
+            else
+            {
                 messageDialog.HideLoading();
                 messageDialog.SendToast("Facility is not updated successful.");
             }
             this.isEdit = false;
         }
 
-        public string SaveImage(Bitmap bitmap)
+        public void SaveImage(Bitmap bitmap, string fileName)
         {
-            string _fileName;
             try
             {
-                _fileName = String.Format("facility_{0}", Guid.NewGuid());
-                using (var os = new FileStream(_dir + "/" + _fileName, FileMode.CreateNew))
+                fileName = String.Format(fileName);
+                using (var os = new FileStream(_dir + "/" + fileName, FileMode.CreateNew))
                 {
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
                 }
-                return _fileName;
             }
             catch (Exception ex)
             {
-                return "";
             }
         }
 
-        public void ShowSettingsAlert()
+        private int GetIndex(Spinner spinner, String myString)
         {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Application.Context);
-            Intent intent = new Intent(Android.Provider.Settings.ActionLocationSourceSettings);
-            StartActivity(intent);
-        }
-        
-        private bool ValidateLocation()
-        {
-            Validations validation = new Validations();
-            MessageDialog messageDialog = new MessageDialog();
-            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
-            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
-
-            bool isValid = true;
-
-            if (!validation.IsRequired(streetAddress.Text))
+            int index = 0;
+            for (int i = 0; i < spinner.Count; i++)
             {
-                streetAddress.SetError("This field is required", icon);
-                isValid = false;
-            }
-            if (!validation.IsRequired(suburb.Text))
-            {
-                suburb.SetError("This field is required", icon);
-                isValid = false;
-            }
-            if (facility.Location == null)
-            {
-                if (facility.Location.GPSCoordinates == null)
+                if (spinner.GetItemAtPosition(i).Equals(myString))
                 {
-                    messageDialog.SendToast("Please add an GPS coordinates");
-                    isValid = false;
+                    index = i;
                 }
-                   
             }
-            return isValid;
+            return index;
         }
 
-        private bool ValidateDeedInfo()
+        public void ShowImage_Click(bool isFirstImage)
         {
-            Validations validation = new Validations();
-            MessageDialog messageDialog = new MessageDialog();
-            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
-            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
+            IsFirstPhoto = isFirstImage;
+            imageDialog = new Dialog(this);
 
-            bool isValid = true;
+            imageDialog.SetContentView(Resource.Layout.dialog_select_image);
+            takeaphotoButton = imageDialog.FindViewById<Button>(Resource.Id.img_takeaphoto);
+            iImageViewer = imageDialog.FindViewById<ImageView>(Resource.Id.imgsi_facilityphoto);
+            selectPictureButton = imageDialog.FindViewById<Button>(Resource.Id.img_selectpicture);
+            siCancelButton = imageDialog.FindViewById<Button>(Resource.Id.sicancel_button);
+            siDoneButton = imageDialog.FindViewById<Button>(Resource.Id.sidone_button);
 
-            if (!validation.IsRequired(erfNumber.Text))
+            if (isFirstImage)
             {
-                erfNumber.SetError("This field is required", icon);
-                isValid = false;
+                Bitmap bitmap = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
+                if (bitmap != null)
+                {
+                    iImageViewer.SetImageBitmap(bitmap);
+                }
             }
-            if (!validation.IsRequired(titleDeedNumber.Text))
+            else
             {
-                titleDeedNumber.SetError("This field is required", icon);
-                isValid = false;
+                Bitmap bitmap = ((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap;
+                if (bitmap != null)
+                {
+                    iImageViewer.SetImageBitmap(bitmap);
+                }
             }
-            if (!validation.IsRequired(extentm2.Text))
+
+            takeaphotoButton.Click += TakeAPicture;
+            selectPictureButton.Click += SelectAPicture;
+            siCancelButton.Click += siCancelButton_Click;
+            siDoneButton.Click += siDoneButton_Click;
+            sameImageDialog = imageDialog;
+            imageDialog.Show();
+        }
+
+        private void TakeAPicture(object sender, EventArgs eventArgs)
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            _PhotoFile = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
+            intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_PhotoFile));
+            StartActivityForResult(intent, TakeImageId);
+        }
+
+        private void SelectAPicture(object sender, EventArgs eventArgs)
+        {
+            var imageIntent = new Intent();
+            imageIntent.SetType("image/*");
+            imageIntent.SetAction(Intent.ActionGetContent);
+            StartActivityForResult(Intent.CreateChooser(imageIntent, "Select Photo"), SelectImageId);
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            AppPreferences ap = new AppPreferences(Application.Context);
+
+            if (requestCode == TakeImageId && resultCode != 0 && _PhotoFile != null)
             {
-                extentm2.SetError("This field is required", icon);
-                isValid = false;
+                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+
+                Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_PhotoFile);
+                mediaScanIntent.SetData(contentUri);
+                SendBroadcast(mediaScanIntent);
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver, contentUri);
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageWidth(bitmap.Height), false));
             }
-            if (!validation.IsRequired(ownerInformation.Text))
+            else
             {
-                ownerInformation.SetError("This field is required", icon);
-                isValid = false;
+                if (data != null)
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(this.ContentResolver, data.Data);
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageWidth(bitmap.Height), false));
+                }
+
             }
-            return isValid;
+        }
+
+        private void siCancelButton_Click(object sender, EventArgs eventArgs)
+        {
+            imageDialog.Dismiss();
+        }
+
+        private void siDoneButton_Click(object sender, EventArgs eventArgs)
+        {
+            if (IsFirstPhoto)
+            {
+                Bitmap bitmap = ((BitmapDrawable)iImageViewer.Drawable).Bitmap;
+                if (bitmap != null)
+                {
+                    facilityPhoto.SetImageBitmap(bitmap);
+                }
+                FirstPhotoIsChanged = true;
+            }
+            else
+            {
+                Bitmap bitmap = ((BitmapDrawable)iImageViewer.Drawable).Bitmap;
+                if (bitmap != null)
+                {
+                    secondFacilityPhoto.SetImageBitmap(bitmap);
+                }
+                SecondPhotoIsChanged = true;
+            }
+            imageDialog.Dismiss();
+        }
+
+        public Java.IO.File CreateDirectoryForPictures()
+        {
+            Java.IO.File _dir = new Java.IO.File(
+                Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures), "TheDataProjectImages");
+            if (!_dir.Exists())
+            {
+                _dir.Mkdirs();
+            }
+
+            return _dir;
         }
 
         #region Location 
@@ -564,15 +491,15 @@ namespace TheDataProject.Droid.Fragments
                     {
                         _BoundryPolygons.Add(BoundaryPolygon);
                         itemList.Add("Lat: " + BoundaryPolygon.Latitude.ToString() + " Long: " + BoundaryPolygon.Longitude.ToString());
-                    }            
-                    
-                    arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+                    }
+
+                    arrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.list_item, itemList);
                     bpListView.Adapter = arrayAdapter;
                     bpListView.ItemLongClick += Adapter_ItemSwipe;
                 }
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
             }
-             
+
 
             locationCancelButton.Click += LocationCancelButton_Click;
             locationDoneButton.Click += LocationDoneButton_Click;
@@ -593,7 +520,8 @@ namespace TheDataProject.Droid.Fragments
                 gpsLocationButton.Enabled = true;
                 bpLocationButton.Enabled = true;
             }
-            else {
+            else
+            {
                 streetAddress.Enabled = false;
                 suburb.Enabled = false;
                 region.Enabled = false;
@@ -605,22 +533,6 @@ namespace TheDataProject.Droid.Fragments
             }
         }
 
-
-        private void Location_Click(object sender, EventArgs e)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(Activity);
-            // Get the layout inflater
-            builder.SetView(Inflater.Inflate(Resource.Layout.dialog_facility_information_location, null));
-            locationDialog = builder.Create();
-
-            locationDialog.Show();
-            locationDialog.SetCanceledOnTouchOutside(false);
-            int height = Resources.DisplayMetrics.HeightPixels/ 2;
-            int width = Resources.DisplayMetrics.WidthPixels;
-            locationDialog.Window.SetLayout(width, height);
-            InitializeLocation(locationDialog);
-        }
-
         private void BPLocationButton_Click(object sender, EventArgs eventArgs)
         {
             GPSTracker GPSTracker = new GPSTracker();
@@ -629,14 +541,15 @@ namespace TheDataProject.Droid.Fragments
             if (!GPSTracker.isLocationGPSEnabled)
             {
                 ShowSettingsAlert();
-            }           
+            }
 
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
-            else {
+            else
+            {
                 BoundryPolygon BoundryPolygon = new BoundryPolygon()
                 {
                     Latitude = location.Latitude.ToString(),
@@ -646,12 +559,18 @@ namespace TheDataProject.Droid.Fragments
                 itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
 
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
-                arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+                arrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.list_item, itemList);
                 bpListView.Adapter = arrayAdapter;
                 bpListView.ItemLongClick += Adapter_ItemSwipe;
             }
-            
 
+
+        }
+        public void ShowSettingsAlert()
+        {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Application.Context);
+            Intent intent = new Intent(Android.Provider.Settings.ActionLocationSourceSettings);
+            StartActivity(intent);
         }
         void Adapter_ItemSwipe(object sender, ItemLongClickEventArgs e)
         {
@@ -660,17 +579,17 @@ namespace TheDataProject.Droid.Fragments
                 var item = arrayAdapter.GetItem(e.Position);
                 arrayAdapter.Remove(item);
                 itemList.Remove(item);
-                _BoundryPolygons.RemoveAt(e.Position);                
+                _BoundryPolygons.RemoveAt(e.Position);
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 oldPosition = e.Position;
                 bpListView.Adapter = arrayAdapter;
                 bpListView.ItemLongClick += Adapter_ItemSwipe;
-            }           
+            }
         }
 
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
         {
-            
+
             GPSTracker GPSTracker = new GPSTracker();
 
             Android.Locations.Location location = GPSTracker.GPSCoordinate();
@@ -678,14 +597,15 @@ namespace TheDataProject.Droid.Fragments
             {
                 ShowSettingsAlert();
             }
-           
+
 
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
-            else {
+            else
+            {
                 locationlinearlayout.Visibility = ViewStates.Visible;
                 tvfLatitude.Text = "Lat: " + location.Latitude.ToString();
                 tvfLongitude.Text = "Long: " + location.Longitude.ToString();
@@ -695,7 +615,68 @@ namespace TheDataProject.Droid.Fragments
         {
             locationDialog.Cancel();
         }
+        private bool ValidateLocation()
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
+            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
 
+            bool isValid = true;
+
+            if (!validation.IsRequired(streetAddress.Text))
+            {
+                streetAddress.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(suburb.Text))
+            {
+                suburb.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (facility.Location == null)
+            {
+                if (facility.Location.GPSCoordinates == null)
+                {
+                    messageDialog.SendToast("Please add an GPS coordinates");
+                    isValid = false;
+                }
+
+            }
+            return isValid;
+        }
+
+        private bool ValidateDeedInfo()
+        {
+            Validations validation = new Validations();
+            MessageDialog messageDialog = new MessageDialog();
+            Android.Graphics.Drawables.Drawable icon = Resources.GetDrawable(Resource.Drawable.error);
+            icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
+
+            bool isValid = true;
+
+            if (!validation.IsRequired(erfNumber.Text))
+            {
+                erfNumber.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(titleDeedNumber.Text))
+            {
+                titleDeedNumber.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(extentm2.Text))
+            {
+                extentm2.SetError("This field is required", icon);
+                isValid = false;
+            }
+            if (!validation.IsRequired(ownerInformation.Text))
+            {
+                ownerInformation.SetError("This field is required", icon);
+                isValid = false;
+            }
+            return isValid;
+        }
         private void LocationDoneButton_Click(object sender, EventArgs e)
         {
             if (!ValidateLocation())
@@ -707,7 +688,8 @@ namespace TheDataProject.Droid.Fragments
             facility.Location.StreetAddress = streetAddress.Text;
             facility.Location.Suburb = suburb.Text;
             facility.Location.Region = region.Text;
-            facility.Location.GPSCoordinates = new Models.GPSCoordinate() {
+            facility.Location.GPSCoordinates = new Models.GPSCoordinate()
+            {
                 Longitude = tvfLatitude.Text,
                 Latitude = tvfLongitude.Text,
             };
@@ -720,9 +702,10 @@ namespace TheDataProject.Droid.Fragments
 
         private void ResponsiblePerson_Click(object sender, EventArgs e)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(Activity);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             // Get the layout inflater
-            builder.SetView(Inflater.Inflate(Resource.Layout.dialog_facility_information_responsible_person, null));
+            LayoutInflater inflater = this.LayoutInflater;
+            builder.SetView(inflater.Inflate(Resource.Layout.dialog_facility_information_responsible_person, null));
             responsiblePersonDialog = builder.Create();
 
             responsiblePersonDialog.Show();
@@ -758,7 +741,8 @@ namespace TheDataProject.Droid.Fragments
                 emailaddress.Enabled = true;
                 responsiblePersonDoneButton.Enabled = true;
             }
-            else {
+            else
+            {
                 fullname.Enabled = false;
                 designation.Enabled = false;
                 mobileNumber.Enabled = false;
@@ -774,7 +758,7 @@ namespace TheDataProject.Droid.Fragments
 
         private void ResponsiblePersonDoneButton_Click(object sender, EventArgs e)
         {
-            
+
             facility.ResposiblePerson = new Models.Person();
             facility.ResposiblePerson.FullName = fullname.Text;
             facility.ResposiblePerson.Designation = designation.Text;
@@ -788,9 +772,10 @@ namespace TheDataProject.Droid.Fragments
 
         private void Deed_Click(object sender, EventArgs e)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(Activity);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             // Get the layout inflater
-            builder.SetView(Inflater.Inflate(Resource.Layout.dialog_facility_information_deed, null));
+            LayoutInflater inflater = this.LayoutInflater;
+            builder.SetView(inflater.Inflate(Resource.Layout.dialog_facility_information_deed, null));
             deedDialog = builder.Create();
 
             deedDialog.Show();
@@ -854,6 +839,4 @@ namespace TheDataProject.Droid.Fragments
         }
         #endregion #endregion        
     }
-
-    
 }

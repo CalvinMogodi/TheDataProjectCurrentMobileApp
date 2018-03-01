@@ -89,9 +89,6 @@ namespace TheDataProject.Droid
             _dir = ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
             locationLinearlayout.Visibility = ViewStates.Gone;
-            //occupationYear.Touch += (sender, e) => {
-            //    show();
-            //};
 
             if (data != null)
             {

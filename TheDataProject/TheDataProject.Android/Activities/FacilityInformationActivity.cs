@@ -70,9 +70,10 @@ namespace TheDataProject.Droid.Activities
             var data = Intent.GetStringExtra("data");           
             
             buildingsButton = FindViewById<Button>(Resource.Id.buildings_button);
-            buildingsButton.Click += (sender, e) =>
+            buildingsButton.Touch += (sender, e) =>
             {
                 var intent = new Intent(this, typeof(BuildingsActivity));
+                intent.PutExtra("data", data);
                 StartActivity(intent);
             };
 
@@ -84,9 +85,6 @@ namespace TheDataProject.Droid.Activities
                 StartActivity(intent);
             };
             
-            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.SetHomeButtonEnabled(true);
-
             editButton = FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
             saveButton = FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
             clientCode = FindViewById<TextView>(Resource.Id.tvf_clientcode);
@@ -135,8 +133,22 @@ namespace TheDataProject.Droid.Activities
             deedHolder.Click += Deed_Click;
             _GPSCoordinates = new GPSCoordinate();
             _BoundryPolygons = new List<BoundryPolygon>();
-        }     
 
+            SupportActionBar.SetHomeButtonEnabled(true);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+        }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    Finish();
+                    return true;
+
+                default:
+                    return base.OnOptionsItemSelected(item);
+            }
+        }
         private void Location_Click(object sender, EventArgs e)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -155,7 +167,12 @@ namespace TheDataProject.Droid.Activities
             InitializeLocation(locationDialog);
         }
 
-
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            Recreate();
+        }
+       
         private async void GetImages(AppPreferences ap)
         {
             if (!String.IsNullOrEmpty(imageNames[0]))
@@ -538,6 +555,13 @@ namespace TheDataProject.Droid.Activities
             GPSTracker GPSTracker = new GPSTracker();
 
             Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            Android.Locations.Criteria criteriaForGPSService = new Android.Locations.Criteria
+            {
+                //A constant indicating an approximate accuracy  
+                Accuracy = Android.Locations.Accuracy.Coarse,
+                PowerRequirement = Android.Locations.Power.Medium
+            };
+
             if (!GPSTracker.isLocationGPSEnabled)
             {
                 ShowSettingsAlert();
@@ -597,7 +621,10 @@ namespace TheDataProject.Droid.Activities
             {
                 ShowSettingsAlert();
             }
-
+            Android.Locations.Criteria criteriaForLocationService = new Android.Locations.Criteria
+            {
+                Accuracy = Android.Locations.Accuracy.Fine
+            };
 
             if (location == null)
             {
@@ -690,9 +717,9 @@ namespace TheDataProject.Droid.Activities
             facility.Location.Region = region.Text;
             facility.Location.GPSCoordinates = new Models.GPSCoordinate()
             {
-                Longitude = tvfLatitude.Text,
-                Latitude = tvfLongitude.Text,
-            };
+                Longitude = tvfLatitude.Text.Substring(5),
+                Latitude = tvfLongitude.Text.Substring(6),
+        };
             facility.Location.BoundryPolygon = _BoundryPolygons;
             locationDialog.Cancel();
         }

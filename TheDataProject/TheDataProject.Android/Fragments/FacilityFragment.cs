@@ -211,15 +211,15 @@ namespace TheDataProject.Droid
                 myHolder.Suburb.Text = String.Format("               {0}",item.Location.Suburb);
                 if (item.Location.GPSCoordinates != null)
                 {
-                    myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+                    myHolder.Location.Text = String.Format("Lat: {0} Long: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
                 }
             }
 
-            myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", 0,0);
+            myHolder.Location.Text = String.Format("Lat: {0} Long: {1}", 0,0);
             if (item.Location != null)
             {
                 if (item.Location.GPSCoordinates != null) {
-                    myHolder.Location.Text = String.Format("Latitude: {0} Longitude: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+                    myHolder.Location.Text = String.Format("Lat: {0} Long: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
                 }
             }
 

@@ -31,6 +31,7 @@ namespace TheDataProject.Droid.Activities
         RecyclerView recyclerView;
         ProgressBar progress;
         int facilityId;
+        Facility facility;
         public static BuildingsViewModel ViewModel { get; set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -40,9 +41,10 @@ namespace TheDataProject.Droid.Activities
             
             AppPreferences ap = new AppPreferences(Application.Context);
             facilityId = Convert.ToInt32(ap.GetFacilityId());
+            var data = Intent.GetStringExtra("data");
 
             informationButton = FindViewById<Button>(Resource.Id.information_button);
-            informationButton.Click += (sender, e) =>
+            informationButton.Touch += (sender, e) =>
             {
                 var intent = new Intent(this, typeof(FacilityInformationActivity));
                 StartActivity(intent);
@@ -65,9 +67,25 @@ namespace TheDataProject.Droid.Activities
                 ap.SaveUserId("0");
                 StartActivity(intent);
             };
+           
+            if (data != null)
+            {
+                facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
+                SupportActionBar.Title = facility.Name;
+            }
 
-            SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
+        }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            var newIntent = new Intent(this, typeof(LoginActivity));
+            newIntent.AddFlags(ActivityFlags.ClearTop);
+            newIntent.AddFlags(ActivityFlags.SingleTop);
+
+            StartActivity(newIntent);
+            Finish();
+            return true;
         }
 
         void AddButton_Click(object sender, EventArgs e)
@@ -75,7 +93,11 @@ namespace TheDataProject.Droid.Activities
             var intent = new Intent(this, typeof(AddBuildingActivity)); ;
             StartActivity(intent);
         }
-
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            Recreate();
+        }
 
         protected async override void OnStart()
         {
@@ -93,7 +115,7 @@ namespace TheDataProject.Droid.Activities
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
         }
-
+        
         protected override void OnStop()
         {
             base.OnStop();

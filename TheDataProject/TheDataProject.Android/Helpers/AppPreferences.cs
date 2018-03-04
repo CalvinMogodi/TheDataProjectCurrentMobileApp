@@ -15,6 +15,7 @@ using Android.Util;
 using Java.Net;
 using Java.IO;
 using Android.Net;
+using System.IO;
 
 namespace TheDataProject.Droid.Helpers
 {
@@ -125,6 +126,39 @@ namespace TheDataProject.Droid.Helpers
             }
 
             return _dir;
+        }
+
+        public void SaveImage(Bitmap bitmap, string fileName)
+        {
+            try
+            {
+                fileName = String.Format(fileName);
+                using (var os = new FileStream(CreateDirectoryForPictures() + "/" + fileName, FileMode.CreateNew))
+                {
+                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public string SaveImage(Bitmap bitmap)
+        {
+            string _fileName;
+            try
+            {
+                _fileName = String.Format("facility_{0}", Guid.NewGuid());
+                using (var os = new FileStream(CreateDirectoryForPictures() + "/" + _fileName, FileMode.CreateNew))
+                {
+                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
+                }
+                return _fileName;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
         }
 
         public bool IsOnline(Context context)

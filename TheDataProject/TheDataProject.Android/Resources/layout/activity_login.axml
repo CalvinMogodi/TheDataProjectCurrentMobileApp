@@ -52,19 +52,18 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
-      <Button
-             android:text="@string/signin"
-             android:backgroundTint="@color/primary"
-             android:theme="@style/button_custom"
-             android:textColor="#ffffff"
-             android:id="@+id/btnlogin_signin"
-             android:layout_width="350dp"
-             android:layout_height="wrap_content" />
+        <Button
+            android:text="@string/signin"
+            android:backgroundTint="@color/primary"
+            android:theme="@style/button_custom"
+            android:textColor="#ffffff"
+            android:id="@+id/btnlogin_signin"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content" />
     </LinearLayout>
     <TextView
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="match_parent"
-        android:theme="@style/button_custom"
         android:layout_height="wrap_content"
         android:textColor="#df3e16"
         android:gravity="center"

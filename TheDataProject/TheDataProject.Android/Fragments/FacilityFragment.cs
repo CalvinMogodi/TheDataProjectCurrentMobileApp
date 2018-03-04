@@ -131,8 +131,8 @@ namespace TheDataProject.Droid
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
             var item = ViewModel.Facilities[e.Position];
-            // var intent = new Intent(Activity, typeof(FacilityDetailActivity));
-            var intent = new Intent(Activity, typeof(FacilityInformationActivity));
+            var intent = new Intent(Activity, typeof(FacilityDetailActivity));
+            //var intent = new Intent(Activity, typeof(FacilityInformationActivity));
             Context mContext = Android.App.Application.Context;
             AppPreferences ap = new AppPreferences(mContext);
             ap.SaveFacilityId(item.Id.ToString());

@@ -22,7 +22,11 @@ namespace TheDataProject.Droid.Helpers
             bool isGPSEnabled = locationManager.IsProviderEnabled(LocationManager.GpsProvider);
             bool isNetworkEnabled = locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
             bool isPassiveProviderEnabled = locationManager.IsProviderEnabled(LocationManager.PassiveProvider);
+            var locationCriteria = new Criteria();
+            locationCriteria.Accuracy = Accuracy.Fine;
+            locationCriteria.PowerRequirement = Power.Medium;
 
+            string locationProvider = locationManager.GetBestProvider(locationCriteria, true);
             Location location = null;
             if (!isGPSEnabled && !isNetworkEnabled && !isPassiveProviderEnabled)
             {
@@ -32,9 +36,14 @@ namespace TheDataProject.Droid.Helpers
             }
             else
             {
+                if (!String.IsNullOrEmpty(locationProvider))
+                {
+                    location = locationManager.GetLastKnownLocation(locationProvider);
+                }
                 if (isGPSEnabled)
                 {
-                    location = locationManager.GetLastKnownLocation(LocationManager.GpsProvider);
+                    if (location == null)
+                        location = locationManager.GetLastKnownLocation(LocationManager.GpsProvider);
                 }
                 if (isNetworkEnabled)
                 {

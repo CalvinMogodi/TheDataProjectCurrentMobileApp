@@ -79,7 +79,7 @@ namespace TheDataProject.Droid.Activities
         }
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            var newIntent = new Intent(this, typeof(LoginActivity));
+            var newIntent = new Intent(this, typeof(MainActivity));
             newIntent.AddFlags(ActivityFlags.ClearTop);
             newIntent.AddFlags(ActivityFlags.SingleTop);
 

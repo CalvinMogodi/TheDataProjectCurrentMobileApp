@@ -89,9 +89,12 @@
   <ItemGroup>
     <Compile Include="Activities\AddBuildingActivity.cs" />
     <Compile Include="Activities\BuildingsActivity.cs" />
+    <Compile Include="Activities\FacilityDetailActivity.cs" />
     <Compile Include="Activities\FacilityInformationActivity.cs" />
+    <Compile Include="Activities\FacilityPictureActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
     <Compile Include="Fragments\FacilityBuildingFragment.cs" />
+    <Compile Include="Fragments\FacilityInformationFragment.cs" />
     <Compile Include="Fragments\IFragmentVisible.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\AppPreferences.cs" />
@@ -150,6 +153,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\activity_buildings.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_facility_picture.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

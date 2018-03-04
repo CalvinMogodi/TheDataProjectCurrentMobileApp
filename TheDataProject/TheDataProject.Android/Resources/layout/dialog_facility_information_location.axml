@@ -164,11 +164,9 @@ android:layout_height="wrap_content">
             </LinearLayout>
         </LinearLayout>
     <ListView
-       android:minWidth="100dp"
-    android:minHeight="100dp"
       android:layout_width="match_parent"  
-    android:layout_height="300dp" 
-       android:id="@+id/bplistView1" />
+      android:layout_height="400dp" 
+      android:id="@+id/bplistView1" />
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp"

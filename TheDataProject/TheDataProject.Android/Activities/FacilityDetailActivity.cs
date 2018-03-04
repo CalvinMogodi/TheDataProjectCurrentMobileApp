@@ -81,6 +81,11 @@ namespace TheDataProject.Droid.Activities
             base.OnRestart();
             Recreate();
         }
+
+        public void OnActivityRestart()
+        {
+            OnRestart();
+        }
         protected override void OnStart()
         {
             base.OnStart();

@@ -236,6 +236,8 @@ namespace TheDataProject.Droid.Fragments
             return isValid;
         }
 
+
+
         private bool ValidateDeedInfo()
         {
             Validations validation = new Validations();
@@ -300,8 +302,8 @@ namespace TheDataProject.Droid.Fragments
                 if (facility.Location.GPSCoordinates != null)
                 {
                     locationlinearlayout.Visibility = ViewStates.Visible;
-                    tvfLatitude.Text = facility.Location.GPSCoordinates.Latitude;
-                    tvfLongitude.Text = facility.Location.GPSCoordinates.Longitude;
+                    tvfLatitude.Text = "Lat: " + facility.Location.GPSCoordinates.Latitude;
+                    tvfLongitude.Text = "Long: " + facility.Location.GPSCoordinates.Longitude;
                 }
 
                 
@@ -312,7 +314,7 @@ namespace TheDataProject.Droid.Fragments
                     foreach (var BoundaryPolygon in facility.Location.BoundryPolygon)
                     {
                         _BoundryPolygons.Add(BoundaryPolygon);
-                        itemList.Add("Lat: " + BoundaryPolygon.Latitude.ToString() + "Long: " + BoundaryPolygon.Longitude.ToString());
+                        itemList.Add("Lat: " + BoundaryPolygon.Latitude.ToString() + " Long: " + BoundaryPolygon.Longitude.ToString());
                     }
 
                     arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -383,7 +385,7 @@ namespace TheDataProject.Droid.Fragments
                 Longitude = location.Longitude.ToString()
             };
             _BoundryPolygons.Add(BoundryPolygon);
-            itemList.Add("Lat: " + location.Latitude.ToString() + "Long: " + location.Longitude.ToString());
+            itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
 
             if (location == null)
             {
@@ -399,8 +401,8 @@ namespace TheDataProject.Droid.Fragments
         }
         void Adapter_ItemSwipe(object sender, ItemLongClickEventArgs e)
         {
-            //if (oldPosition != e.Position)
-            //{
+            if (_BoundryPolygons.Count() > 0)
+            {
                 var item = arrayAdapter.GetItem(e.Position);
                 arrayAdapter.Remove(item);
                 itemList.Remove(item);
@@ -409,7 +411,7 @@ namespace TheDataProject.Droid.Fragments
                 oldPosition = e.Position;
                 bpListView.Adapter = arrayAdapter;
                 bpListView.ItemLongClick += Adapter_ItemSwipe;
-            //}
+            }
         }
 
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
@@ -449,8 +451,8 @@ namespace TheDataProject.Droid.Fragments
             facility.Location.Region = region.Text;
             facility.Location.GPSCoordinates = new Models.GPSCoordinate()
             {
-                Longitude = tvfLatitude.Text.Substring(5),
-                Latitude = tvfLongitude.Text.Substring(6),
+                Longitude = tvfLongitude.Text.Substring(6),                
+                Latitude = tvfLatitude.Text.Substring(5),
             };
             facility.Location.BoundryPolygon = _BoundryPolygons;
             locationDialog.Cancel();

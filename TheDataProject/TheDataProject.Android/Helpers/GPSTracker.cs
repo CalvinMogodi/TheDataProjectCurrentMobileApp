@@ -40,21 +40,23 @@ namespace TheDataProject.Droid.Helpers
                 {
                     location = locationManager.GetLastKnownLocation(locationProvider);
                 }
+
                 if (isGPSEnabled)
                 {
                     if (location == null)
                         location = locationManager.GetLastKnownLocation(LocationManager.GpsProvider);
+                }
+                if (isPassiveProviderEnabled)
+                {
+                    if (location == null)
+                        location = locationManager.GetLastKnownLocation(LocationManager.PassiveProvider);
                 }
                 if (isNetworkEnabled)
                 {
                     if (location == null)
                         location = locationManager.GetLastKnownLocation(LocationManager.NetworkProvider);
                 }
-                if (isPassiveProviderEnabled)
-                {
-                    if (location == null)
-                        location = locationManager.GetLastKnownLocation(LocationManager.PassiveProvider);
-                }             
+                         
             }
             return location;
         }

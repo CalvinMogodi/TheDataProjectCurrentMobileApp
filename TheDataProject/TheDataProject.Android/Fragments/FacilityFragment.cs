@@ -70,7 +70,7 @@ namespace TheDataProject.Droid
         {
             if (searchedTxt.Text.Trim().Length > 1)
             {
-                var newList = ViewModel.OriginalFacilities.Where(f => f.Name.Contains(searchedTxt.Text.Trim()) || f.ClientCode.Contains(searchedTxt.Text.Trim()));
+                var newList = ViewModel.OriginalFacilities.Where(f => f.Name.ToLower().Contains(searchedTxt.Text.ToLower().Trim()) || f.ClientCode.ToLower().Contains(searchedTxt.Text.ToLower().Trim()));
                 ViewModel.Facilities = new ObservableCollection<Facility>();
                 foreach (var item in newList)
                 {

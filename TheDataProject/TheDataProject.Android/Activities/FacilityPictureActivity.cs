@@ -17,6 +17,7 @@ using TheDataProject.ViewModels;
 using System.IO;
 using Android.Util;
 using Android.Support.V7.App;
+using TheDataProject.Models;
 
 namespace TheDataProject.Droid.Activities
 {
@@ -127,6 +128,13 @@ namespace TheDataProject.Droid.Activities
 
         void CancelButton_Click(object sender, EventArgs e)
         {
+            var intent = new Intent(this, typeof(FacilityDetailActivity));
+            Context mContext = Android.App.Application.Context;
+            AppPreferences ap = new AppPreferences(mContext);
+            ap.SaveFacilityId(facility.Id.ToString());
+            facility.Buildings = new List<Building>();
+            intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
+            this.StartActivity(intent);
             Finish();
         }
         async void SaveButton_Click(object sender, EventArgs e)
@@ -208,6 +216,14 @@ namespace TheDataProject.Droid.Activities
                 await pictureViewModel.ExecuteSavePictureCommand(pictures);
                 messageDialog.HideLoading();
                 messageDialog.SendToast("Pictures are saved successful.");
+                
+                var intent = new Intent(this, typeof(FacilityDetailActivity));
+                Context mContext = Android.App.Application.Context;
+                AppPreferences ap = new AppPreferences(mContext);
+                ap.SaveFacilityId(facility.Id.ToString());
+                facility.Buildings = new List<Building>();
+                intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
+                this.StartActivity(intent);
                 Finish();
             }
             else

@@ -27,7 +27,7 @@ namespace TheDataProject.Droid
     {
         FloatingActionButton saveButton, gpscAddLocationButton;
         EditText title, description, occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
-        TextView tvbLatitude, tvbLongitude;
+        TextView tvbLatitude, tvbLongitude, accuracyMessage;
         ImageView buildingPhoto, iImageViewer;
         NumberPicker numberPicker;
         Button takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
@@ -85,6 +85,7 @@ namespace TheDataProject.Droid
             disabledAccesss = FindViewById<Spinner>(Resource.Id.sf_disabledaccesss);
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
+            accuracyMessage = FindViewById<TextView>(Resource.Id.accuracy_message);
 
             _dir = ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
@@ -355,6 +356,7 @@ namespace TheDataProject.Droid
                 locationLinearlayout.Visibility = ViewStates.Visible;
                 tvbLatitude.Text = "Lat: " + location.Latitude.ToString();
                 tvbLongitude.Text = "Long: " + location.Longitude.ToString();
+                accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
                 _GPSCoordinates = new GPSCoordinate()
                 {
                     Latitude = location.Latitude.ToString(),

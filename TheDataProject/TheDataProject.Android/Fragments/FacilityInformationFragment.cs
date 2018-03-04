@@ -43,7 +43,7 @@ namespace TheDataProject.Droid.Fragments
         LayoutInflater Inflater;
         CardView locationHolder, responsiblepersonHolder, deedHolder;
         ImageView pictureHolder;
-        TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText;
+        TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText, bpAccuracyMessage, accuracyMessage;
         List<string> imageNames;
         LinearLayout locationlinearlayout;
         View view;
@@ -287,6 +287,8 @@ namespace TheDataProject.Droid.Fragments
             tvfLatitude = dialog.FindViewById<TextView>(Resource.Id.tvf_latitude);
             tvfLongitude = dialog.FindViewById<TextView>(Resource.Id.tvf_longitude);
             boundaryPolygonsText = dialog.FindViewById<TextView>(Resource.Id.boundaryPolygonsText);
+            accuracyMessage = dialog.FindViewById<TextView>(Resource.Id.accuracy_message);
+            bpAccuracyMessage = dialog.FindViewById<TextView>(Resource.Id.bpaccuracy_message);
             bpListView = dialog.FindViewById<ListView>(Resource.Id.bplistView1);
             locationlinearlayout.Visibility = ViewStates.Gone;
             itemList = new List<string>();
@@ -379,25 +381,29 @@ namespace TheDataProject.Droid.Fragments
             {
                 ShowSettingsAlert();
             }
-            BoundryPolygon BoundryPolygon = new BoundryPolygon()
-            {
-                Latitude = location.Latitude.ToString(),
-                Longitude = location.Longitude.ToString()
-            };
-            _BoundryPolygons.Add(BoundryPolygon);
-            itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
-
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.SendToast("Unable to get location");
             }
-            boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
-            arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
-            bpListView.Adapter = arrayAdapter;
-            bpListView.ItemLongClick += Adapter_ItemSwipe;
-            int listViewMinimumHeight = 25 * _BoundryPolygons.Count();
-            bpListView.SetMinimumHeight(listViewMinimumHeight);
+            else {
+                BoundryPolygon BoundryPolygon = new BoundryPolygon()
+                {
+                    Latitude = location.Latitude.ToString(),
+                    Longitude = location.Longitude.ToString()
+                };
+                _BoundryPolygons.Add(BoundryPolygon);
+                itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
+                bpAccuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
+
+                boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
+                arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
+                bpListView.Adapter = arrayAdapter;
+                bpListView.ItemLongClick += Adapter_ItemSwipe;
+                int listViewMinimumHeight = 25 * _BoundryPolygons.Count();
+                bpListView.SetMinimumHeight(listViewMinimumHeight);
+            }
+           
         }
         void Adapter_ItemSwipe(object sender, ItemLongClickEventArgs e)
         {
@@ -425,8 +431,8 @@ namespace TheDataProject.Droid.Fragments
                 ShowSettingsAlert();
             }
             tvfLatitude.Text = "Lat: " + location.Latitude.ToString();
-            tvfLongitude.Text = "Long: " + location.Longitude.ToString();
-
+            tvfLongitude.Text = " Long: " + location.Longitude.ToString();
+            accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
             if (location == null)
             {
                 MessageDialog messageDialog = new MessageDialog();

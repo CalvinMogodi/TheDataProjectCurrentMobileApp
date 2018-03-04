@@ -251,6 +251,12 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tvb_longitude" />
             </LinearLayout>
+          <TextView
+       android:textAppearance="?android:attr/textAppearanceSmall"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:gravity="center"
+       android:id="@+id/accuracy_message" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.FloatingActionButton

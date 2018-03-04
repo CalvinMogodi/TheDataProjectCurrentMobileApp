@@ -136,6 +136,12 @@ android:layout_height="match_parent">
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/tvf_longitude" />
         </LinearLayout>
+    <TextView
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:id="@+id/accuracy_message" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,6 +169,12 @@ android:layout_height="match_parent">
                     android:layout_margin="@dimen/fab_margin" />
             </LinearLayout>
         </LinearLayout>
+    <TextView
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:id="@+id/bpaccuracy_message" />
     <ListView
       android:layout_width="match_parent"  
       android:layout_height="400dp" 

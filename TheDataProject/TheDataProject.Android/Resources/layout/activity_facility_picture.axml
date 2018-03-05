@@ -31,8 +31,7 @@
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">    
     <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
@@ -42,6 +41,47 @@
         android:layout_height="20dp"
         android:layout_weight="1" />
       <android.support.v7.widget.CardView xmlns:local="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp">
+        <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:orientation="horizontal">
+        <ImageView
+          android:src="@android:drawable/ic_menu_gallery"
+          android:layout_width="200dp"
+          android:gravity="left"
+          android:layout_height="200dp"
+          android:id="@+id/facility_photo_imageview" />
+         <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="52dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:backgroundTint="@color/primary"
+                android:theme="@style/button_primary"
+                android:id="@+id/img_takeaphoto"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:text="@string/camera" />
+            <Button
+                android:backgroundTint="@color/primary"
+                android:theme="@style/button_primary"
+                android:id="@+id/img_selectpicture"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:text="@string/selectPicture" />
+        </LinearLayout>
+        </LinearLayout>
+      </android.support.v7.widget.CardView>
+      <android.support.v7.widget.CardView xmlns:local="http://schemas.android.com/apk/res-auto"
                   xmlns:tools="http://schemas.android.com/tools"
                   android:layout_width="match_parent"
                   android:foreground="?attr/selectableItemBackground"
@@ -49,25 +89,38 @@
                   android:layout_marginLeft="12dp"
                   android:layout_marginRight="12dp"
                   android:layout_marginBottom="12dp">
-        <ImageView
+        <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:orientation="horizontal">
+          <ImageView
           android:src="@android:drawable/ic_menu_gallery"
-          android:layout_width="match_parent"
+           android:gravity="left"
+          android:layout_width="200dp"
           android:layout_height="200dp"
-          android:id="@+id/facility_photo_imageview" />
-      </android.support.v7.widget.CardView>
-      <android.support.v7.widget.CardView xmlns:local="http://schemas.android.com/apk/res-auto"
-                   xmlns:tools="http://schemas.android.com/tools"
-                   android:layout_width="match_parent"
-                   android:foreground="?attr/selectableItemBackground"
-                   android:layout_height="wrap_content"
-                   android:layout_marginLeft="12dp"
-                   android:layout_marginRight="12dp"
-                   android:layout_marginBottom="12dp">
-        <ImageView
-        android:src="@android:drawable/ic_menu_gallery"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/facility_secondphoto_imageview" />
+          android:id="@+id/facility_secondphoto_imageview" />
+          <LinearLayout
+             android:orientation="vertical"
+             android:gravity="center"
+              android:layout_marginTop="52dp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content">
+            <Button
+                android:backgroundTint="@color/primary"
+                android:theme="@style/button_primary"
+                android:id="@+id/secondimg_takeaphoto"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:text="@string/camera" />
+            <Button
+                android:backgroundTint="@color/primary"
+                android:theme="@style/button_primary"
+                android:id="@+id/secondimg_selectpicture"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:text="@string/selectPicture" />
+          </LinearLayout>
+        </LinearLayout>
       </android.support.v7.widget.CardView>
       <Space
                 android:layout_width="match_parent"

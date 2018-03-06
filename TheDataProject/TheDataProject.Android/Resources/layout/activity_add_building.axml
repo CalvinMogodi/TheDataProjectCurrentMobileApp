@@ -250,13 +250,33 @@
                     android:paddingRight="10dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvb_longitude" />
+            </LinearLayout>         
+          <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="horizontal">
+            <TextView
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:id="@+id/accuracy_message" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+              <android.support.design.widget.FloatingActionButton
+                  android:id="@+id/refreshaccuracy_button"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@drawable/ic_refresh"
+                  android:background="#9f6800"
+                  android:layout_gravity="center|right"
+                  android:layout_margin="@dimen/fab_margin" />
             </LinearLayout>
-          <TextView
-       android:textAppearance="?android:attr/textAppearanceSmall"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:gravity="center"
-       android:id="@+id/accuracy_message" />
+          </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.FloatingActionButton

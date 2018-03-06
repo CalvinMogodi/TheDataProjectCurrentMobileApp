@@ -25,9 +25,9 @@ namespace TheDataProject.Droid
     [Activity(Label = "AddItemActivity", 
         AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
-    public class AddBuildingActivity : BaseActivity, ILocationListener
+    public class AddBuildingActivity : BaseActivity
     {
-        FloatingActionButton saveButton, gpscAddLocationButton;
+        FloatingActionButton saveButton, gpscAddLocationButton, refashAccuracy;
         EditText title, description, occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
         TextView tvbLatitude, tvbLongitude, accuracyMessage;
         ImageView buildingPhoto, iImageViewer;
@@ -90,6 +90,9 @@ namespace TheDataProject.Droid
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
             accuracyMessage = FindViewById<TextView>(Resource.Id.accuracy_message);
+            refashAccuracy = FindViewById<FloatingActionButton>(Resource.Id.refreshaccuracy_button);
+            refashAccuracy.Click += RefashAccuracy_Click;
+
 
             _dir = ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
@@ -146,61 +149,15 @@ namespace TheDataProject.Droid
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
             buildingPhoto.Click += (sender, e) => { ShowImage_Click(); };
-            InitializeLocationManager();
-        }
-        
 
-        public void OnProviderDisabled(string provider) { }
-
-        public void OnProviderEnabled(string provider) { }
-
-        public void OnStatusChanged(string provider, Availability status, Bundle extras)
-        {
-
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-            _locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
-        }
-        protected override void OnPause()
-        {
-            base.OnPause();
-            _locationManager.RemoveUpdates(this);
-        }
-
-        public async void OnLocationChanged(Android.Locations.Location location)
-        {
-            if (location == null)
-            {
-                accuracyMessage.Text = "Unable to determine your location.";
-            }
-            else
+            GPSTracker GPSTracker = new GPSTracker();
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            if (location != null)
             {
                 accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
             }
         }
-
-        void InitializeLocationManager()
-        {
-            _locationManager = (LocationManager)GetSystemService(LocationService);
-            Criteria criteriaForLocationService = new Criteria
-            {
-                Accuracy = Accuracy.Fine
-            };
-            IList<string> acceptableLocationProviders = _locationManager.GetProviders(criteriaForLocationService, true);
-
-            if (acceptableLocationProviders.Any())
-            {
-                _locationProvider = acceptableLocationProviders.First();
-            }
-            else
-            {
-                _locationProvider = string.Empty;
-            }
-        }
-
+        
         public Bitmap SetImageBitmap(string filePath)
         {
             try
@@ -215,6 +172,16 @@ namespace TheDataProject.Droid
             catch (Exception e)
             {
                 return null;
+            }
+        }
+
+        private void RefashAccuracy_Click(object sender, EventArgs e)
+        {
+            GPSTracker GPSTracker = new GPSTracker();
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            if (location != null)
+            {
+                accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
             }
         }
 

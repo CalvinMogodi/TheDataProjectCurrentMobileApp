@@ -22,11 +22,17 @@ namespace TheDataProject.Droid.Helpers
             bool isGPSEnabled = locationManager.IsProviderEnabled(LocationManager.GpsProvider);
             bool isNetworkEnabled = locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
             bool isPassiveProviderEnabled = locationManager.IsProviderEnabled(LocationManager.PassiveProvider);
-            var locationCriteria = new Criteria();
-            locationCriteria.Accuracy = Accuracy.Fine;
-            locationCriteria.PowerRequirement = Power.Medium;
+            string locationProvider = "gps";
+            Criteria criteriaForLocationService = new Criteria
+            {
+                Accuracy = Accuracy.Fine
+            };
+            IList<string> acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService, true);
 
-            string locationProvider = locationManager.GetBestProvider(locationCriteria, true);
+            if (acceptableLocationProviders.Any())
+            {
+                locationProvider = acceptableLocationProviders.First();
+            }
             Location location = null;
             if (!isGPSEnabled && !isNetworkEnabled && !isPassiveProviderEnabled)
             {
@@ -59,6 +65,25 @@ namespace TheDataProject.Droid.Helpers
                          
             }
             return location;
+        }
+
+        public string InitializeLocationManager()
+        {
+            LocationManager _locationManager = Application.Context.GetSystemService(Context.LocationService) as LocationManager;
+            Criteria criteriaForLocationService = new Criteria
+            {
+                Accuracy = Accuracy.Fine
+            };
+            IList<string> acceptableLocationProviders = _locationManager.GetProviders(criteriaForLocationService, true);
+
+            if (acceptableLocationProviders.Any())
+            {
+               return  acceptableLocationProviders.First();
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -17,13 +17,15 @@ using Android.Util;
 using Android.Graphics.Drawables;
 using System.Collections.Generic;
 using Java.Util;
+using Android.Locations;
+using System.Linq;
 
 namespace TheDataProject.Droid
 {
     [Activity(Label = "AddItemActivity", 
         AlwaysRetainTaskState = true, LaunchMode = Android.Content.PM.LaunchMode.SingleTop,
         ScreenOrientation = ScreenOrientation.Portrait)]
-    public class AddBuildingActivity : BaseActivity
+    public class AddBuildingActivity : BaseActivity, ILocationListener
     {
         FloatingActionButton saveButton, gpscAddLocationButton;
         EditText title, description, occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
@@ -51,6 +53,8 @@ namespace TheDataProject.Droid
         int userId;
         string FileName = "";
         Building building;
+        LocationManager _locationManager;
+        string _locationProvider;
 
         protected override int LayoutResource => Resource.Layout.activity_add_building;
         protected async override void OnCreate(Bundle savedInstanceState)
@@ -142,6 +146,59 @@ namespace TheDataProject.Droid
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
             buildingPhoto.Click += (sender, e) => { ShowImage_Click(); };
+            InitializeLocationManager();
+        }
+        
+
+        public void OnProviderDisabled(string provider) { }
+
+        public void OnProviderEnabled(string provider) { }
+
+        public void OnStatusChanged(string provider, Availability status, Bundle extras)
+        {
+
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            _locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
+        }
+        protected override void OnPause()
+        {
+            base.OnPause();
+            _locationManager.RemoveUpdates(this);
+        }
+
+        public async void OnLocationChanged(Android.Locations.Location location)
+        {
+            if (location == null)
+            {
+                accuracyMessage.Text = "Unable to determine your location.";
+            }
+            else
+            {
+                accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
+            }
+        }
+
+        void InitializeLocationManager()
+        {
+            _locationManager = (LocationManager)GetSystemService(LocationService);
+            Criteria criteriaForLocationService = new Criteria
+            {
+                Accuracy = Accuracy.Fine
+            };
+            IList<string> acceptableLocationProviders = _locationManager.GetProviders(criteriaForLocationService, true);
+
+            if (acceptableLocationProviders.Any())
+            {
+                _locationProvider = acceptableLocationProviders.First();
+            }
+            else
+            {
+                _locationProvider = string.Empty;
+            }
         }
 
         public Bitmap SetImageBitmap(string filePath)

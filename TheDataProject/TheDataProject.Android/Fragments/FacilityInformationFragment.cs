@@ -33,7 +33,7 @@ namespace TheDataProject.Droid.Fragments
         #region Properties 
         public string Photo { get; set; }
         public static readonly int PickImageId = 1000;
-        FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton;
+        FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton, refashAccuracy;
         Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton
             , takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         ProgressBar progress;
@@ -43,9 +43,8 @@ namespace TheDataProject.Droid.Fragments
         LayoutInflater Inflater;
         CardView locationHolder, responsiblepersonHolder, deedHolder;
         ImageView pictureHolder;
-        TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText, bpAccuracyMessage, accuracyMessage;
+        TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText, accuracyMessage;
         List<string> imageNames;
-        LinearLayout locationlinearlayout;
         View view;
         ViewGroup Container;
         ListView bpListView;
@@ -57,6 +56,8 @@ namespace TheDataProject.Droid.Fragments
         ArrayAdapter<string> arrayAdapter;
         int oldPosition;
         public bool isEdit = false;
+        LocationManager _locationManager;
+        string _locationProvider;
         public static FacilitiesViewModel ViewModel { get; set; }
         public Facility facility;
         public static FacilityInformationFragment NewInstance(Bundle mybundle) =>
@@ -122,10 +123,8 @@ namespace TheDataProject.Droid.Fragments
             deedHolder.Click += Deed_Click;
             _GPSCoordinates = new GPSCoordinate();
             _BoundryPolygons = new List<BoundryPolygon>();
-
             return view;
         }
-
         private async void GetImages(AppPreferences ap)
         {
             if (!String.IsNullOrEmpty(imageNames[0]))
@@ -283,16 +282,15 @@ namespace TheDataProject.Droid.Fragments
             locationDoneButton = dialog.FindViewById<Button>(Resource.Id.dfil_donebutton);
             gpsLocationButton = dialog.FindViewById<FloatingActionButton>(Resource.Id.gpscaddlocation_button);
             bpLocationButton = dialog.FindViewById<FloatingActionButton>(Resource.Id.bpaddlocation_button);
-            locationlinearlayout = dialog.FindViewById<LinearLayout>(Resource.Id.location_linearlayout);
+            refashAccuracy = dialog.FindViewById<FloatingActionButton>(Resource.Id.refreshaccuracy_button);
             tvfLatitude = dialog.FindViewById<TextView>(Resource.Id.tvf_latitude);
             tvfLongitude = dialog.FindViewById<TextView>(Resource.Id.tvf_longitude);
             boundaryPolygonsText = dialog.FindViewById<TextView>(Resource.Id.boundaryPolygonsText);
             accuracyMessage = dialog.FindViewById<TextView>(Resource.Id.accuracy_message);
-            bpAccuracyMessage = dialog.FindViewById<TextView>(Resource.Id.bpaccuracy_message);
             bpListView = dialog.FindViewById<ListView>(Resource.Id.bplistView1);
-            locationlinearlayout.Visibility = ViewStates.Gone;
             itemList = new List<string>();
             bpListView.SetMinimumHeight(listViewMinimumHeight);
+            refashAccuracy.Click += RefashAccuracy_Click;
             if (facility.Location != null)
             {
                 streetAddress.Text = facility.Location.StreetAddress;
@@ -303,9 +301,8 @@ namespace TheDataProject.Droid.Fragments
                 listViewMinimumHeight = listViewMinimumHeight * facility.Location.BoundryPolygon.Count();
                 if (facility.Location.GPSCoordinates != null)
                 {
-                    locationlinearlayout.Visibility = ViewStates.Visible;
                     tvfLatitude.Text = "Lat: " + facility.Location.GPSCoordinates.Latitude;
-                    tvfLongitude.Text = "Long: " + facility.Location.GPSCoordinates.Longitude;
+                    tvfLongitude.Text = " Long: " + facility.Location.GPSCoordinates.Longitude;
                 }
 
                 
@@ -357,8 +354,24 @@ namespace TheDataProject.Droid.Fragments
                 gpsLocationButton.Enabled = false;
                 bpLocationButton.Enabled = false;
             }
+
+            GPSTracker GPSTracker = new GPSTracker();
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            if (location != null)
+            {
+                accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
+            }
         }
 
+        private void RefashAccuracy_Click(object sender, EventArgs e)
+        {
+            GPSTracker GPSTracker = new GPSTracker();
+            Android.Locations.Location location = GPSTracker.GPSCoordinate();
+            if (location != null)
+            {
+                accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
+            }
+        }
 
         private void Location_Click(object sender, EventArgs e)
         {
@@ -394,7 +407,6 @@ namespace TheDataProject.Droid.Fragments
                 };
                 _BoundryPolygons.Add(BoundryPolygon);
                 itemList.Add("Lat: " + location.Latitude.ToString() + " Long: " + location.Longitude.ToString());
-                bpAccuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
 
                 boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 arrayAdapter = new ArrayAdapter<string>(Activity, Resource.Layout.list_item, itemList);
@@ -422,7 +434,6 @@ namespace TheDataProject.Droid.Fragments
 
         private void GPSLocationButton_Click(object sender, EventArgs eventArgs)
         {
-            locationlinearlayout.Visibility = ViewStates.Visible;
             GPSTracker GPSTracker = new GPSTracker();
 
             Android.Locations.Location location = GPSTracker.GPSCoordinate();

@@ -206,38 +206,22 @@ namespace TheDataProject.Droid.Activities
                     };
                     pictures.Add(picture);
                 }
-                //if (SecondPhotoIsChanged)
-                //{
-                //    Bitmap _bm = ((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap;
-                //    string file = "";
-                //    if (_bm != null)
-                //    {
-                //        MemoryStream stream = new MemoryStream();
-                //        _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
-                //        byte[] ba = stream.ToArray();
-                //        file = Base64.EncodeToString(ba, Base64.Default);
-                //    }
+                bool isSuccess = await pictureViewModel.ExecuteSavePictureCommand(pictures);
 
-                //    Models.Picture picture = new Models.Picture()
-                //    {
-                //        Name = imageNames[1],
-                //        File = file,
-                //    };
-
-                //    pictures.Add(picture);
-                //}
-                await pictureViewModel.ExecuteSavePictureCommand(pictures);
                 messageDialog.HideLoading();
                 messageDialog.SendToast("Pictures are saved successful.");
 
-                var intent = new Intent(this, typeof(FacilityDetailActivity));
-                Context mContext = Android.App.Application.Context;
-                AppPreferences ap = new AppPreferences(mContext);
-                ap.SaveFacilityId(facility.Id.ToString());
-                facility.Buildings = new List<Building>();
-                intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
-                this.StartActivity(intent);
-                Finish();
+                messageDialog.HideLoading();
+                if (isSuccess)
+                {
+                    messageDialog.SendToast("Deeds information is saved successful.");
+                    Finish();
+                }
+                else
+                {
+                    messageDialog.SendToast("Error occurred: Unable to save deed information.");
+                }
+               
             }
             else
             {

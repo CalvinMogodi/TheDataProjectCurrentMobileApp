@@ -13,7 +13,7 @@ using TheDataProject.Models;
 
 namespace TheDataProject
 {
-    public class MockDataStore : IDataStore<Facility, Building, User, Picture, DBPicture>
+    public class MockDataStore : IDataStore<Facility, Building, User, Picture, DBPicture, Location, Person, DeedsInfo>
     {
 
         HttpClient client;
@@ -29,10 +29,12 @@ namespace TheDataProject
 
         public async Task<bool> UpdateFacilityAsync(Facility facility)
         {
-            string restUrl = "http://154.0.170.81:89/api/Facility/UpdateFacility";
+            string restUrl = "http://154.0.170.81:85/api/Facility/UpdateFacility";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isUpdated = false;
-
+            facility.Location = new Models.Location();
+            facility.ResposiblePerson = new Person();
+            facility.DeedsInfo = new DeedsInfo();
             var json = JsonConvert.SerializeObject(facility);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await client.PutAsync(uri, content);
@@ -52,7 +54,7 @@ namespace TheDataProject
 
         public async Task<ObservableCollection<Facility>> GetFacilitysAsync(int userId)
         {
-            string restUrl = "http://154.0.170.81:89/api/Facility/GetFacilitiesByUserId?userId=" + userId;
+            string restUrl = "http://154.0.170.81:85/api/Facility/GetFacilitiesByUserId?userId=" + userId;
             var uri = new Uri(string.Format(restUrl, string.Empty));
             try
             {
@@ -75,7 +77,7 @@ namespace TheDataProject
 
         public async Task<bool> AddBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:89/api/Building/AddBuilding";
+            string restUrl = "http://154.0.170.81:85/api/Building/AddBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isAdded = false;
             try
@@ -97,7 +99,7 @@ namespace TheDataProject
 
         public async Task<bool> UpdateBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:89/api/Building/UpdateBuilding";
+            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isUpdated = false;
             try
@@ -119,7 +121,7 @@ namespace TheDataProject
 
         public async Task<ObservableCollection<Building>> GetBuildingsAsync(int facilityId)
         {
-            string restUrl = "http://154.0.170.81:89/api/Building/GetBuildingByFacilityId?facilityId=" + facilityId;
+            string restUrl = "http://154.0.170.81:85/api/Building/GetBuildingByFacilityId?facilityId=" + facilityId;
             var uri = new Uri(string.Format(restUrl, string.Empty));
             try { 
                 var response = await client.GetAsync(uri);
@@ -145,7 +147,7 @@ namespace TheDataProject
 
         public async Task<User> LoginUser(User user)
         {
-            string RestUrl = "http://154.0.170.81:89/api/User/Login?username="+user.Username+"&password="+ user.Password;
+            string RestUrl = "http://154.0.170.81:85/api/User/Login?username=" + user.Username+"&password="+ user.Password;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             HttpResponseMessage response = null;
@@ -188,7 +190,7 @@ namespace TheDataProject
 
         public async Task<bool> SaveImage(List<Picture> pictures)
         {
-             string restUrl = "http://154.0.170.81:89/api/Building/SaveImage";
+             string restUrl = "http://154.0.170.81:85/api/Building/SaveImage";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSaved= false;
             try
@@ -211,7 +213,7 @@ namespace TheDataProject
 
         public async Task<Picture> GetImage(string fileName)
         {
-            string RestUrl = "http://154.0.170.81:89/api/Building/GetImage?pictureGuid=" + fileName;
+            string RestUrl = "http://154.0.170.81:85/api/Building/GetImage?pictureGuid=" + fileName;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             HttpResponseMessage response = null;
@@ -247,6 +249,72 @@ namespace TheDataProject
             }
 
             return _picture;
+        }
+
+        public async Task<bool> AddUpdateDeedsInfoAsync(DeedsInfo deedsInfo)
+        {
+            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isSuccess = false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(deedsInfo);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return isSuccess;
+            }
+            return await Task.FromResult(isSuccess);
+        }
+
+        public async Task<bool> AddUpdateLocationAsync(Location location)
+        {
+            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isSuccess = false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(location);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return isSuccess;
+            }
+            return await Task.FromResult(isSuccess);
+        }
+
+        public async Task<bool> AddUpdatePersonAsync(Person person)
+        {
+            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            var uri = new Uri(string.Format(restUrl, string.Empty));
+            bool isSuccess = false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(person);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return isSuccess;
+            }
+            return await Task.FromResult(isSuccess);
         }
     }
 

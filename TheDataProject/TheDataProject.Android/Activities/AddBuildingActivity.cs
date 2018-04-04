@@ -53,8 +53,6 @@ namespace TheDataProject.Droid
         int userId;
         string FileName = "";
         Building building;
-        LocationManager _locationManager;
-        string _locationProvider;
 
         protected override int LayoutResource => Resource.Layout.activity_add_building;
         protected async override void OnCreate(Bundle savedInstanceState)
@@ -403,28 +401,6 @@ namespace TheDataProject.Droid
 
         }
 
-        public void show()
-        {
-            LayoutInflater inflater = (LayoutInflater)Application.Context.GetSystemService(Context.LayoutInflaterService);
-            View npView = inflater.Inflate(Resource.Layout.dialog_numberpicker, null);
-            numberPicker = npView.FindViewById<NumberPicker>(Resource.Id.numberPicker1);
-            numberPicker.MaxValue = new DateTime().Year;
-            numberPicker.MinValue = 1900;
-            numberPicker.SetGravity(GravityFlags.Center);
-            numberPicker.WrapSelectorWheel = true;
-            numberPicker.SetScrollContainer(true);
-            numberPickerAlertDialog = new AlertDialog.Builder(this).SetTitle("Occupation Year").SetView(npView)
-                .SetPositiveButton(Resource.String.done, delegate
-                {
-                    occupationYear.Text = numberPicker.Value.ToString();
-                    numberPickerAlertDialog.Dismiss();
-                }).SetNegativeButton(Resource.String.cancel, delegate
-                {
-                    numberPickerAlertDialog.Dismiss();
-                }).Create();
-            numberPickerAlertDialog.Show();
-        }
-
         #region Image 
         
         public void SaveImage(Bitmap bitmap,string fileName)
@@ -506,8 +482,6 @@ namespace TheDataProject.Droid
             icon.SetBounds(0, 0, icon.IntrinsicWidth, icon.IntrinsicHeight);
 
             bool isValid = true;
-            bool photoIsRequired = false;
-            bool GPSCoordinatesIsRequired = false;
                         
             if (!validation.IsRequired(buildingName.Text))
             {

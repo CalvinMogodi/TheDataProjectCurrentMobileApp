@@ -90,10 +90,13 @@
   <ItemGroup>
     <Compile Include="Activities\AddBuildingActivity.cs" />
     <Compile Include="Activities\BuildingsActivity.cs" />
+    <Compile Include="Activities\DeedInforActivity.cs" />
     <Compile Include="Activities\FacilityDetailActivity.cs" />
     <Compile Include="Activities\FacilityInformationActivity.cs" />
     <Compile Include="Activities\FacilityPictureActivity.cs" />
+    <Compile Include="Activities\LocationActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
+    <Compile Include="Activities\PersonActivity.cs" />
     <Compile Include="Fragments\FacilityBuildingFragment.cs" />
     <Compile Include="Fragments\FacilityInformationFragment.cs" />
     <Compile Include="Fragments\IFragmentVisible.cs" />
@@ -138,25 +141,19 @@
     <AndroidResource Include="Resources\layout\facility_card.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_facility_information_location.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_facility_information_responsible_person.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_facility_information_deed.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_facility_information_municipal_roll.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_numberpicker.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\activity_buildings.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\activity_facility_picture.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_location.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_person.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_deedInfor.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

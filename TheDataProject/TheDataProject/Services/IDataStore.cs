@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TheDataProject
 {
-    public interface IDataStore<F, B, U, P, DBP>
+    public interface IDataStore<F, B, U, P, DBP, L, RP, D>
     {
         Task<bool> UpdateFacilityAsync(F facility);
         Task<F> GetFacilityAsync(int id);
@@ -20,5 +20,11 @@ namespace TheDataProject
 
         Task<P> GetImage(string fileName);
         Task<bool> SaveImage(List<P> pictures);
+
+        Task<bool> AddUpdateDeedsInfoAsync(D deedsInfo);
+
+        Task<bool> AddUpdateLocationAsync(L location);
+
+        Task<bool> AddUpdatePersonAsync(RP person);
     }
 }

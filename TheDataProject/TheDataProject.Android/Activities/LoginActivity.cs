@@ -25,7 +25,7 @@ namespace TheDataProject.Droid.Activities
        
         EditText username, password;
         TextView message;
-        Button signInBtn, signInOffLineBtn;
+        Button signInBtn;
 
         
         public bool FormIsValid { get; set; }

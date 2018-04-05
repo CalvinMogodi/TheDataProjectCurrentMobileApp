@@ -8,33 +8,52 @@
     android:layout_marginLeft="12dp"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="12dp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView
+        android:src="@drawable/noimage_placeholder"
+        android:id="@+id/facility_photo"
+        android:layout_below="@android:id/text1"
+        android:layout_width="fill_parent"
+        android:layout_height="170dp"
+        android:gravity="right"
+        android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/f_text2"
+        android:layout_marginTop="-10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/small_margin"
+        style="?android:textAppearanceMedium"
+        android:text="N000000000000000000000002324C" />
+    <TextView
+        android:id="@+id/f_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-18dp"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingLeft="@dimen/small_margin"
+        android:paddingRight="@dimen/small_margin"
+        style="?android:textAppearanceSmall"
+        android:text="Facility Name"
+        android:layout_gravity="center" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
+        <ImageView
+            android:src="@drawable/ic_mylocation"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal" />
         <LinearLayout
             android:orientation="vertical"
             android:gravity="left"
-             android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/f_text2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:padding="@dimen/small_margin"
-                style="?android:textAppearanceLarge"
-                tools:text="Client Code" />
-            <TextView
-                android:id="@+id/f_text1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/small_margin"
-                android:paddingLeft="@dimen/small_margin"
-                android:paddingRight="@dimen/small_margin"
-                android:gravity="bottom"
-                style="?android:textAppearanceMedium"
-                tools:text="Facility Name" />
             <TextView
                 android:id="@+id/f_text3"
                 android:layout_width="match_parent"
@@ -43,46 +62,33 @@
                 android:gravity="bottom"
                 android:padding="@dimen/small_margin"
                 style="?android:textAppearanceSmall"
-                tools:text="Address" />
-            <TextView
-                android:id="@+id/f_text5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/contactName"
-                android:gravity="bottom"
-                android:padding="@dimen/small_margin"
-                style="?android:textAppearanceSmall"
-                tools:text="Address" />
+                android:text="Street name and suburbs" />
             <TextView
                 android:id="@+id/f_text4"
+                android:layout_marginTop="-18dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/contactName"
                 android:gravity="bottom"
                 android:padding="@dimen/small_margin"
                 style="?android:textAppearanceSmall"
-                tools:text="Location" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:src="@drawable/noimage_placeholder"
-                android:id="@+id/facility_photo"
-                android:layout_below="@android:id/text1"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:gravity="right" />
-            <Button
-                android:text="@string/submit"
-                android:gravity="center"
-                android:backgroundTint="@color/primary"
-                android:theme="@style/button_custom"
-                android:id="@+id/submitfacilitybtn"
-                 android:layout_width="150dp"
-                android:layout_height="wrap_content" />
+                android:text="Lat: -25.92565565 Long: 28.12345687" />
         </LinearLayout>
     </LinearLayout>
+    <Button
+        android:text="@string/submit"
+        android:gravity="center"
+        android:backgroundTint="@color/primary"
+        android:theme="@style/button_custom"
+        android:id="@+id/submitfacilitybtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="25px"
+        android:minHeight="25px" />
+</LinearLayout>
 </android.support.v7.widget.CardView>

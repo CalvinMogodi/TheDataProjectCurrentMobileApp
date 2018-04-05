@@ -50,10 +50,6 @@ namespace TheDataProject.Droid
 
             View view = inflater.Inflate(Resource.Layout.fragment_facility, container, false);
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.facilityRecyclerView);
-            searchedTxt = view.FindViewById<EditText>(Resource.Id.searchedTxt);
-
-            searchedTxt.TextChanged += Search_Facilities;
-
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseFacilitiesAdapter(Activity, ViewModel, userId));
 
@@ -66,11 +62,11 @@ namespace TheDataProject.Droid
             return view;
         }
 
-        void Search_Facilities(object sender, EventArgs e)
+        public void SearchFacilities(string searchedTxt)
         {
-            if (searchedTxt.Text.Trim().Length > 1)
+            if (searchedTxt.Length > 1)
             {
-                var newList = ViewModel.OriginalFacilities.Where(f => f.Name.ToLower().Contains(searchedTxt.Text.ToLower().Trim()) || f.ClientCode.ToLower().Contains(searchedTxt.Text.ToLower().Trim()));
+                var newList = ViewModel.OriginalFacilities.Where(f => f.Name.ToLower().Contains(searchedTxt.ToLower().Trim()) || f.ClientCode.ToLower().Contains(searchedTxt.ToLower().Trim()));
                 ViewModel.Facilities = new ObservableCollection<Facility>();
                 foreach (var item in newList)
                 {
@@ -207,8 +203,7 @@ namespace TheDataProject.Droid
             };
             if (item.Location != null)
             {
-                myHolder.StreetAddress.Text = String.Format("Address: {0}",item.Location.StreetAddress);
-                myHolder.Suburb.Text = String.Format("               {0}",item.Location.Suburb);
+                myHolder.StreetAddress.Text = String.Format("Address: {0} {1}",item.Location.StreetAddress, item.Location.Suburb);
                 if (item.Location.GPSCoordinates != null)
                 {
                     myHolder.Location.Text = String.Format("Lat: {0} Long: {1}", item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
@@ -352,7 +347,6 @@ namespace TheDataProject.Droid
         public TextView ClientCode { get; set; }
         public TextView FacilityName { get; set; }
         public TextView StreetAddress { get; set; }
-        public TextView Suburb { get; set; }
         public TextView Location { get; set; }
         public ImageView ImageView { get; set; }
         public Button Button { get; set; }
@@ -363,7 +357,6 @@ namespace TheDataProject.Droid
             FacilityName = itemView.FindViewById<TextView>(Resource.Id.f_text1);
             ClientCode = itemView.FindViewById<TextView>(Resource.Id.f_text2);
             StreetAddress = itemView.FindViewById<TextView>(Resource.Id.f_text3);
-            Suburb = itemView.FindViewById<TextView>(Resource.Id.f_text5);
             Location = itemView.FindViewById<TextView>(Resource.Id.f_text4);
             ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
             Button = itemView.FindViewById<Button>(Resource.Id.submitfacilitybtn);

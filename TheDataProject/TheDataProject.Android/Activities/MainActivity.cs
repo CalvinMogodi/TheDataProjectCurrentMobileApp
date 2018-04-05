@@ -67,7 +67,7 @@ namespace TheDataProject.Droid
             searchEditText.TextChanged += (sender, eventArgs) => {
                 if (searchEditText.Text.Trim().Length > 1)
                 {
-                    FacilityFragment fragment =  (FacilityFragment)SupportFragmentManager.FindFragmentByTag("FacilityFragment");
+                    FacilityFragment fragment = (FacilityFragment)SupportFragmentManager.Fragments[0];
                     if (fragment != null)
                     {
                         fragment.SearchFacilities(searchEditText.Text.Trim());

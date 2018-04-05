@@ -198,8 +198,12 @@ namespace TheDataProject.Droid
             myHolder.Button.Click += (sender, e) => {
                 Submit_Click(item);
             };
-            myHolder.Location.LongClick += (sender, e) => {
-                Open_Map(item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+            myHolder.MyLocation.LongClick += (sender, e) => {
+                if (item.Location != null)
+                {
+                    if (item.Location.GPSCoordinates != null)
+                        Open_Map(item.Location.GPSCoordinates.Latitude, item.Location.GPSCoordinates.Longitude);
+                }                    
             };
             if (item.Location != null)
             {
@@ -347,6 +351,7 @@ namespace TheDataProject.Droid
         public TextView ClientCode { get; set; }
         public TextView FacilityName { get; set; }
         public TextView StreetAddress { get; set; }
+        public ImageView MyLocation { get; set; }
         public TextView Location { get; set; }
         public ImageView ImageView { get; set; }
         public Button Button { get; set; }
@@ -357,6 +362,7 @@ namespace TheDataProject.Droid
             FacilityName = itemView.FindViewById<TextView>(Resource.Id.f_text1);
             ClientCode = itemView.FindViewById<TextView>(Resource.Id.f_text2);
             StreetAddress = itemView.FindViewById<TextView>(Resource.Id.f_text3);
+            MyLocation = itemView.FindViewById<ImageView>(Resource.Id.mylocation);
             Location = itemView.FindViewById<TextView>(Resource.Id.f_text4);
             ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
             Button = itemView.FindViewById<Button>(Resource.Id.submitfacilitybtn);

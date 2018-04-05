@@ -2,9 +2,11 @@
 <resources>
   <color name="primary">#101e45</color>
   <color name="primaryDark">#2196F3</color>
+  <color name="lightPrimary">#e7e8ec</color>
   <color name="accent">#96d1ff</color>
   <color name="window_background">#FFFFFF</color>
   <color name="window_lightgraybackground">#D3D3D3</color>
+  <color name="thisColor">#273457</color>
   <color name="white">#FFFFFF</color>
   <color name="black">#000000</color>
   <color name="easternblue">#101e45</color>

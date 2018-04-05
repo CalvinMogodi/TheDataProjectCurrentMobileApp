@@ -33,7 +33,8 @@ namespace TheDataProject.Droid.Fragments
         #region Properties 
         public string Photo { get; set; }
         public static readonly int PickImageId = 1000;
-        FloatingActionButton editButton, saveButton;        
+        FloatingActionButton editButton, saveButton;
+        LinearLayout secondHeader;
         Spinner settlementtype, zoning;
         LayoutInflater Inflater;
         CardView locationHolder, responsiblepersonHolder, deedHolder;
@@ -77,7 +78,8 @@ namespace TheDataProject.Droid.Fragments
             responsiblepersonHolder = view.FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
             deedHolder = view.FindViewById<CardView>(Resource.Id.tvf_deedholder);
             pictureHolder = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
-           
+            secondHeader = view.FindViewById<LinearLayout>(Resource.Id.f_secondheader);           
+            //secondHeader.SetBackgroundColor(Activity.Resources.GetColor(Resource.Color.thisColor));
             facility = new Facility();
 
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);

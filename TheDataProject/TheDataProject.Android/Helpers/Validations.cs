@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Text.RegularExpressions;
+using Android.Net;
 
 namespace TheDataProject.Droid.Helpers
 {
@@ -71,6 +72,18 @@ namespace TheDataProject.Droid.Helpers
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public void IsOnline(Context context)
+        {
+            ConnectivityManager connectivityManager = (ConnectivityManager)context.GetSystemService("");
+            bool isOnline = connectivityManager.ActiveNetworkInfo.IsConnected;
+            if (!isOnline)
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.SendMessage("No internet connection please check your wifi or data settings", "No Internet Connection");
+
             }
         }
     }

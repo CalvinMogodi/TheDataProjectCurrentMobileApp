@@ -195,9 +195,7 @@ namespace TheDataProject.Droid
             var myHolder = holder as MyViewHolder;
             myHolder.FacilityName.Text = item.Name;
             myHolder.ClientCode.Text = item.ClientCode;
-            myHolder.Button.Click += (sender, e) => {
-                Submit_Click(item);
-            };
+           
             myHolder.MyLocation.LongClick += (sender, e) => {
                 if (item.Location != null)
                 {
@@ -251,99 +249,10 @@ namespace TheDataProject.Droid
             Intent intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(urlAddress));
             activity.StartActivity(intent);
         }
-        async void Submit_Click(Facility facility)
-        {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.ShowLoading();
-            BuildingsViewModel ViewModel = new BuildingsViewModel();
-            await ViewModel.ExecuteBuildingsCommand(facility.Id);
-            var buildings = ViewModel.Buildings;           
-
-            if (!ValidateForm(facility, buildings, messageDialog))
-            {
-                messageDialog.HideLoading();
-                return;
-            }               
-
-            facility.Status = "Submitted";
-            facility.ModifiedUserId = userId;
-            facility.ModifiedDate = new DateTime();
-            bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
-            messageDialog.HideLoading();
-            if (isUpdated)
-            {
-                viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
-                messageDialog.SendToast("Facility is submitted for approval.");
-                var myActivity = (MainActivity)this.activity;
-                myActivity.Recreate();
-            }
-            else {
-                messageDialog.SendToast("Unable to submitted facility for approval.");
-            }
-        }
+       
         public override int ItemCount => viewModel.Facilities.Count;
 
-        private bool ValidateForm(Facility facility, ObservableCollection<Building> buildings, MessageDialog messageDialog)
-        {
-            Validations validation = new Validations();           
-
-            bool isValid = true;
-            bool deedsInfoIsRequired = false;
-            bool locationfoIsRequired = false;
-            bool pictureIsRequired = false;
-            bool buildingPictureIsRequired = false;
-            bool buildingLocationIsRequired = false;
-
-            foreach (var building in buildings)
-            {
-                if (String.IsNullOrEmpty(building.Photo))
-                {
-                    buildingPictureIsRequired = true;
-                    isValid = false;
-                }
-                if (building.GPSCoordinates == null)
-                {
-                    buildingLocationIsRequired = true;
-                    isValid = false;
-                }
-            }
-
-            if (facility.DeedsInfo == null)
-            {
-                deedsInfoIsRequired = true;
-                isValid = false;
-            }
-            if (facility.Location == null)
-            {
-                locationfoIsRequired = true;
-                 isValid = false;
-            }
-            
-            if (!validation.IsRequired(facility.IDPicture))
-            {
-                pictureIsRequired = true;
-                isValid = false;
-            }
-
-            if (deedsInfoIsRequired || locationfoIsRequired || pictureIsRequired || buildingLocationIsRequired || buildingPictureIsRequired) 
-            {
-                if (deedsInfoIsRequired && locationfoIsRequired && pictureIsRequired)
-                    messageDialog.SendToast("Please add an image, location information and deeds information");
-                else if (deedsInfoIsRequired)
-                    messageDialog.SendToast("Please capture deeds information.");
-                else if(locationfoIsRequired)
-                    messageDialog.SendToast("Please capture location information.");
-                else if(pictureIsRequired)
-                    messageDialog.SendToast("Please add an image.");
-                else if (buildingPictureIsRequired && buildingLocationIsRequired)
-                    messageDialog.SendToast("Please add an image and location for all the buildings.");
-                else if (buildingPictureIsRequired)
-                    messageDialog.SendToast("Please add an image for all the buildings.");
-                else if (buildingLocationIsRequired)
-                    messageDialog.SendToast("Please add location for all the buildings.");
-            }
-            return isValid;
-        }
+       
     }
 
     public class MyViewHolder : RecyclerView.ViewHolder
@@ -354,7 +263,6 @@ namespace TheDataProject.Droid
         public ImageView MyLocation { get; set; }
         public TextView Location { get; set; }
         public ImageView ImageView { get; set; }
-        public Button Button { get; set; }
 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
@@ -365,7 +273,6 @@ namespace TheDataProject.Droid
             MyLocation = itemView.FindViewById<ImageView>(Resource.Id.mylocation);
             Location = itemView.FindViewById<TextView>(Resource.Id.f_text4);
             ImageView = itemView.FindViewById<ImageView>(Resource.Id.facility_photo);
-            Button = itemView.FindViewById<Button>(Resource.Id.submitfacilitybtn);
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

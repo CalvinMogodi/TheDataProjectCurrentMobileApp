@@ -28,34 +28,21 @@ namespace TheDataProject.Droid.Fragments
 {
     public class FacilityInformationFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-
-
         #region Properties 
-        public string Photo { get; set; }
-        public static readonly int PickImageId = 1000;
-        FloatingActionButton editButton, saveButton;
-        LinearLayout secondHeader;
-        Spinner settlementtype, zoning;
         LayoutInflater Inflater;
-        CardView locationHolder, responsiblepersonHolder, deedHolder;
+        LinearLayout locationHolder, responsiblepersonHolder, deedHolder;
         ImageView pictureHolder;
         TextView clientCode, facilityName;
         List<string> imageNames;
         View view;
         ViewGroup Container;
-        ListView bpListView;
-        List<string> itemList;
-        Dialog imageDialog;
-        FacilityDetailViewModel facilityDetailViewModel;
         public bool isEdit = false;
         public static FacilitiesViewModel ViewModel { get; set; }
         public Facility facility;
         public static FacilityInformationFragment NewInstance(Bundle mybundle) => new FacilityInformationFragment { Arguments = mybundle };
-
         #endregion #endregion 
 
         #region Methods
-
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -68,18 +55,12 @@ namespace TheDataProject.Droid.Fragments
             Inflater = inflater;
             Container = container;
             view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
-            editButton = view.FindViewById<FloatingActionButton>(Resource.Id.editfacilityinfo_button);
-            saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.savefacilityinfo_button);
             clientCode = view.FindViewById<TextView>(Resource.Id.tvf_clientcode);
-            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);
-            settlementtype = view.FindViewById<Spinner>(Resource.Id.sf_settlementtype);
-            zoning = view.FindViewById<Spinner>(Resource.Id.sf_zoning);
-            locationHolder = view.FindViewById<CardView>(Resource.Id.tvf_locationholder);
-            responsiblepersonHolder = view.FindViewById<CardView>(Resource.Id.tvf_responsiblepersonholder);
-            deedHolder = view.FindViewById<CardView>(Resource.Id.tvf_deedholder);
+            facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);          
+            locationHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_locationholder);
+            responsiblepersonHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_responsiblepersonholder);
+            deedHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_deedholder);
             pictureHolder = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
-            secondHeader = view.FindViewById<LinearLayout>(Resource.Id.f_secondheader);           
-            //secondHeader.SetBackgroundColor(Activity.Resources.GetColor(Resource.Color.thisColor));
             facility = new Facility();
 
             AppPreferences ap = new AppPreferences(Android.App.Application.Context);
@@ -91,8 +72,6 @@ namespace TheDataProject.Droid.Fragments
                 facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
                 clientCode.Text = facility.ClientCode;
                 facilityName.Text = facility.Name;
-                settlementtype.SetSelection(GetIndex(settlementtype, facility.SettlementType));
-                zoning.SetSelection(GetIndex(zoning, facility.Zoning));
                 imageNames = facility.IDPicture == null ? new List<string>() : facility.IDPicture.Split(',').ToList();
                 if (imageNames.Count > 0)
                     GetImages(ap);
@@ -101,14 +80,7 @@ namespace TheDataProject.Droid.Fragments
                 var intent = new Intent(Activity, typeof(FacilityPictureActivity));
                 intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
                 StartActivity(intent);
-            };
-            settlementtype.Enabled = false;
-            zoning.Enabled = false;
-            saveButton.Visibility = ViewStates.Gone;
-            editButton.SetBackgroundColor(Android.Graphics.Color.Tan);
-            saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
-            editButton.Click += EditButton_Click;
-            saveButton.Click += SaveButton_Click;
+            };           
             locationHolder.Click += Location_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
@@ -152,42 +124,108 @@ namespace TheDataProject.Droid.Fragments
         public void BecameVisible()
         {
 
-        }
+        }              
 
-        void EditButton_Click(object sender, EventArgs e)
-        {
-            editButton.Visibility = ViewStates.Gone;
-            saveButton.Visibility = ViewStates.Visible;
-            isEdit = true;
-            settlementtype.Enabled = true;
-            zoning.Enabled = true;
-        }
-
-        async void SaveButton_Click(object sender, EventArgs e)
+        private async void SubmitButton_Click(object sender, EventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog();
             messageDialog.ShowLoading();
-            facility.SettlementType = settlementtype.SelectedItem.ToString();
-            facility.Zoning = zoning.SelectedItem.ToString();          
-            bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
-            if (isUpdated)
-            {
-                editButton.Visibility = ViewStates.Visible;
-                saveButton.Visibility = ViewStates.Gone;
-                isEdit = false;
-                settlementtype.Enabled = false;
-                zoning.Enabled = false;
-                messageDialog.HideLoading();
-                messageDialog.SendToast("Facility is updated successful.");
-            }
-            else
-            {
-                messageDialog.HideLoading();
-                messageDialog.SendToast("Facility is not updated successful.");
-            }
-            this.isEdit = false;
+            BuildingsViewModel ViewModel = new BuildingsViewModel();
+            await ViewModel.ExecuteBuildingsCommand(facility.Id);
+           // var buildings = ViewModel.Buildings;
+
+            //if (!ValidateForm(facility, buildings, messageDialog))
+            //{
+            //    messageDialog.HideLoading();
+            //    return;
+            //}
+
+            //facility.Status = "Submitted";
+            //facility.ModifiedUserId = userId;
+            //facility.ModifiedDate = new DateTime();
+            //bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
+            //messageDialog.HideLoading();
+            //if (isUpdated)
+            //{
+            //    viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
+            //    messageDialog.SendToast("Facility is submitted for approval.");
+            //    var myActivity = (MainActivity)this.activity;
+            //    myActivity.Recreate();
+            //}
+            //else
+            //{
+            //    messageDialog.SendToast("Unable to submitted facility for approval.");
+            //}
         }
-       
+
+        private bool ValidateForm(Facility facility, MessageDialog messageDialog)
+        {
+            Validations validation = new Validations();
+
+            bool isValid = true;
+            bool deedsInfoIsRequired = false;
+            bool locationfoIsRequired = false;
+            bool pictureIsRequired = false;
+            bool buildingPictureIsRequired = false;
+            bool buildingLocationIsRequired = false;
+
+            //foreach (var building in buildings)
+            //{
+            //    if (String.IsNullOrEmpty(building.Photo))
+            //    {
+            //        buildingPictureIsRequired = true;
+            //        isValid = false;
+            //    }
+            //    if (building.GPSCoordinates == null)
+            //    {
+            //        buildingLocationIsRequired = true;
+            //        isValid = false;
+            //    }
+            //}
+
+            if (facility.DeedsInfo == null)
+            {
+                deedsInfoIsRequired = true;
+                isValid = false;
+            }
+            if (facility.Location == null)
+            {
+                locationfoIsRequired = true;
+                isValid = false;
+            }
+
+            if (!validation.IsRequired(facility.IDPicture))
+            {
+                pictureIsRequired = true;
+                isValid = false;
+            }
+
+            if (deedsInfoIsRequired || locationfoIsRequired || pictureIsRequired || buildingLocationIsRequired || buildingPictureIsRequired)
+            {
+                if (deedsInfoIsRequired && locationfoIsRequired && pictureIsRequired)
+                    messageDialog.SendToast("Please add an image, location information and deeds information");
+                else if (deedsInfoIsRequired)
+                    messageDialog.SendToast("Please capture deeds information.");
+                else if (locationfoIsRequired)
+                    messageDialog.SendToast("Please capture location information.");
+                else if (pictureIsRequired)
+                    messageDialog.SendToast("Please add an image.");
+                else if (buildingPictureIsRequired && buildingLocationIsRequired)
+                    messageDialog.SendToast("Please add an image and location for all the buildings.");
+                else if (buildingPictureIsRequired)
+                    messageDialog.SendToast("Please add an image for all the buildings.");
+                else if (buildingLocationIsRequired)
+                    messageDialog.SendToast("Please add location for all the buildings.");
+            }
+            return isValid;
+        }
+
+        private void Information_Click(object sender, EventArgs e)
+        {
+            var intent = new Intent(Activity, typeof(LocationActivity));
+            intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
+            StartActivity(intent);
+        }
         private void Location_Click(object sender, EventArgs e)
         {
             var intent = new Intent(Activity, typeof(LocationActivity));

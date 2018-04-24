@@ -75,21 +75,6 @@
                 style="?android:textAppearanceSmall"
                 android:text="Lat: -25.92565565 Long: 28.12345687" />
         </LinearLayout>
-    </LinearLayout>
-    <Button
-        android:text="@string/submit"
-        android:gravity="center"
-        android:backgroundTint="@color/primary"
-        android:theme="@style/button_custom"
-        android:id="@+id/submitfacilitybtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="25px"
-        android:minHeight="25px" />
+    </LinearLayout>   
 </LinearLayout>
 </android.support.v7.widget.CardView>

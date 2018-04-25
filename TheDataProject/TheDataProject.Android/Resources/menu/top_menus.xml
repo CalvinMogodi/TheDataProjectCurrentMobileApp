@@ -19,7 +19,11 @@
     android:showAsAction="ifRoom"
     android:title="Log Out" />
   <item
-    android:id="@+id/menu_edit"
+    android:id="@+id/menu_save"
+    android:showAsAction="ifRoom"
+    android:title="Save" />
+  <item
+    android:id="@+id/menu_help"
     android:showAsAction="ifRoom"
     android:title="Help" />
 </menu>

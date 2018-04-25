@@ -25,7 +25,6 @@ namespace TheDataProject.Droid.Activities
         #region Properties 
 
         FloatingActionButton gpsLocationButton, bpLocationButton, refashAccuracy;
-        Button cancelButton, saveButton;
         EditText streetAddress, suburb, region;
         Spinner province, localmunicipality;
         TextView tvfLatLong, boundaryPolygonsText, accuracyMessage;
@@ -52,8 +51,6 @@ namespace TheDataProject.Droid.Activities
             region = FindViewById<EditText>(Resource.Id.etf_region);
             province = FindViewById<Spinner>(Resource.Id.sf_province);
             localmunicipality = FindViewById<Spinner>(Resource.Id.sf_localmunicipality);
-            cancelButton = FindViewById<Button>(Resource.Id.dfil_cancelbutton);
-            saveButton = FindViewById<Button>(Resource.Id.dfil_donebutton);
             gpsLocationButton = FindViewById<FloatingActionButton>(Resource.Id.gpscaddlocation_button);
             bpLocationButton = FindViewById<FloatingActionButton>(Resource.Id.bpaddlocation_button);
             refashAccuracy = FindViewById<FloatingActionButton>(Resource.Id.refreshaccuracy_button);
@@ -97,8 +94,6 @@ namespace TheDataProject.Droid.Activities
                     boundaryPolygonsText.Text = String.Format("Boundary Polygons {0}", itemList.Count);
                 }
             }
-            cancelButton.Click += CancelButton_Click;
-            saveButton.Click += SaveButton_Click;
             bpLocationButton.Click += BPLocationButton_Click;
             gpsLocationButton.Click += GPSLocationButton_Click;
 
@@ -202,10 +197,6 @@ namespace TheDataProject.Droid.Activities
                 };
             }
         }
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Finish();
-        }
 
         private async void SaveButton_Click(object sender, EventArgs e)
         {
@@ -289,6 +280,24 @@ namespace TheDataProject.Droid.Activities
                 }
             }
             return isValid;
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+            }
+            return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

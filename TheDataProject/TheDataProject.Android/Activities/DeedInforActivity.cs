@@ -20,8 +20,6 @@ namespace TheDataProject.Droid.Activities
     public class DeedInforActivity : BaseActivity
     {
         #region Properties
-
-        Button cancelButton, saveButton;
         EditText erfNumber, titleDeedNumber, extentm2, ownerInformation;
         DeedsInfo DeedsInfo;
         Facility Facility;
@@ -39,8 +37,6 @@ namespace TheDataProject.Droid.Activities
             titleDeedNumber = FindViewById<EditText>(Resource.Id.etf_titledeednumber);
             extentm2 = FindViewById<EditText>(Resource.Id.etf_extentm2);
             ownerInformation = FindViewById<EditText>(Resource.Id.etf_ownerinformation);
-            cancelButton = FindViewById<Button>(Resource.Id.dfid_cancelbutton);
-            saveButton = FindViewById<Button>(Resource.Id.dfid_donebutton);
             ViewModel = new DeedInforViewModel();
             DeedsInfo = new DeedsInfo();
             var data = Intent.GetStringExtra("data");
@@ -57,18 +53,10 @@ namespace TheDataProject.Droid.Activities
 
                 }
             }
-            cancelButton.Click += CancelButton_Click;
-            saveButton.Click += SaveButton_Click;
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
         }
-
-
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Finish();
-        }
-
+        
         private async void SaveButton_Click(object sender, EventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog();
@@ -104,6 +92,23 @@ namespace TheDataProject.Droid.Activities
             {
                 messageDialog.SendToast("Error occurred: Unable to save deed information.");
             }
+        }
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+            }
+            return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

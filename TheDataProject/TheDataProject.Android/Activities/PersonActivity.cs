@@ -21,7 +21,6 @@ namespace TheDataProject.Droid.Activities
     {
         #region Properties
 
-        Button cancelButton, saveButton;
         EditText fullname, designation, mobileNumber, emailaddress;
         Person Person;
         Facility Facility;
@@ -39,8 +38,6 @@ namespace TheDataProject.Droid.Activities
             designation = FindViewById<EditText>(Resource.Id.etf_designation);
             mobileNumber = FindViewById<EditText>(Resource.Id.etf_mobileNumber);
             emailaddress = FindViewById<EditText>(Resource.Id.etf_emailaddress);
-            cancelButton = FindViewById<Button>(Resource.Id.dfirp_cancelbutton);
-            saveButton = FindViewById<Button>(Resource.Id.dfirp_donebutton);
             ViewModel = new PersonViewModel();
             Person = new Person();
             var data = Intent.GetStringExtra("data");
@@ -59,23 +56,25 @@ namespace TheDataProject.Droid.Activities
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
-            cancelButton.Click += CancelButton_Click;
-            saveButton.Click += SaveButton_Click;
         }
-
-        private void CancelButton_Click(object sender, EventArgs e)
+        public override bool OnCreateOptionsMenu(IMenu menu)
         {
-           Finish();
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+            }
+            return base.OnCreateOptionsMenu(menu);
         }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            if (item.ItemId != Android.Resource.Id.Home)
-                return base.OnOptionsItemSelected(item);
-            Finish();
-            return true;
-        }
-
+        
         private async void SaveButton_Click(object sender, EventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog();

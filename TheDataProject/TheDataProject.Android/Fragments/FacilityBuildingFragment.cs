@@ -27,7 +27,6 @@ namespace TheDataProject.Droid.Fragments
 
         BrowseBuildingsAdapter adapter;
         SwipeRefreshLayout refresher;
-        FloatingActionButton addButton;
         RecyclerView recyclerView;
         ProgressBar progress;
         int facilityId;
@@ -51,18 +50,14 @@ namespace TheDataProject.Droid.Fragments
             View view = inflater.Inflate(Resource.Layout.fragment_facility_building, container, false);
 
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
-            addButton = view.FindViewById<FloatingActionButton>(Resource.Id.addnewBuilding_button);
-
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(Activity, ViewModel));
 
             refresher = view.FindViewById<SwipeRefreshLayout>(Resource.Id.buildingRefresher);
             refresher.SetColorSchemeColors(Resource.Color.accent);
-
             progress = view.FindViewById<ProgressBar>(Resource.Id.buildingprogressbar_loading);
             progress.Visibility = ViewStates.Gone;
-            addButton.Click += AddButton_Click;
-            addButton.SetBackgroundColor(Android.Graphics.Color.Tan);
+            HasOptionsMenu = true;
             return view;
         }
 
@@ -70,6 +65,22 @@ namespace TheDataProject.Droid.Fragments
         {
             var intent = new Intent(Activity, typeof(AddBuildingActivity)); ;
             StartActivity(intent);
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            inflater.Inflate(Resource.Menu.top_menus, menu);
+            base.OnCreateOptionsMenu(menu, inflater);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+            }
         }
 
 

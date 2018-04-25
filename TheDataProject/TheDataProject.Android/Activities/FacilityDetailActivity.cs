@@ -60,14 +60,7 @@ namespace TheDataProject.Droid.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
         }
-
-
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }
-
+        
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             if (item.ItemId != Android.Resource.Id.Home)

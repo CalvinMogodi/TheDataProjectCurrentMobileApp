@@ -2030,8 +2030,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070086
 			public const int accuracy_message = 2131165318;
 			
-			// aapt resource value: 0x7f0700e4
-			public const int action0 = 2131165412;
+			// aapt resource value: 0x7f0700e3
+			public const int action0 = 2131165411;
 			
 			// aapt resource value: 0x7f07005a
 			public const int action_bar = 2131165274;
@@ -2057,8 +2057,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f07005b
 			public const int action_context_bar = 2131165275;
 			
-			// aapt resource value: 0x7f0700e8
-			public const int action_divider = 2131165416;
+			// aapt resource value: 0x7f0700e7
+			public const int action_divider = 2131165415;
 			
 			// aapt resource value: 0x7f070003
 			public const int action_menu_divider = 2131165187;
@@ -2129,8 +2129,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070044
 			public const int buttonPanel = 2131165252;
 			
-			// aapt resource value: 0x7f0700e5
-			public const int cancel_action = 2131165413;
+			// aapt resource value: 0x7f0700e4
+			public const int cancel_action = 2131165412;
 			
 			// aapt resource value: 0x7f07002b
 			public const int center = 2131165227;
@@ -2144,8 +2144,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070052
 			public const int checkbox = 2131165266;
 			
-			// aapt resource value: 0x7f0700eb
-			public const int chronometer = 2131165419;
+			// aapt resource value: 0x7f0700ea
+			public const int chronometer = 2131165418;
 			
 			// aapt resource value: 0x7f070033
 			public const int clip_horizontal = 2131165235;
@@ -2234,8 +2234,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f07001c
 			public const int end = 2131165212;
 			
-			// aapt resource value: 0x7f0700f0
-			public const int end_padder = 2131165424;
+			// aapt resource value: 0x7f0700ef
+			public const int end_padder = 2131165423;
 			
 			// aapt resource value: 0x7f070023
 			public const int enterAlways = 2131165219;
@@ -2396,8 +2396,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f0700cd
 			public const int imgsi_facilityphoto = 2131165389;
 			
-			// aapt resource value: 0x7f0700ef
-			public const int info = 2131165423;
+			// aapt resource value: 0x7f0700ee
+			public const int info = 2131165422;
 			
 			// aapt resource value: 0x7f070089
 			public const int information_button = 2131165321;
@@ -2408,11 +2408,11 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f07002f
 			public const int left = 2131165231;
 			
-			// aapt resource value: 0x7f0700e9
-			public const int line1 = 2131165417;
+			// aapt resource value: 0x7f0700e8
+			public const int line1 = 2131165416;
 			
-			// aapt resource value: 0x7f0700ed
-			public const int line3 = 2131165421;
+			// aapt resource value: 0x7f0700ec
+			public const int line3 = 2131165420;
 			
 			// aapt resource value: 0x7f07000b
 			public const int listMode = 2131165195;
@@ -2423,14 +2423,20 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070069
 			public const int main_content = 2131165289;
 			
-			// aapt resource value: 0x7f0700e7
-			public const int media_actions = 2131165415;
+			// aapt resource value: 0x7f0700e6
+			public const int media_actions = 2131165414;
 			
 			// aapt resource value: 0x7f0700f3
-			public const int menu_edit = 2131165427;
+			public const int menu_add = 2131165427;
+			
+			// aapt resource value: 0x7f0700f4
+			public const int menu_edit = 2131165428;
+			
+			// aapt resource value: 0x7f0700f1
+			public const int menu_save = 2131165425;
 			
 			// aapt resource value: 0x7f0700f2
-			public const int menu_save = 2131165426;
+			public const int menu_submit = 2131165426;
 			
 			// aapt resource value: 0x7f07001d
 			public const int middle = 2131165213;
@@ -2504,8 +2510,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070054
 			public const int radio = 2131165268;
 			
-			// aapt resource value: 0x7f0700e3
-			public const int recyclerView = 2131165411;
+			// aapt resource value: 0x7f0700e2
+			public const int recyclerView = 2131165410;
 			
 			// aapt resource value: 0x7f070087
 			public const int refreshaccuracy_button = 2131165319;
@@ -2621,8 +2627,8 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f0700cf
 			public const int sidone_button = 2131165391;
 			
-			// aapt resource value: 0x7f0700f1
-			public const int sliding_tabs = 2131165425;
+			// aapt resource value: 0x7f0700f0
+			public const int sliding_tabs = 2131165424;
 			
 			// aapt resource value: 0x7f0700c7
 			public const int snackbar_action = 2131165383;
@@ -2651,17 +2657,14 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070031
 			public const int start = 2131165233;
 			
-			// aapt resource value: 0x7f0700e6
-			public const int status_bar_latest_event_content = 2131165414;
+			// aapt resource value: 0x7f0700e5
+			public const int status_bar_latest_event_content = 2131165413;
 			
 			// aapt resource value: 0x7f0700a2
 			public const int streetaddress_layout = 2131165346;
 			
 			// aapt resource value: 0x7f070065
 			public const int submit_area = 2131165285;
-			
-			// aapt resource value: 0x7f0700e2
-			public const int submitfacilitybtn = 2131165410;
 			
 			// aapt resource value: 0x7f0700a4
 			public const int suburb_layout = 2131165348;
@@ -2672,17 +2675,17 @@ namespace TheDataProject.Droid
 			// aapt resource value: 0x7f070098
 			public const int tabs = 2131165336;
 			
-			// aapt resource value: 0x7f0700ee
-			public const int text = 2131165422;
+			// aapt resource value: 0x7f0700ed
+			public const int text = 2131165421;
 			
-			// aapt resource value: 0x7f0700ec
-			public const int text2 = 2131165420;
+			// aapt resource value: 0x7f0700eb
+			public const int text2 = 2131165419;
 			
 			// aapt resource value: 0x7f07004d
 			public const int textSpacerNoButtons = 2131165261;
 			
-			// aapt resource value: 0x7f0700ea
-			public const int time = 2131165418;
+			// aapt resource value: 0x7f0700e9
+			public const int time = 2131165417;
 			
 			// aapt resource value: 0x7f070043
 			public const int title = 2131165251;

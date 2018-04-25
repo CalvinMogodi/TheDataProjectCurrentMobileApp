@@ -84,7 +84,25 @@ namespace TheDataProject.Droid.Fragments
             locationHolder.Click += Location_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
+            HasOptionsMenu = true;
             return view;
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            inflater.Inflate(Resource.Menu.top_menus, menu);
+            base.OnCreateOptionsMenu(menu, inflater);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+
+            }
         }
 
         private async void GetImages(AppPreferences ap)

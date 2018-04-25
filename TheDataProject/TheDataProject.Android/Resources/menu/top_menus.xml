@@ -5,9 +5,18 @@
     android:icon="@android:drawable/ic_menu_search"
     android:showAsAction="always"
     android:title="Search" />
-	<item 
-    android:id="@+id/menu_edit" 
-    android:showAsAction="ifRoom" 
+  <item
+   android:id="@+id/menu_submit"
+   android:showAsAction="always"
+   android:title="Submit" />
+  <item
+   android:id="@+id/menu_add"
+   android:icon="@android:drawable/ic_menu_add"
+   android:showAsAction="always"
+   android:title="Add" />
+  <item
+    android:id="@+id/menu_edit"
+    android:showAsAction="ifRoom"
     android:title="Log Out" />
   <item
     android:id="@+id/menu_edit"

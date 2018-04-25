@@ -113,38 +113,7 @@ namespace TheDataProject.Droid.Activities
             secondFacilityPhoto.Click += (sender, e) => {
                 ShowImage_Click(false);
             };
-            //facility = new Facility();
-
-            //AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-            //userId = Convert.ToInt32(ap.GetUserId());
-
-            //if (data != null)
-            //{
-            //    facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
-            //    SupportActionBar.Title = facility.Name;
-            //    clientCode.Text = facility.ClientCode;
-            //    facilityName.Text = facility.Name;
-            //    settlementtype.SetSelection(GetIndex(settlementtype, facility.SettlementType));
-            //    zoning.SetSelection(GetIndex(zoning, facility.Zoning));
-            //    imageNames = facility.IDPicture == null ? new List<string>() : facility.IDPicture.Split(',').ToList();
-            //    if (imageNames.Count > 0)
-            //        GetImages(ap);
-            //}
-            //settlementtype.Enabled = false;
-            //zoning.Enabled = false;
-            //saveButton.Visibility = ViewStates.Gone;
-            //editButton.SetBackgroundColor(Android.Graphics.Color.Tan);
-            //saveButton.SetBackgroundColor(Android.Graphics.Color.Tan);
-            //editButton.Click += EditButton_Click;
-            //saveButton.Click += SaveButton_Click;
-            //locationHolder.Click += Location_Click;
-            //responsiblepersonHolder.Click += ResponsiblePerson_Click;
-            //deedHolder.Click += Deed_Click;
-            //_GPSCoordinates = new GPSCoordinate();
-            //_BoundryPolygons = new List<BoundryPolygon>();
-
-            //SupportActionBar.SetHomeButtonEnabled(true);
-            //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+           
         }
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
@@ -157,6 +126,22 @@ namespace TheDataProject.Droid.Activities
                 default:
                     return base.OnOptionsItemSelected(item);
             }
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+            }
+            return base.OnCreateOptionsMenu(menu);
         }
         //private void Location_Click(object sender, EventArgs e)
         //{

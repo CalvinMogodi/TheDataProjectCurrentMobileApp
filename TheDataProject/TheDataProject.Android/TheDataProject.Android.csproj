@@ -94,6 +94,7 @@
     <Compile Include="Activities\FacilityDetailActivity.cs" />
     <Compile Include="Activities\FacilityInformationActivity.cs" />
     <Compile Include="Activities\FacilityPictureActivity.cs" />
+    <Compile Include="Activities\InformationActivity.cs" />
     <Compile Include="Activities\LocationActivity.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
     <Compile Include="Activities\PersonActivity.cs" />
@@ -107,7 +108,7 @@
     <Compile Include="Helpers\GPSTracker.cs" />
     <Compile Include="Helpers\MessageDialog.cs" />
     <Compile Include="Helpers\SqlLiteManager.cs" />
-    <Compile Include="Helpers\StaticData.cs" />
+    <Compile Include="Helpers\UIHelpers.cs" />
     <Compile Include="Helpers\Validations.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -154,6 +155,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\activity_deedInfor.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_information.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

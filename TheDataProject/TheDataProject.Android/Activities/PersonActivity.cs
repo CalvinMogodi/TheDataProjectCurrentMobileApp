@@ -104,6 +104,14 @@ namespace TheDataProject.Droid.Activities
             }
         }
 
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId != Android.Resource.Id.Home)
+                return base.OnOptionsItemSelected(item);
+            Finish();
+            return true;
+        }
+
         #endregion #endregion 
     }
 }

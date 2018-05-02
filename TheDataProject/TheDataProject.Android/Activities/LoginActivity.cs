@@ -73,38 +73,24 @@ namespace TheDataProject.Droid.Activities
                 Password = password.Text,
             };
             
-            //if (ap.IsOnline(Application.Context))
-            //{
-                user = await ViewModel.ExecuteLoginCommand(user);
-                // this.SqlLiteManager.CreateDatabase();
-                //await this.SqlLiteManager.InsertUpdateUser(this.SqlLiteManager.MapUserToLocalUser(user));
-            //}
-            //else {
-            //   var locaUser = await SqlLiteManager.GetUser(this.SqlLiteManager.MapUserToLocalUser(user));
-            //    if (locaUser != null)
-            //        user = SqlLiteManager.MapLocalUserToUser(locaUser);
-            //    else {
-            //        user = new User()
-            //        {
-            //            RespondMessage = "Invaild username or password.",
-            //        };
-            //    }
-            //}
-
-            
-            if (user.RespondMessage != null)
-                message.Text = user.RespondMessage;
-            else
+            if (ap.IsOnline(Application.Context))
             {
-                var newIntent = new Intent(this, typeof(MainActivity));
-                newIntent.AddFlags(ActivityFlags.ClearTop);
-                newIntent.AddFlags(ActivityFlags.SingleTop);                
-                ap.SaveUserId(user.Id.ToString());
-               
-                StartActivity(newIntent);
-            
-                Finish();
-            }
+                user = await ViewModel.ExecuteLoginCommand(user);
+
+                if (user.RespondMessage != null)
+                    message.Text = user.RespondMessage;
+                else
+                {
+                    var newIntent = new Intent(this, typeof(MainActivity));
+                    newIntent.AddFlags(ActivityFlags.ClearTop);
+                    newIntent.AddFlags(ActivityFlags.SingleTop);
+                    ap.SaveUserId(user.Id.ToString());
+
+                    StartActivity(newIntent);
+
+                    Finish();
+                }
+            }   
 
             messageDialog.HideLoading();
         }

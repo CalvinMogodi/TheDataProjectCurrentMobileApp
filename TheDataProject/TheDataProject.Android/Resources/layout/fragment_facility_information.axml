@@ -48,7 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvf_locationholder"
+                android:id="@+id/tvf_informationHolder"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp">
                 <ImageView

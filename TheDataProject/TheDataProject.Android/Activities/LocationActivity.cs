@@ -24,7 +24,7 @@ namespace TheDataProject.Droid.Activities
         protected override int LayoutResource => Resource.Layout.activity_location;
         #region Properties 
 
-        FloatingActionButton gpsLocationButton, bpLocationButton, refashAccuracy;
+        ImageView gpsLocationButton, bpLocationButton, refashAccuracy;
         EditText streetAddress, suburb, region;
         Spinner province, localmunicipality;
         TextView tvfLatLong, boundaryPolygonsText, accuracyMessage;
@@ -51,9 +51,9 @@ namespace TheDataProject.Droid.Activities
             region = FindViewById<EditText>(Resource.Id.etf_region);
             province = FindViewById<Spinner>(Resource.Id.sf_province);
             localmunicipality = FindViewById<Spinner>(Resource.Id.sf_localmunicipality);
-            gpsLocationButton = FindViewById<FloatingActionButton>(Resource.Id.gpscaddlocation_button);
-            bpLocationButton = FindViewById<FloatingActionButton>(Resource.Id.bpaddlocation_button);
-            refashAccuracy = FindViewById<FloatingActionButton>(Resource.Id.refreshaccuracy_button);
+            gpsLocationButton = FindViewById<ImageView>(Resource.Id.gpscaddlocation_button);
+            bpLocationButton = FindViewById<ImageView>(Resource.Id.bpaddlocation_button);
+            refashAccuracy = FindViewById<ImageView>(Resource.Id.refreshaccuracy_button);
             tvfLatLong = FindViewById<TextView>(Resource.Id.tvf_latLang);
             boundaryPolygonsText = FindViewById<TextView>(Resource.Id.boundaryPolygonsText);
             accuracyMessage = FindViewById<TextView>(Resource.Id.accuracy_message);

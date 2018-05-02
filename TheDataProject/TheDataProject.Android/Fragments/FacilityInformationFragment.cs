@@ -30,7 +30,7 @@ namespace TheDataProject.Droid.Fragments
     {
         #region Properties 
         LayoutInflater Inflater;
-        LinearLayout locationHolder, responsiblepersonHolder, deedHolder;
+        LinearLayout locationHolder, responsiblepersonHolder, deedHolder, informationHolder;
         ImageView pictureHolder;
         TextView clientCode, facilityName;
         List<string> imageNames;
@@ -58,6 +58,7 @@ namespace TheDataProject.Droid.Fragments
             clientCode = view.FindViewById<TextView>(Resource.Id.tvf_clientcode);
             facilityName = view.FindViewById<TextView>(Resource.Id.tvf_facilityname);          
             locationHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_locationholder);
+            informationHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_informationHolder);
             responsiblepersonHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_responsiblepersonholder);
             deedHolder = view.FindViewById<LinearLayout>(Resource.Id.tvf_deedholder);
             pictureHolder = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
@@ -82,6 +83,7 @@ namespace TheDataProject.Droid.Fragments
                 StartActivity(intent);
             };           
             locationHolder.Click += Location_Click;
+            informationHolder.Click += Information_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
             HasOptionsMenu = true;
@@ -240,7 +242,7 @@ namespace TheDataProject.Droid.Fragments
 
         private void Information_Click(object sender, EventArgs e)
         {
-            var intent = new Intent(Activity, typeof(LocationActivity));
+            var intent = new Intent(Activity, typeof(InformationActivity));
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
             StartActivity(intent);
         }

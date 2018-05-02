@@ -4,201 +4,169 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <android.support.design.widget.AppBarLayout
-      android:id="@+id/appbar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-      <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-          app:layout_collapseMode="pin" />
-  </android.support.design.widget.AppBarLayout>
-  <android.support.v4.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_collapseMode="pin" />
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="20dp"
-          android:layout_weight="1" />
-      <android.support.design.widget.TextInputLayout
-          android:id="@+id/streetaddress_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:hint="Street Address"
-            android:layout_height="wrap_content"
-            android:id="@+id/etf_streetAddress" />
-      </android.support.design.widget.TextInputLayout>
-      <android.support.design.widget.TextInputLayout
-          android:id="@+id/suburb_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:hint="Suburb"
-            android:layout_height="wrap_content"
-            android:id="@+id/etf_suburb" />
-      </android.support.design.widget.TextInputLayout>
-      <android.support.design.widget.TextInputLayout
-          android:id="@+id/region_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:hint="Region"
-            android:layout_height="wrap_content"
-            android:id="@+id/etf_region" />
-      </android.support.design.widget.TextInputLayout>
-      <TextView
-          android:text="Province"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="@dimen/small_margin"
-          android:paddingLeft="@dimen/small_margin"
-          android:paddingRight="@dimen/small_margin"
-          style="?android:textAppearanceSmall" />
-      <Spinner
-          android:id="@+id/sf_province"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:entries="@array/provinces"
-          android:spinnerMode="dialog"
-          style="@style/Widget.AppCompat.Spinner.Underlined"
-          android:gravity="bottom" />
-      <TextView
-          android:text="Local Municipality"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="@dimen/small_margin"
-          android:paddingLeft="@dimen/small_margin"
-          android:paddingRight="@dimen/small_margin"
-          style="?android:textAppearanceSmall" />
-      <Spinner
-          android:id="@+id/sf_localmunicipality"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:entries="@array/localmunicipalities"
-          android:spinnerMode="dialog"
-          style="@style/Widget.AppCompat.Spinner.Underlined"
-          android:gravity="bottom" />
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="20dp"
-          android:layout_weight="1" />
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_gravity="center_vertical"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal">
-        <TextView
-            android:text="GPS Coordinate"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-          <android.support.design.widget.FloatingActionButton
-              android:id="@+id/gpscaddlocation_button"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:src="@drawable/ic_add"
-              android:layout_gravity="center|right"
-              android:layout_margin="@dimen/fab_margin" />
+            android:layout_height="match_parent"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/streetaddress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:hint="Street Address"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etf_streetAddress" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/suburb_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:hint="Suburb"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etf_suburb" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/region_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:hint="Region"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etf_region" />
+            </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:text="Province"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
+            <Spinner
+                android:id="@+id/sf_province"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/provinces"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:gravity="bottom" />
+            <TextView
+                android:text="Local Municipality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                style="?android:textAppearanceSmall" />
+            <Spinner
+                android:id="@+id/sf_localmunicipality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/localmunicipalities"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:gravity="bottom" />
+            <TextView
+                android:text="GPS Coordinate"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:src="@drawable/ic_refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/refreshaccuracy_button" />
+                <TextView
+                    android:id="@+id/accuracy_message"
+                    android:text="GPS Coordinate"
+                    android:gravity="left"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal"
+                    android:layout_gravity="top">
+                    <ImageView
+                        android:src="@android:drawable/ic_menu_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48.5dp"
+                        android:layout_gravity="right"
+                        android:id="@+id/gpscaddlocation_button" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:text="Lat: 0 Long: 0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/tvf_latLang"
+                android:layout_marginTop="-8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="Boundary Polygons"
+                    android:id="@+id/boundaryPolygonsText"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal"
+                    android:layout_gravity="top">
+                    <ImageView
+                        android:src="@android:drawable/ic_menu_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48.5dp"
+                        android:layout_gravity="right"
+                        android:id="@+id/bpaddlocation_button" />
+                </LinearLayout>
+            </LinearLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:smoothScrollbar="true"
+                android:id="@+id/bplistView1" />
         </LinearLayout>
-      </LinearLayout>
-      <TextView
-          android:text="Lat: 0 Long: 0"
-          android:paddingLeft="20dp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          android:id="@+id/tvf_latLang" />
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="20dp"
-          android:layout_weight="1" />
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="horizontal">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/refreshaccuracy_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh"
-            android:layout_margin="@dimen/small_margin" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-          <TextView
-              android:text="Current Location Accurance"
-              android:gravity="center_vertical"
-              android:textAppearance="?android:attr/textAppearanceMedium"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-          <Space
-              android:layout_width="match_parent"
-              android:layout_height="20dp"
-              android:layout_weight="1" />
-          <TextView
-              android:id="@+id/accuracy_message"
-              android:gravity="center_vertical"
-              android:textAppearance="?android:attr/textAppearanceSmall"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-        </LinearLayout>
-      </LinearLayout>
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="20dp"
-          android:layout_weight="1" />
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal">
-        <TextView
-            android:text="Boundary Polygons"
-            android:id="@+id/boundaryPolygonsText"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-          <android.support.design.widget.FloatingActionButton
-              android:id="@+id/bpaddlocation_button"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:src="@drawable/ic_add"
-              android:layout_gravity="top|right"
-              android:layout_margin="@dimen/small_margin" />
-        </LinearLayout>
-      </LinearLayout>
-      <ListView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:smoothScrollbar="true"
-          android:id="@+id/bplistView1" />
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

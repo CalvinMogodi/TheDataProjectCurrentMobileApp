@@ -27,17 +27,13 @@ namespace TheDataProject.Droid
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class AddBuildingActivity : BaseActivity
     {
-        FloatingActionButton saveButton, gpscAddLocationButton, refashAccuracy;
-        EditText title, description, occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
-        TextView tvbLatitude, tvbLongitude, accuracyMessage;
-        ImageView buildingPhoto, iImageViewer;
-        NumberPicker numberPicker;
+        EditText occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
+        TextView  tvblatLang, accuracyMessage;
+        ImageView gpscAddLocationButton, refashAccuracy, buildingPhoto, iImageViewer;
         Button takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         Dialog imageDialog;
         Spinner buildingType, buildingstandard, disabledAccesss;
-        AlertDialog numberPickerAlertDialog;
         TextInputLayout occupationyearLayout;
-        LinearLayout locationLinearlayout;
         public static readonly int TakeImageId = 1000;
         public static readonly int SelectImageId = 2000;
         Switch heritage;
@@ -67,13 +63,10 @@ namespace TheDataProject.Droid
             var data = Intent.GetStringExtra("data");
             // Create your application here
 
-            saveButton = FindViewById<FloatingActionButton>(Resource.Id.save_button);
             occupationYear = FindViewById<EditText>(Resource.Id.etb_occupationyear);
             occupationyearLayout = FindViewById<TextInputLayout>(Resource.Id.occupationyear_layout);
-            gpscAddLocationButton = FindViewById<FloatingActionButton>(Resource.Id.gpscaddlocation_button);
-            locationLinearlayout = FindViewById<LinearLayout>(Resource.Id.blocation_linearlayout);
-            tvbLatitude = FindViewById<TextView>(Resource.Id.tvb_latitude);
-            tvbLongitude = FindViewById<TextView>(Resource.Id.tvb_longitude);
+            gpscAddLocationButton = FindViewById<ImageView>(Resource.Id.gpscaddlocation_button);
+            tvblatLang = FindViewById<TextView>(Resource.Id.tvf_latLang);
             buildingPhoto = FindViewById<ImageView>(Resource.Id.imgb_buildingphoto);
             _GPSCoordinates = new GPSCoordinate();
             buildingName = FindViewById<EditText>(Resource.Id.etb_name);
@@ -88,13 +81,13 @@ namespace TheDataProject.Droid
             disabledComment = FindViewById<EditText>(Resource.Id.etb_disabledcomment);
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
             accuracyMessage = FindViewById<TextView>(Resource.Id.accuracy_message);
-            refashAccuracy = FindViewById<FloatingActionButton>(Resource.Id.refreshaccuracy_button);
+            refashAccuracy = FindViewById<ImageView>(Resource.Id.refreshaccuracy_button);
             refashAccuracy.Click += RefashAccuracy_Click;
 
 
             _dir = ap.CreateDirectoryForPictures();
             Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
-            locationLinearlayout.Visibility = ViewStates.Gone;
+            
 
             if (data != null)
             {
@@ -104,10 +97,8 @@ namespace TheDataProject.Droid
                 occupationYear.Text = building.OccupationYear;
                 if (building.GPSCoordinates != null)
                 {
-                    tvbLatitude.Text = "Lat: " + building.GPSCoordinates.Latitude;
-                    tvbLongitude.Text = "Long: " + building.GPSCoordinates.Longitude;
+                    tvblatLang.Text = "Lat: " + building.GPSCoordinates.Latitude + " Long: " + building.GPSCoordinates.Longitude;
                     _GPSCoordinates = building.GPSCoordinates;
-                    locationLinearlayout.Visibility = ViewStates.Visible;
                 }                
                 buildingName.Text = building.BuildingName;
                 buildingType.SetSelection(GetIndex(buildingType, building.BuildingType));
@@ -142,7 +133,6 @@ namespace TheDataProject.Droid
             {
                 SupportActionBar.Title = "Add New Building";
             }
-            saveButton.Click += SaveButton_Click;
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
             gpscAddLocationButton.Click += AddLocation_Click;
@@ -155,7 +145,33 @@ namespace TheDataProject.Droid
                 accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
             }
         }
-        
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
+            {
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+            }
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId != Android.Resource.Id.Home)
+                return base.OnOptionsItemSelected(item);
+            Finish();
+            return true;
+        }
+
         public Bitmap SetImageBitmap(string filePath)
         {
             try
@@ -254,14 +270,7 @@ namespace TheDataProject.Droid
         {
             occupationYear.Text = e.Date.ToLongDateString();
         }
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            if (item.ItemId != Android.Resource.Id.Home)
-                return base.OnOptionsItemSelected(item);
-            Finish();
-            return true;
-        }
-
+      
         async void SaveButton_Click(object sender, EventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog();
@@ -272,9 +281,9 @@ namespace TheDataProject.Droid
                 messageDialog.HideLoading();
                 return;
             }
-            
-               
-            StaticData staticData = new StaticData();
+
+
+            Helpers.UIHelpers staticData = new Helpers.UIHelpers();
 
             int numberOfFloors = 0;
             if (!String.IsNullOrEmpty(nooOfFoors.Text))
@@ -375,9 +384,7 @@ namespace TheDataProject.Droid
                 messageDialog.SendToast("Unable to get location");
             }
             else {
-                locationLinearlayout.Visibility = ViewStates.Visible;
-                tvbLatitude.Text = "Lat: " + location.Latitude.ToString();
-                tvbLongitude.Text = "Long: " + location.Longitude.ToString();
+                tvblatLang.Text = "Lat: " + location.Latitude + " Long: " + location.Longitude;
                 accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
                 _GPSCoordinates = new GPSCoordinate()
                 {

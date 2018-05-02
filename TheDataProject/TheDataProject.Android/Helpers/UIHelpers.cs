@@ -12,8 +12,11 @@ using Android.Widget;
 
 namespace TheDataProject.Droid.Helpers
 {
-    public class StaticData
+    public class UIHelpers
     {
+        public UIHelpers() {
+
+        }
         public string RandomDigits(int length)
         {
             var random = new Random();
@@ -21,6 +24,19 @@ namespace TheDataProject.Droid.Helpers
             for (int i = 0; i < length; i++)
                 s = String.Concat(s, random.Next(10).ToString());
             return s;
+        }
+
+        public int GetSpinnerIndex(Spinner spinner, String myString)
+        {
+            int index = 0;
+            for (int i = 0; i < spinner.Count; i++)
+            {
+                if (spinner.GetItemAtPosition(i).Equals(myString))
+                {
+                    index = i;
+                }
+            }
+            return index;
         }
 
     }

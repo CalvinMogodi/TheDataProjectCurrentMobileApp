@@ -173,6 +173,8 @@ namespace TheDataProject.Droid.Helpers
             }
             else
             {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.SendMessage("Please make sure you are connected","No Connection");
                 return false;
             }
         }

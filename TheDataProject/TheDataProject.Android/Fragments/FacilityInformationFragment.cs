@@ -34,11 +34,13 @@ namespace TheDataProject.Droid.Fragments
         ImageView pictureHolder;
         TextView clientCode, facilityName;
         List<string> imageNames;
+        int userId = 0;
         View view;
         ViewGroup Container;
         public bool isEdit = false;
-        public static FacilitiesViewModel ViewModel { get; set; }
+        public static FacilitiesViewModel viewModel { get; set; }
         public Facility facility;
+        private AppPreferences appPreferences;
         public static FacilityInformationFragment NewInstance(Bundle mybundle) => new FacilityInformationFragment { Arguments = mybundle };
         #endregion #endregion 
 
@@ -50,8 +52,7 @@ namespace TheDataProject.Droid.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            ViewModel = new FacilitiesViewModel();
-
+            viewModel = new FacilitiesViewModel();           
             Inflater = inflater;
             Container = container;
             view = inflater.Inflate(Resource.Layout.fragment_facility_information, container, false);
@@ -64,8 +65,8 @@ namespace TheDataProject.Droid.Fragments
             pictureHolder = view.FindViewById<ImageView>(Resource.Id.facilityphotoimageinfo);
             facility = new Facility();
 
-            AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-           
+            appPreferences = new AppPreferences(Application.Context);
+            userId = Convert.ToInt32(appPreferences.GetUserId());
             var data = Arguments.GetString("data");
 
             if (data != null)
@@ -75,7 +76,7 @@ namespace TheDataProject.Droid.Fragments
                 facilityName.Text = facility.Name;
                 imageNames = facility.IDPicture == null ? new List<string>() : facility.IDPicture.Split(',').ToList();
                 if (imageNames.Count > 0)
-                    GetImages(ap);
+                    GetImages(appPreferences);
             }
             pictureHolder.Click += (sender, e) => {
                 var intent = new Intent(Activity, typeof(FacilityPictureActivity));
@@ -86,7 +87,7 @@ namespace TheDataProject.Droid.Fragments
             informationHolder.Click += Information_Click;
             responsiblepersonHolder.Click += ResponsiblePerson_Click;
             deedHolder.Click += Deed_Click;
-            HasOptionsMenu = true;
+            HasOptionsMenu = true;            
             return view;
         }
 
@@ -146,39 +147,38 @@ namespace TheDataProject.Droid.Fragments
 
         }              
 
-        private async void SubmitButton_Click(object sender, EventArgs e)
+        public async void SubmitFacility()
         {
             MessageDialog messageDialog = new MessageDialog();
             messageDialog.ShowLoading();
             BuildingsViewModel ViewModel = new BuildingsViewModel();
             await ViewModel.ExecuteBuildingsCommand(facility.Id);
-           // var buildings = ViewModel.Buildings;
+            var buildings = ViewModel.Buildings;
 
-            //if (!ValidateForm(facility, buildings, messageDialog))
-            //{
-            //    messageDialog.HideLoading();
-            //    return;
-            //}
+            if (!ValidateForm(facility, buildings.ToList(), messageDialog))
+            {
+                messageDialog.HideLoading();
+                return;
+            }
 
-            //facility.Status = "Submitted";
-            //facility.ModifiedUserId = userId;
-            //facility.ModifiedDate = new DateTime();
-            //bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
-            //messageDialog.HideLoading();
-            //if (isUpdated)
-            //{
-            //    viewModel.Facilities.Remove(viewModel.Facilities.Where(s => s.Id == facility.Id).Single());
-            //    messageDialog.SendToast("Facility is submitted for approval.");
-            //    var myActivity = (MainActivity)this.activity;
-            //    myActivity.Recreate();
-            //}
-            //else
-            //{
-            //    messageDialog.SendToast("Unable to submitted facility for approval.");
-            //}
+            facility.Status = "Submitted";
+            facility.ModifiedUserId = userId;
+            facility.ModifiedDate = new DateTime();
+            bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
+            messageDialog.HideLoading();
+            if (isUpdated)
+            {
+                messageDialog.SendToast("Facility is submitted for approval.");
+                var intent = new Intent(Activity, typeof(MainActivity));
+                StartActivity(intent);
+            }
+            else
+            {
+                messageDialog.SendToast("Unable to submit facility for approval.");
+            }
         }
 
-        private bool ValidateForm(Facility facility, MessageDialog messageDialog)
+        private bool ValidateForm(Facility facility, List<Building> buildings, MessageDialog messageDialog)
         {
             Validations validation = new Validations();
 
@@ -189,19 +189,19 @@ namespace TheDataProject.Droid.Fragments
             bool buildingPictureIsRequired = false;
             bool buildingLocationIsRequired = false;
 
-            //foreach (var building in buildings)
-            //{
-            //    if (String.IsNullOrEmpty(building.Photo))
-            //    {
-            //        buildingPictureIsRequired = true;
-            //        isValid = false;
-            //    }
-            //    if (building.GPSCoordinates == null)
-            //    {
-            //        buildingLocationIsRequired = true;
-            //        isValid = false;
-            //    }
-            //}
+            foreach (var building in buildings)
+            {
+                if (String.IsNullOrEmpty(building.Photo))
+                {
+                    buildingPictureIsRequired = true;
+                    isValid = false;
+                }
+                if (building.GPSCoordinates == null)
+                {
+                    buildingLocationIsRequired = true;
+                    isValid = false;
+                }
+            }
 
             if (facility.DeedsInfo == null)
             {

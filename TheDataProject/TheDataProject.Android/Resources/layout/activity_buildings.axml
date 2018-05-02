@@ -50,19 +50,10 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-      <android.support.design.widget.FloatingActionButton
-               android:id="@+id/addnewBuilding_button"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:src="@drawable/ic_add"
-               app:elevation="4dp"
-               android:layout_gravity="bottom|right"
-               android:layout_margin="@dimen/fab_margin" />
       <android.support.v4.widget.SwipeRefreshLayout
           android:layout_width="match_parent"
           android:layout_height="fill_parent"
           android:id="@+id/buildingRefresher">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/buildingRecyclerView"
             android:scrollbars="vertical"

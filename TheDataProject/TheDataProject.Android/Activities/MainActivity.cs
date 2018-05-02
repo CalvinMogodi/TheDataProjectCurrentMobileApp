@@ -118,6 +118,12 @@ namespace TheDataProject.Droid
                 var item = menu.GetItem(j);
                 if (item.ToString() == "Search")
                     item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetVisible(false);
             }
             return base.OnCreateOptionsMenu(menu);
         }

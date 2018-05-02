@@ -20,20 +20,21 @@ namespace TheDataProject.Droid.Activities
     public class PersonActivity : BaseActivity
     {
         #region Properties
-
+        private int userId;
         EditText fullname, designation, mobileNumber, emailaddress;
         Person Person;
         Facility Facility;
         public PersonViewModel ViewModel { get; set; }
+        private AppPreferences appPreferences;
         protected override int LayoutResource => Resource.Layout.activity_person;
-
         #endregion #endregion 
 
         #region Methods 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            appPreferences = new AppPreferences(Application.Context);
+            userId = Convert.ToInt32(appPreferences.GetUserId());
             fullname = FindViewById<EditText>(Resource.Id.etf_fullname);
             designation = FindViewById<EditText>(Resource.Id.etf_designation);
             mobileNumber = FindViewById<EditText>(Resource.Id.etf_mobileNumber);
@@ -53,6 +54,22 @@ namespace TheDataProject.Droid.Activities
                     emailaddress.Text = Person.EmailAddress;
                 }
             }
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Save":
+                        SavePerson();
+                        break;
+                }
+            };
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
@@ -75,32 +92,42 @@ namespace TheDataProject.Droid.Activities
             return base.OnCreateOptionsMenu(menu);
         }
         
-        private async void SaveButton_Click(object sender, EventArgs e)
+        private async void SavePerson()
         {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.ShowLoading();
+            if (appPreferences.IsOnline(Application.Context))
+            {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
 
-            Person.FullName = fullname.Text;
-            Person.Designation = designation.Text;
-            Person.PhoneNumber = mobileNumber.Text;
-            Person.EmailAddress = emailaddress.Text;
-            bool isSuccess = true;// await ViewModel.AddUpdatePersonAsync(Person);
+                Person.FullName = fullname.Text;
+                Person.Designation = designation.Text;
+                Person.PhoneNumber = mobileNumber.Text;
+                Person.EmailAddress = emailaddress.Text;
+                Person.FacilityId = Facility.Id;
+                Person.CreatedUserId = userId;
+                Person.ModifiedDate = DateTime.Now;
+                Person.ModifiedUserId = userId;
+                Person.CreatedDate = DateTime.Now;
+                bool isSuccess = await ViewModel.AddUpdatePersonAsync(Person);
 
-            messageDialog.HideLoading();
-            if (isSuccess){
-                messageDialog.SendToast("Responsible person is saved successful.");
-                var intent = new Intent(this, typeof(FacilityDetailActivity));
-                Context mContext = Android.App.Application.Context;
-                AppPreferences ap = new AppPreferences(mContext);
-                ap.SaveFacilityId(Facility.Id.ToString());
-                Facility.Buildings = new List<Building>();
-                Facility.ResposiblePerson = Person;
-                intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(Facility));
-                this.StartActivity(intent);
-                Finish();
-            }
-            else {
-                messageDialog.SendToast("Error occurred: Unable to save responsible person.");
+                messageDialog.HideLoading();
+                if (isSuccess)
+                {
+                    messageDialog.SendToast("Responsible person is saved successful.");
+                    var intent = new Intent(this, typeof(FacilityDetailActivity));
+                    Context mContext = Android.App.Application.Context;
+                    AppPreferences ap = new AppPreferences(mContext);
+                    ap.SaveFacilityId(Facility.Id.ToString());
+                    Facility.Buildings = new List<Building>();
+                    Facility.ResposiblePerson = Person;
+                    intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(Facility));
+                    this.StartActivity(intent);
+                    Finish();
+                }
+                else
+                {
+                    messageDialog.SendToast("Error occurred: Unable to save responsible person.");
+                }
             }
         }
 

@@ -16,14 +16,16 @@ using TheDataProject.ViewModels;
 
 namespace TheDataProject.Droid.Activities
 {
-    [Activity(Label = "Deed Infor", ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "Deed Information", ScreenOrientation = ScreenOrientation.Portrait)]
     public class DeedInforActivity : BaseActivity
     {
         #region Properties
         EditText erfNumber, titleDeedNumber, extentm2, ownerInformation;
         DeedsInfo DeedsInfo;
         Facility Facility;
+        private int userId;
         public DeedInforViewModel ViewModel { get; set; }
+        private AppPreferences appPreferences;
         protected override int LayoutResource => Resource.Layout.activity_deedInfor;
 
         #endregion #endregion 
@@ -32,7 +34,8 @@ namespace TheDataProject.Droid.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            appPreferences = new AppPreferences(Application.Context);
+            userId = Convert.ToInt32(appPreferences.GetUserId());
             erfNumber = FindViewById<EditText>(Resource.Id.etf_erfnumber);
             titleDeedNumber = FindViewById<EditText>(Resource.Id.etf_titledeednumber);
             extentm2 = FindViewById<EditText>(Resource.Id.etf_extentm2);
@@ -53,44 +56,65 @@ namespace TheDataProject.Droid.Activities
 
                 }
             }
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Save":
+                        SaveDeedInfor();
+                        break;
+                }
+            };
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
         }
         
-        private async void SaveButton_Click(object sender, EventArgs e)
+        private async void SaveDeedInfor()
         {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.ShowLoading();
-
-            if (!ValidateDeedInfo())
+            if (appPreferences.IsOnline(Application.Context))
             {
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
+
+                if (!ValidateDeedInfo())
+                {
+                    messageDialog.HideLoading();
+                    return;
+                }
+                DeedsInfo.ErFNumber = erfNumber.Text;
+                DeedsInfo.TitleDeedNumber = titleDeedNumber.Text;
+                DeedsInfo.Extent = extentm2.Text;
+                DeedsInfo.OwnerInfomation = ownerInformation.Text;
+                DeedsInfo.FacilityId = Facility.Id;
+                DeedsInfo.CreatedUserId = userId;
+                DeedsInfo.ModifiedDate = DateTime.Now;
+                DeedsInfo.ModifiedUserId = userId;
+                DeedsInfo.CreatedDate = DateTime.Now;
+                bool isSuccess = await ViewModel.AddUpdateDeedsInfoAsync(DeedsInfo);
+
                 messageDialog.HideLoading();
-                return;
-            }
-            DeedsInfo.ErFNumber = erfNumber.Text;
-            DeedsInfo.TitleDeedNumber = titleDeedNumber.Text;
-            DeedsInfo.Extent = extentm2.Text;
-            DeedsInfo.OwnerInfomation = ownerInformation.Text;
-
-            bool isSuccess = true;//await ViewModel.AddUpdateDeedsInfoAsync(DeedsInfo);
-
-            messageDialog.HideLoading();
-            if (isSuccess)
-            {
-                messageDialog.SendToast("Deeds information is saved successful.");
-                var intent = new Intent(this, typeof(FacilityDetailActivity));
-                Context mContext = Android.App.Application.Context;
-                AppPreferences ap = new AppPreferences(mContext);
-                ap.SaveFacilityId(Facility.Id.ToString());
-                Facility.Buildings = new List<Building>();
-                Facility.DeedsInfo = DeedsInfo;
-                intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(Facility));
-                this.StartActivity(intent);
-                Finish();
-            }
-            else
-            {
-                messageDialog.SendToast("Error occurred: Unable to save deed information.");
+                if (isSuccess)
+                {
+                    messageDialog.SendToast("Deeds information is saved successful.");
+                    var intent = new Intent(this, typeof(FacilityDetailActivity));
+                    appPreferences.SaveFacilityId(Facility.Id.ToString());
+                    Facility.Buildings = new List<Building>();
+                    Facility.DeedsInfo = DeedsInfo;
+                    intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(Facility));
+                    this.StartActivity(intent);
+                    Finish();
+                }
+                else
+                {
+                    messageDialog.SendToast("Error occurred: Unable to save deed information.");
+                }
             }
         }
         public override bool OnCreateOptionsMenu(IMenu menu)

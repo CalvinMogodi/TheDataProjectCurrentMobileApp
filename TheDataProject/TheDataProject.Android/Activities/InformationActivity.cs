@@ -13,15 +13,15 @@ using Android.Widget;
 
 namespace TheDataProject.Droid.Activities
 {
-    [Activity(Label = "InformationActivity", ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "Facility Information", ScreenOrientation = ScreenOrientation.Portrait)]
     public class InformationActivity : BaseActivity
     {
         #region Properties
         Spinner settlementtype, zoning;
         private UIHelpers helpers;
         private AppPreferences appPreferences;
-        Facility facility;
-        FacilitiesViewModel viewModel;
+        private Facility facility;
+        private FacilitiesViewModel viewModel;
         protected override int LayoutResource => Resource.Layout.activity_information;
         #endregion #endregion 
 
@@ -29,7 +29,7 @@ namespace TheDataProject.Droid.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            viewModel = new FacilitiesViewModel();
             helpers = new UIHelpers();
             appPreferences = new AppPreferences(Application.Context);
             settlementtype = FindViewById<Spinner>(Resource.Id.sf_settlementtype);
@@ -39,11 +39,27 @@ namespace TheDataProject.Droid.Activities
             if (data != null)
             {
                 facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
-                if (String.IsNullOrEmpty(facility.SettlementType))
+                if (!String.IsNullOrEmpty(facility.SettlementType))
                     settlementtype.SetSelection(helpers.GetSpinnerIndex(settlementtype, facility.SettlementType));
-                if(String.IsNullOrEmpty(facility.Zoning))
+                if (!String.IsNullOrEmpty(facility.Zoning))
                     zoning.SetSelection(helpers.GetSpinnerIndex(zoning, facility.Zoning));
             }
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Save":
+                        SaveFacility();
+                        break;
+                }
+            };
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
@@ -67,13 +83,14 @@ namespace TheDataProject.Droid.Activities
             return base.OnCreateOptionsMenu(menu);
         }
 
-        private async void SaveButton_Click(object sender, EventArgs e)
+        private async void SaveFacility()
         {
-            facility.SettlementType = settlementtype.SelectedItem.ToString();
-            facility.Zoning = zoning.SelectedItem.ToString();
-
             if (appPreferences.IsOnline(Application.Context))
             {
+                facility.SettlementType = settlementtype.SelectedItem.ToString();
+                facility.Zoning = zoning.SelectedItem.ToString();
+
+
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.ShowLoading();
                 bool isUpdated = await viewModel.ExecuteUpdateFacilityCommand(facility);
@@ -89,10 +106,11 @@ namespace TheDataProject.Droid.Activities
                     this.StartActivity(intent);
                     Finish();
                 }
-                else {
+                else
+                {
                     messageDialog.SendToast("Error occurred: Unable to save Facility Information.");
                 }
-            }            
+            }
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

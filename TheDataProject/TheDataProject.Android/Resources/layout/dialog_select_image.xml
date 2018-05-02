@@ -2,40 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:layout_height="match_parent"
+    android:background="@color/thisColor"
     android:gravity="center_vertical">
-
-  <Button
-        android:backgroundTint="@color/primary"
-        android:theme="@style/button_primary"
-        android:id="@+id/img_takeaphoto"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/camera" />
-  <Button
-    android:backgroundTint="@color/primary"
-    android:theme="@style/button_primary"
-    android:id="@+id/img_selectpicture"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/selectPicture"/>
-  <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_weight="1" />
-  <ImageView
-      android:src="@drawable/noimage_placeholder"
+  <LinearLayout
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+    <Button
+      android:backgroundTint="@color/primary"
+      android:paddingLeft="20dp"
+      android:theme="@style/button_primary"
+       android:gravity="center"
+      android:id="@+id/img_takeaphoto"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingLeft="20dp"
+      android:drawableLeft="@android:drawable/ic_menu_camera"
+      android:text="@string/camera" />
+    <Button
+      android:backgroundTint="@color/primary"
+      android:theme="@style/button_primary"
+       android:gravity="center"
+       android:paddingRight="20dp"
+      android:id="@+id/img_selectpicture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:drawableLeft="@android:drawable/ic_menu_gallery"
+      android:text="@string/selectPicture" />
+  </LinearLayout>
+  <ImageView
+      android:src="@android:drawable/ic_menu_gallery"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="#FFFFFF"
+      android:padding="3dp"
       android:layout_gravity="center_horizontal"
       android:id="@+id/imgsi_facilityphoto" />
-  <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_weight="1" />
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

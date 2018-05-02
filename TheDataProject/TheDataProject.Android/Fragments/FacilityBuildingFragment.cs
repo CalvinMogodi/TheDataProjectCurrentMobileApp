@@ -57,14 +57,8 @@ namespace TheDataProject.Droid.Fragments
             refresher.SetColorSchemeColors(Resource.Color.accent);
             progress = view.FindViewById<ProgressBar>(Resource.Id.buildingprogressbar_loading);
             progress.Visibility = ViewStates.Gone;
-            HasOptionsMenu = true;
+            HasOptionsMenu = true;            
             return view;
-        }
-
-        void AddButton_Click(object sender, EventArgs e)
-        {
-            var intent = new Intent(Activity, typeof(AddBuildingActivity)); ;
-            StartActivity(intent);
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)

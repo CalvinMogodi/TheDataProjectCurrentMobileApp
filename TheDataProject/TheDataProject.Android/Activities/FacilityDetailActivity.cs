@@ -13,6 +13,7 @@ using Android.Support.V4.App;
 using TheDataProject.Droid.Fragments;
 using Android.Support.V4.View;
 using Android.Support.Design.Widget;
+using TheDataProject.Droid.Helpers;
 
 namespace TheDataProject.Droid.Activities
 {
@@ -20,7 +21,7 @@ namespace TheDataProject.Droid.Activities
     public class FacilityDetailActivity : BaseActivity
     {
         protected override int LayoutResource => Resource.Layout.activity_facility;
-
+        private AppPreferences appPreferences;
         ViewPager pager;
         TabsAdapter adapter;
 
@@ -29,7 +30,7 @@ namespace TheDataProject.Droid.Activities
         {
             base.OnCreate(savedInstanceState);
             var data = Intent.GetStringExtra("data");
-
+            appPreferences = new AppPreferences(Application.Context);
             var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
             viewModel = new FacilityDetailViewModel(item);
 
@@ -45,8 +46,26 @@ namespace TheDataProject.Droid.Activities
 
             Toolbar.MenuItemClick += (sender, e) =>
             {
-                var intent = new Intent(this, typeof(LoginActivity)); ;
-                StartActivity(intent);
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Submit":
+                        FacilityInformationFragment fragment = (FacilityInformationFragment)SupportFragmentManager.Fragments[1];
+                        if (fragment != null)
+                        {
+                            fragment.SubmitFacility();
+                        }
+                        break;
+                    case "Add":
+                        var buildingIntent = new Intent(this, typeof(AddBuildingActivity)); ;
+                        StartActivity(buildingIntent);
+                        break;
+                }
             };
 
             pager.PageSelected += (sender, args) =>

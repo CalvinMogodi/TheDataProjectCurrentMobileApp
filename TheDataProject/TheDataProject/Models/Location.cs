@@ -16,5 +16,6 @@ namespace TheDataProject.Models
         public string Region { get; set; }
         public GPSCoordinate GPSCoordinates { get; set; }
         public List<BoundryPolygon> BoundryPolygon { get; set; }
+        public int? FacilityId { get; set; }
     }
 }

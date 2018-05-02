@@ -8,12 +8,12 @@
     android:layout_marginLeft="12dp"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="12dp">
-<LinearLayout
-    android:layout_width="match_parent"
+  <LinearLayout
+  android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
     <ImageView
-        android:src="@drawable/noimage_placeholder"
+        android:src="@android:drawable/ic_menu_gallery"
         android:id="@+id/facility_photo"
         android:layout_below="@android:id/text1"
         android:layout_width="fill_parent"
@@ -45,8 +45,8 @@
         android:gravity="center"
         android:orientation="horizontal">
         <ImageView
-            android:src="@drawable/ic_mylocation"
-             android:id="@+id/mylocation"
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:id="@+id/mylocation"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal" />
@@ -75,6 +75,6 @@
                 style="?android:textAppearanceSmall"
                 android:text="Lat: -25.92565565 Long: 28.12345687" />
         </LinearLayout>
-    </LinearLayout>   
+    </LinearLayout>
 </LinearLayout>
 </android.support.v7.widget.CardView>

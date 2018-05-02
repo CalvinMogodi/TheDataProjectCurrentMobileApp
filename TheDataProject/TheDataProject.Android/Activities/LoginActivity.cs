@@ -22,12 +22,14 @@ namespace TheDataProject.Droid.Activities
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class LoginActivity : Activity
     {
-       
+        #region Properties
         EditText username, password;
         TextView message;
         Button signInBtn;
+        private AppPreferences appPreferences;
+        #endregion #endregion 
 
-        
+        #region Methods 
         public bool FormIsValid { get; set; }
         public User User { get; set; }
         public LoginViewModel ViewModel { get; set; }
@@ -45,7 +47,7 @@ namespace TheDataProject.Droid.Activities
         private void Initialize()
         {
 
-            // Create your application here
+            appPreferences = new AppPreferences(Application.Context);
             username = FindViewById<EditText>(Resource.Id.etlogin_username);
             password = FindViewById<EditText>(Resource.Id.etlogin_password);            
             message = FindViewById<TextView>(Resource.Id.tvlogin_message);
@@ -62,7 +64,6 @@ namespace TheDataProject.Droid.Activities
                 return;
 
             MessageDialog messageDialog = new MessageDialog();
-            AppPreferences ap = new AppPreferences(Application.Context);
             messageDialog.ShowLoading();
 
             EncryptionHelper encryptionHelper = new EncryptionHelper();
@@ -73,7 +74,7 @@ namespace TheDataProject.Droid.Activities
                 Password = password.Text,
             };
             
-            if (ap.IsOnline(Application.Context))
+            if (appPreferences.IsOnline(Application.Context))
             {
                 user = await ViewModel.ExecuteLoginCommand(user);
 
@@ -84,7 +85,7 @@ namespace TheDataProject.Droid.Activities
                     var newIntent = new Intent(this, typeof(MainActivity));
                     newIntent.AddFlags(ActivityFlags.ClearTop);
                     newIntent.AddFlags(ActivityFlags.SingleTop);
-                    ap.SaveUserId(user.Id.ToString());
+                    appPreferences.SaveUserId(user.Id.ToString());
 
                     StartActivity(newIntent);
 
@@ -129,6 +130,6 @@ namespace TheDataProject.Droid.Activities
 
             return FormIsValid;
         }
-
+        #endregion #endregion 
     }
 }

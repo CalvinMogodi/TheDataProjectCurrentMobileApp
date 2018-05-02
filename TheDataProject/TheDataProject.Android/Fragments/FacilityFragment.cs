@@ -21,9 +21,8 @@ namespace TheDataProject.Droid
 {
     public class FacilityFragment : Android.Support.V4.App.Fragment, IFragmentVisible
     {
-        public static FacilityFragment NewInstance() =>
-            new FacilityFragment { Arguments = new Bundle() };
-
+        #region Properties
+        public static FacilityFragment NewInstance() => new FacilityFragment { Arguments = new Bundle() };
         BrowseFacilitiesAdapter adapter;
         SwipeRefreshLayout refresher;
         RecyclerView recyclerView;
@@ -33,7 +32,9 @@ namespace TheDataProject.Droid
         AppPreferences ap;
         public SqlLiteManager SqlLiteManager { get; set; }
         public static FacilitiesViewModel ViewModel { get; set; }
+        #endregion #endregion 
 
+        #region Methods 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -151,15 +152,19 @@ namespace TheDataProject.Droid
 
         }
 
-       
+        #endregion #endregion 
+
     }
 
     class BrowseFacilitiesAdapter : BaseRecycleViewAdapter
     {
+        #region Properties
         FacilitiesViewModel viewModel;
         Activity activity;
         int userId = 0;
+        #endregion #endregion 
 
+        #region Methods 
         public BrowseFacilitiesAdapter(Activity activity, FacilitiesViewModel viewModel, int _userId)
         {
             this.viewModel = viewModel;
@@ -252,18 +257,21 @@ namespace TheDataProject.Droid
        
         public override int ItemCount => viewModel.Facilities.Count;
 
-       
+        #endregion #endregion 
     }
 
     public class MyViewHolder : RecyclerView.ViewHolder
     {
+        #region Properties
         public TextView ClientCode { get; set; }
         public TextView FacilityName { get; set; }
         public TextView StreetAddress { get; set; }
         public ImageView MyLocation { get; set; }
         public TextView Location { get; set; }
         public ImageView ImageView { get; set; }
+        #endregion #endregion 
 
+        #region Methods 
         public MyViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
@@ -276,5 +284,6 @@ namespace TheDataProject.Droid
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }
+        #endregion #endregion 
     }
 }

@@ -253,7 +253,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdateDeedsInfoAsync(DeedsInfo deedsInfo)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            string restUrl = "http://154.0.170.81:85/api/DeedsInfo/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try
@@ -275,7 +275,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdateLocationAsync(Location location)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            string restUrl = "http://154.0.170.81:85/api/Location/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try
@@ -297,7 +297,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdatePersonAsync(Person person)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            string restUrl = "http://154.0.170.81:85/api/Person/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try

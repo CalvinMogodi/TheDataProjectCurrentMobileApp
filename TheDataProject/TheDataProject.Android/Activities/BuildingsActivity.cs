@@ -27,9 +27,7 @@ namespace TheDataProject.Droid.Activities
         Button informationButton;
         BrowseBuildingsAdapter adapter;
         SwipeRefreshLayout refresher;
-        FloatingActionButton addButton;
         RecyclerView recyclerView;
-        ProgressBar progress;
         int facilityId;
         Facility facility;
         public static BuildingsViewModel ViewModel { get; set; }
@@ -51,16 +49,11 @@ namespace TheDataProject.Droid.Activities
             };
 
             recyclerView = FindViewById<RecyclerView>(Resource.Id.buildingRecyclerView);
-            addButton = FindViewById<FloatingActionButton>(Resource.Id.addnewBuilding_button);
-
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapter = new BrowseBuildingsAdapter(this, ViewModel));
 
             refresher = FindViewById<SwipeRefreshLayout>(Resource.Id.buildingRefresher);
-            refresher.SetColorSchemeColors(Resource.Color.accent);
-            addButton.Click += AddButton_Click;
-            addButton.SetBackgroundColor(Android.Graphics.Color.Tan);
-            
+            refresher.SetColorSchemeColors(Resource.Color.accent);            
             Toolbar.MenuItemClick += (sender, e) =>
             {
                 var intent = new Intent(this, typeof(LoginActivity));
@@ -86,12 +79,6 @@ namespace TheDataProject.Droid.Activities
             StartActivity(newIntent);
             Finish();
             return true;
-        }
-
-        void AddButton_Click(object sender, EventArgs e)
-        {
-            var intent = new Intent(this, typeof(AddBuildingActivity)); ;
-            StartActivity(intent);
         }
         protected override void OnRestart()
         {

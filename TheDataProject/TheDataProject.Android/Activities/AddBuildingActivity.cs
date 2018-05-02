@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Java.Util;
 using Android.Locations;
 using System.Linq;
+using TheDataProject.Droid.Activities;
 
 namespace TheDataProject.Droid
 {
@@ -27,6 +28,7 @@ namespace TheDataProject.Droid
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class AddBuildingActivity : BaseActivity
     {
+        #region Properties
         EditText occupationYear, buildingName, utilisationStatus, disabledComment, nooOfFoors, totalFootprintAream2, totalImprovedaAeam2, constructionDescription;
         TextView  tvblatLang, accuracyMessage;
         ImageView gpscAddLocationButton, refashAccuracy, buildingPhoto, iImageViewer;
@@ -49,20 +51,22 @@ namespace TheDataProject.Droid
         int userId;
         string FileName = "";
         Building building;
-
+        private AppPreferences appPreferences;
+        private UIHelpers helpers;
         protected override int LayoutResource => Resource.Layout.activity_add_building;
+        #endregion #endregion 
+
+        #region Methods 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             building = new Building();
             ViewModel = new BuildingsViewModel();
-            AppPreferences ap = new AppPreferences(Android.App.Application.Context);
-            facilityId = Convert.ToInt32(ap.GetFacilityId());
-            userId = Convert.ToInt32(ap.GetUserId());
-
+            appPreferences = new AppPreferences(Application.Context);
+            facilityId = Convert.ToInt32(appPreferences.GetFacilityId());
+            userId = Convert.ToInt32(appPreferences.GetUserId());
+            helpers = new UIHelpers();
             var data = Intent.GetStringExtra("data");
-            // Create your application here
-
             occupationYear = FindViewById<EditText>(Resource.Id.etb_occupationyear);
             occupationyearLayout = FindViewById<TextInputLayout>(Resource.Id.occupationyear_layout);
             gpscAddLocationButton = FindViewById<ImageView>(Resource.Id.gpscaddlocation_button);
@@ -84,10 +88,7 @@ namespace TheDataProject.Droid
             refashAccuracy = FindViewById<ImageView>(Resource.Id.refreshaccuracy_button);
             refashAccuracy.Click += RefashAccuracy_Click;
 
-
-            _dir = ap.CreateDirectoryForPictures();
-            Android.Content.Res.ColorStateList csl = new Android.Content.Res.ColorStateList(new int[][] { new int[0] }, new int[] { Android.Graphics.Color.ParseColor("#008000") }); gpscAddLocationButton.BackgroundTintList = csl;
-            
+            _dir = appPreferences.CreateDirectoryForPictures();
 
             if (data != null)
             {
@@ -101,9 +102,9 @@ namespace TheDataProject.Droid
                     _GPSCoordinates = building.GPSCoordinates;
                 }                
                 buildingName.Text = building.BuildingName;
-                buildingType.SetSelection(GetIndex(buildingType, building.BuildingType));
-                buildingstandard.SetSelection(GetIndex(buildingstandard, building.BuildingStandard));
-                disabledAccesss.SetSelection(GetIndex(disabledAccesss, building.DisabledAccess));
+                buildingType.SetSelection(helpers.GetSpinnerIndex(buildingType, building.BuildingType));
+                buildingstandard.SetSelection(helpers.GetSpinnerIndex(buildingstandard, building.BuildingStandard));
+                disabledAccesss.SetSelection(helpers.GetSpinnerIndex(disabledAccesss, building.DisabledAccess));
                 utilisationStatus.Text = building.Status;
                 nooOfFoors.Text = Convert.ToString(building.NumberOfFloors);
                 totalFootprintAream2.Text = Convert.ToString(building.FootPrintArea);
@@ -121,7 +122,7 @@ namespace TheDataProject.Droid
                     Models.Picture picture = await pictureViewModel.ExecuteGetPictureCommand(building.Photo);
                     if (picture != null)
                     {
-                        var _bit = ap.StringToBitMap(picture.File);
+                        var _bit = appPreferences.StringToBitMap(picture.File);
                         if (_bit != null)
                             SaveImage(_bit, building.Photo);
                         buildingPhoto.SetImageBitmap(_bit);
@@ -144,6 +145,22 @@ namespace TheDataProject.Droid
             {
                 accuracyMessage.Text = String.Format("Accurate to {0} Meters", location.Accuracy.ToString());
             }
+
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Save":
+                        SaveBuilding();
+                        break;
+                }
+            };
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -231,7 +248,6 @@ namespace TheDataProject.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            AppPreferences ap = new AppPreferences(Application.Context);
 
             if (requestCode == TakeImageId && resultCode != 0)
             {
@@ -241,29 +257,16 @@ namespace TheDataProject.Droid
                 mediaScanIntent.SetData(contentUri);
                 SendBroadcast(mediaScanIntent);
                 Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, contentUri);
-                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageHeight(bitmap.Height), false));
+                iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, appPreferences.GetImageWidth(bitmap.Width), appPreferences.GetImageHeight(bitmap.Height), false));
             }
             else
             {
                 if (data != null)
                 {
                     Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, data.Data);
-                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, ap.GetImageWidth(bitmap.Width), ap.GetImageHeight(bitmap.Height), false));
+                    iImageViewer.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, appPreferences.GetImageWidth(bitmap.Width), appPreferences.GetImageHeight(bitmap.Height), false));
                 }
             }
-        }
-
-        private int GetIndex(Spinner spinner, String myString)
-        {
-            int index = 0;
-            for (int i = 0; i < spinner.Count; i++)
-            {
-                if (spinner.GetItemAtPosition(i).Equals(myString))
-                {
-                    index = i;
-                }
-            }
-            return index;
         }
 
         void OnOccupationYearSet(object sender, DatePickerDialog.DateSetEventArgs e)
@@ -271,100 +274,102 @@ namespace TheDataProject.Droid
             occupationYear.Text = e.Date.ToLongDateString();
         }
       
-        async void SaveButton_Click(object sender, EventArgs e)
+        async void SaveBuilding()
         {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.ShowLoading();
-
-            if (!ValidateForm())
+            if (appPreferences.IsOnline(Application.Context))
             {
-                messageDialog.HideLoading();
-                return;
-            }
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
 
-
-            Helpers.UIHelpers staticData = new Helpers.UIHelpers();
-
-            int numberOfFloors = 0;
-            if (!String.IsNullOrEmpty(nooOfFoors.Text))
-                numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
-            
-            if (PhotoIsChanged)
-                FileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
-
-            Building item = new Building
-            {
-                Id = building.Id,
-                BuildingName = buildingName.Text,
-                BuildingNumber = building.Id == 0 ? facilityId + staticData.RandomDigits(10) : building.BuildingNumber,
-                BuildingType = buildingType.SelectedItem.ToString(),
-                BuildingStandard = buildingstandard.SelectedItem.ToString(),
-                Status = utilisationStatus.Text,
-                NumberOfFloors = numberOfFloors,
-                FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
-                ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
-                Heritage = heritage.Checked == true ? true :false,
-                OccupationYear = occupationYear.Text,
-                DisabledAccess = disabledAccesss.SelectedItem.ToString(),
-                DisabledComment = disabledComment.Text,
-                ConstructionDescription = constructionDescription.Text,
-                GPSCoordinates = _GPSCoordinates,
-                Photo = PhotoIsChanged == true ? FileName : building.Photo,
-                CreatedDate = new DateTime(),
-                CreatedUserId = userId,
-                ModifiedUserId = userId,
-                Facility = new Facility
+                if (!ValidateForm())
                 {
-                    Id = facilityId
+                    messageDialog.HideLoading();
+                    return;
                 }
-            };
-            bool isAdded = false;
-            if (!isEdit)
-                isAdded = await ViewModel.AddBuildingAsync(item);
-            else
-            {
-                isAdded = await ViewModel.UpdateBuildingAsync(item);
-            }
-                
-            if (isAdded)
-            {
-                if (PhotoIsChanged) {
-                    PictureViewModel pictureViewModel = new PictureViewModel();
-                    Bitmap _bm = ((BitmapDrawable)buildingPhoto.Drawable).Bitmap;
-                    string bal = "";
-                    if (_bm != null)
-                    {
-                        MemoryStream stream = new MemoryStream();
-                        _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
-                        byte[] ba = stream.ToArray();
-                         bal = Base64.EncodeToString(ba, Base64.Default);
-                    }
 
-                    Models.Picture picture = new Models.Picture()
+                int numberOfFloors = 0;
+                if (!String.IsNullOrEmpty(nooOfFoors.Text))
+                    numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
+
+                if (PhotoIsChanged)
+                    FileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
+
+                Building item = new Building
+                {
+                    Id = building.Id,
+                    BuildingName = buildingName.Text,
+                    BuildingNumber = building.Id == 0 ? facilityId + helpers.RandomDigits(10) : building.BuildingNumber,
+                    BuildingType = buildingType.SelectedItem.ToString(),
+                    BuildingStandard = buildingstandard.SelectedItem.ToString(),
+                    Status = utilisationStatus.Text,
+                    NumberOfFloors = numberOfFloors,
+                    FootPrintArea = Convert.ToDouble(totalFootprintAream2.Text),
+                    ImprovedArea = Convert.ToDouble(totalImprovedaAeam2.Text),
+                    Heritage = heritage.Checked == true ? true : false,
+                    OccupationYear = occupationYear.Text,
+                    DisabledAccess = disabledAccesss.SelectedItem.ToString(),
+                    DisabledComment = disabledComment.Text,
+                    ConstructionDescription = constructionDescription.Text,
+                    GPSCoordinates = _GPSCoordinates,
+                    Photo = PhotoIsChanged == true ? FileName : building.Photo,
+                    CreatedDate = new DateTime(),
+                    CreatedUserId = userId,
+                    ModifiedUserId = userId,
+                    Facility = new Facility
                     {
-                        Name = FileName,
-                        File = bal,
-                    };
-                    List<Models.Picture> pictures = new List<Models.Picture>();
-                    pictures.Add(picture);
-                    await pictureViewModel.ExecuteSavePictureCommand(pictures);
-                
-            
+                        Id = facilityId
+                    }
+                };
+                bool isAdded = false;
+                if (!isEdit)
+                    isAdded = await ViewModel.AddBuildingAsync(item);
+                else
+                {
+                    isAdded = await ViewModel.UpdateBuildingAsync(item);
                 }
-                messageDialog.HideLoading();
-                if (!isEdit)
-                    messageDialog.SendToast("Building is added successful.");
+
+                if (isAdded)
+                {
+                    if (PhotoIsChanged)
+                    {
+                        PictureViewModel pictureViewModel = new PictureViewModel();
+                        Bitmap _bm = ((BitmapDrawable)buildingPhoto.Drawable).Bitmap;
+                        string bal = "";
+                        if (_bm != null)
+                        {
+                            MemoryStream stream = new MemoryStream();
+                            _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+                            byte[] ba = stream.ToArray();
+                            bal = Base64.EncodeToString(ba, Base64.Default);
+                        }
+
+                        Models.Picture picture = new Models.Picture()
+                        {
+                            Name = FileName,
+                            File = bal,
+                        };
+                        List<Models.Picture> pictures = new List<Models.Picture>();
+                        pictures.Add(picture);
+                        await pictureViewModel.ExecuteSavePictureCommand(pictures);
+
+
+                    }
+                    messageDialog.HideLoading();
+                    if (!isEdit)
+                        messageDialog.SendToast("Building is added successful.");
+                    else
+                        messageDialog.SendToast("Building is updated successful.");
+                    Finish();
+                }
                 else
-                    messageDialog.SendToast("Building is updated successful.");
-                Finish();
-            }
-            else {
-                messageDialog.HideLoading();
-                if (!isEdit)
-                    messageDialog.SendToast("Unable to add new building.");
-                else
-                    messageDialog.SendToast("Unable to update building.");
-            }            
+                {
+                    messageDialog.HideLoading();
+                    if (!isEdit)
+                        messageDialog.SendToast("Unable to add new building.");
+                    else
+                        messageDialog.SendToast("Unable to update building.");
+                }
+            }                       
         }
 
         void AddLocation_Click(object sender, EventArgs e)
@@ -408,8 +413,10 @@ namespace TheDataProject.Droid
 
         }
 
+        #endregion #endregion 
+
         #region Image 
-        
+
         public void SaveImage(Bitmap bitmap,string fileName)
         {
             try

@@ -16,6 +16,7 @@ using System.IO;
 using Android.Graphics.Drawables;
 using Android.Util;
 using System.Linq;
+using Android.Provider;
 
 namespace TheDataProject.Droid.Activities
 {
@@ -23,8 +24,8 @@ namespace TheDataProject.Droid.Activities
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class FacilityPictureActivity : Android.Support.V7.App.AppCompatActivity
     {
-        Button takeaphotoButton, selectPictureButton, selectSecondImgButton, cancelPitureButton, takeaSecondImgButton, donePitureButton;
-        ImageView facilityPhoto , secondFacilityPhoto;
+        Button takeaphotoButton, selectPictureButton, selectSecondImgButton, takeaSecondImgButton;
+        ImageView facilityPhoto, secondFacilityPhoto;
         List<string> imageNames;
         public Facility facility;
         public static FacilitiesViewModel ViewModel { get; set; }
@@ -35,24 +36,21 @@ namespace TheDataProject.Droid.Activities
         public bool FirstPhotoIsChanged = false;
         public bool SecondPhotoIsChanged = false;
         public Java.IO.File _File;
-        AppPreferences ap;
+        private AppPreferences appPreferences;
         public Android.Support.V7.Widget.Toolbar Toolbar
         {
             get;
             set;
         }
 
-        //protected override int LayoutResource => Resource.Layout.activity_facility_picture;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             ViewModel = new FacilitiesViewModel();
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_facility_picture);
-            cancelPitureButton = FindViewById<Button>(Resource.Id.pcancel_button);
-            donePitureButton = FindViewById<Button>(Resource.Id.pdone_button);
             secondFacilityPhoto = FindViewById<ImageView>(Resource.Id.facility_secondphoto_imageview);
             facilityPhoto = FindViewById<ImageView>(Resource.Id.facility_photo_imageview);
-            ap = new AppPreferences(Android.App.Application.Context);
+            appPreferences = new AppPreferences(Application.Context);
 
             takeaphotoButton = FindViewById<Button>(Resource.Id.img_takeaphoto);
             selectPictureButton = FindViewById<Button>(Resource.Id.img_selectpicture);
@@ -64,8 +62,6 @@ namespace TheDataProject.Droid.Activities
             selectSecondImgButton.Click += SelectASecondPicture;
             takeaSecondImgButton.Click += TakeASecondPicture;
 
-            cancelPitureButton.Click += CancelButton_Click;
-            donePitureButton.Click += SaveButton_Click;
             _dir = CreateDirectoryForPictures();
             Toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             if (Toolbar != null)
@@ -75,7 +71,21 @@ namespace TheDataProject.Droid.Activities
                 SupportActionBar.SetDisplayHomeAsUpEnabled(true);
                 SupportActionBar.SetHomeButtonEnabled(true);
             }
-
+            Toolbar.MenuItemClick += (sender, e) =>
+            {
+                var itemTitle = e.Item.TitleFormatted;
+                switch (itemTitle.ToString())
+                {
+                    case "Log Out":
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        appPreferences.SaveUserId("0");
+                        StartActivity(intent);
+                        break;
+                    case "Save":
+                        SaveFacility();
+                        break;
+                }
+            };
             var data = Intent.GetStringExtra("data");
             facility = new Facility();
             if (data != null)
@@ -83,7 +93,7 @@ namespace TheDataProject.Droid.Activities
                 facility = Newtonsoft.Json.JsonConvert.DeserializeObject<Facility>(data);
                 imageNames = facility.IDPicture == null ? new List<string>() : facility.IDPicture.Split(',').ToList();
                 if (imageNames.Count > 0)
-                    GetImages(ap);
+                    GetImages(appPreferences);
             }
         }
         private async void GetImages(AppPreferences ap)
@@ -126,108 +136,119 @@ namespace TheDataProject.Droid.Activities
             }
         }
 
-
-        void CancelButton_Click(object sender, EventArgs e)
+        private async void SaveFacility()
         {
-            var intent = new Intent(this, typeof(FacilityDetailActivity));
-            Context mContext = Android.App.Application.Context;
-            AppPreferences ap = new AppPreferences(mContext);
-            ap.SaveFacilityId(facility.Id.ToString());
-            facility.Buildings = new List<Building>();
-            intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
-            this.StartActivity(intent);
-            Finish();
-        }
-        async void SaveButton_Click(object sender, EventArgs e)
-        {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.ShowLoading();
-            if (imageNames.Count() == 0)
+            if (appPreferences.IsOnline(Application.Context))
             {
-                imageNames = new List<string>();
-            }
-            
-            if (FirstPhotoIsChanged)
-            {                
-                string thisFileName = ap.SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
-                if (imageNames.Count() > 0)
-                    imageNames[0] = thisFileName;
-                else
-                    imageNames.Add(thisFileName);
-
-            }
-            if (SecondPhotoIsChanged)
-            {
-                var _fileName = String.Format("facility_{0}", Guid.NewGuid());
-                ap.SaveImage(((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap, _fileName);
-                if (imageNames.Count() > 1)
-                    imageNames[1] = _fileName;
-                else
-                    imageNames.Add(_fileName);
-            }
-            if (FirstPhotoIsChanged)
-            {
-                facility.IDPicture = "";
-
-                foreach (var name in imageNames)
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.ShowLoading();
+                if (imageNames.Count() == 0)
                 {
-                    if (!String.IsNullOrEmpty(name))
-                    {
-                        if (String.IsNullOrEmpty(facility.IDPicture))
-                            facility.IDPicture = name;
-                        else
-                            facility.IDPicture = facility.IDPicture + "," + name;
-                    }
+                    imageNames = new List<string>();
                 }
-            }
 
-
-            bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
-            if (isUpdated)
-            {
-                PictureViewModel pictureViewModel = new PictureViewModel();
-                List<Models.Picture> pictures = new List<Models.Picture>();
                 if (FirstPhotoIsChanged)
                 {
-                    Bitmap _bm = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
-                    string file = "";
-                    if (_bm != null)
-                    {
-                        MemoryStream stream = new MemoryStream();
-                        _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
-                        byte[] ba = stream.ToArray();
-                        file = Base64.EncodeToString(ba, Base64.Default);
-                    }
+                    string thisFileName = appPreferences.SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
+                    if (imageNames.Count() > 0)
+                        imageNames[0] = thisFileName;
+                    else
+                        imageNames.Add(thisFileName);
 
-                    Models.Picture picture = new Models.Picture()
-                    {
-                        Name = imageNames[0],
-                        File = file,
-                    };
-                    pictures.Add(picture);
                 }
-                bool isSuccess = await pictureViewModel.ExecuteSavePictureCommand(pictures);
-
-                messageDialog.HideLoading();
-                messageDialog.SendToast("Pictures are saved successful.");
-
-                messageDialog.HideLoading();
-                if (isSuccess)
+                if (SecondPhotoIsChanged)
                 {
-                    messageDialog.SendToast("Deeds information is saved successful.");
+                    var _fileName = String.Format("facility_{0}", Guid.NewGuid());
+                    appPreferences.SaveImage(((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap, _fileName);
+                    if (imageNames.Count() > 1)
+                        imageNames[1] = _fileName;
+                    else
+                        imageNames.Add(_fileName);
+                }
+                if (FirstPhotoIsChanged)
+                {
+                    facility.IDPicture = "";
+
+                    foreach (var name in imageNames)
+                    {
+                        if (!String.IsNullOrEmpty(name))
+                        {
+                            if (String.IsNullOrEmpty(facility.IDPicture))
+                                facility.IDPicture = name;
+                            else
+                                facility.IDPicture = facility.IDPicture + "," + name;
+                        }
+                    }
+                }
+
+
+                bool isUpdated = await ViewModel.ExecuteUpdateFacilityCommand(facility);
+                if (isUpdated)
+                {
+                    PictureViewModel pictureViewModel = new PictureViewModel();
+                    List<Models.Picture> pictures = new List<Models.Picture>();
+                    if (FirstPhotoIsChanged)
+                    {
+                        Bitmap _bm = ((BitmapDrawable)facilityPhoto.Drawable).Bitmap;
+                        string file = "";
+                        if (_bm != null)
+                        {
+                            MemoryStream stream = new MemoryStream();
+                            _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+                            byte[] ba = stream.ToArray();
+                            file = Base64.EncodeToString(ba, Base64.Default);
+                        }
+
+                        Models.Picture picture = new Models.Picture()
+                        {
+                            Name = imageNames[0],
+                            File = file,
+                        };
+                        pictures.Add(picture);
+                    }
+                    bool isSuccess = await pictureViewModel.ExecuteSavePictureCommand(pictures);
+
+                    messageDialog.HideLoading();
+                    messageDialog.SendToast("Pictures are saved successful.");
+                    var intent = new Intent(this, typeof(FacilityDetailActivity));
+                    Context mContext = Android.App.Application.Context;
+                    AppPreferences ap = new AppPreferences(mContext);
+                    ap.SaveFacilityId(facility.Id.ToString());
+                    intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(facility));
+                    this.StartActivity(intent);
                     Finish();
                 }
                 else
                 {
-                    messageDialog.SendToast("Error occurred: Unable to save deed information.");
+                    messageDialog.HideLoading();
+                    messageDialog.SendToast("Pictures are not saved successful.");
                 }
-               
             }
-            else
+        }
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            for (int j = 0; j < menu.Size(); j++)
             {
-                messageDialog.HideLoading();
-                messageDialog.SendToast("Pictures are not saved successful.");
+                var item = menu.GetItem(j);
+                if (item.ToString() == "Search")
+                    item.SetVisible(false);
+                if (item.ToString() == "Submit")
+                    item.SetVisible(false);
+                if (item.ToString() == "Add")
+                    item.SetVisible(false);
+                if (item.ToString() == "Save")
+                    item.SetShowAsActionFlags(Android.Views.ShowAsAction.Always);
             }
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId != Android.Resource.Id.Home)
+                return base.OnOptionsItemSelected(item);
+            Finish();
+            return true;
         }
 
         async void TakeAPicture(object sender, EventArgs e)
@@ -269,7 +290,6 @@ namespace TheDataProject.Droid.Activities
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            AppPreferences ap = new AppPreferences(Application.Context);
 
             if (requestCode == TakeImageId && resultCode != 0 && _File != null)
             {
@@ -278,19 +298,20 @@ namespace TheDataProject.Droid.Activities
                 Android.Net.Uri contentUri = Android.Net.Uri.FromFile(_File);
                 mediaScanIntent.SetData(contentUri);
                 Application.Context.SendBroadcast(mediaScanIntent);
-                int height = Resources.DisplayMetrics.HeightPixels;
-                int width = Resources.DisplayMetrics.WidthPixels;
-                Android.Graphics.Bitmap bitmap = _File.Path.LoadAndResizeBitmap(ap.GetImageWidth(width), ap.GetImageHeight(height));
-                if (bitmap != null)
+                Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, contentUri);
+                Bitmap formattedBitmap = Bitmap.CreateScaledBitmap(bitmap, appPreferences.GetImageWidth(bitmap.Width), appPreferences.GetImageHeight(bitmap.Height), false);
+                if (formattedBitmap != null)
                 {
-                   if (IsFirstPhoto) {
-                        facilityPhoto.SetImageBitmap(bitmap);
+                    if (IsFirstPhoto)
+                    {
+                        facilityPhoto.SetImageBitmap(formattedBitmap);
                         FirstPhotoIsChanged = true;
-                    }                        
-                   else{
-                        secondFacilityPhoto.SetImageBitmap(bitmap);
+                    }
+                    else
+                    {
+                        secondFacilityPhoto.SetImageBitmap(formattedBitmap);
                         SecondPhotoIsChanged = true;
-                    }   
+                    }
                 }
                 bitmap = null;
                 GC.Collect();
@@ -299,22 +320,22 @@ namespace TheDataProject.Droid.Activities
             {
                 if (data != null)
                 {
-                    Android.Net.Uri uri = data.Data;
+                    Bitmap bitmap = MediaStore.Images.Media.GetBitmap(ContentResolver, data.Data);
                     if (IsFirstPhoto)
                     {
-                        facilityPhoto.SetImageURI(uri);
+                        facilityPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, appPreferences.GetImageWidth(bitmap.Width), appPreferences.GetImageHeight(bitmap.Height), false));
                         FirstPhotoIsChanged = true;
                     }
                     else
                     {
-                        secondFacilityPhoto.SetImageURI(uri);
+                        secondFacilityPhoto.SetImageBitmap(Bitmap.CreateScaledBitmap(bitmap, appPreferences.GetImageWidth(bitmap.Width), appPreferences.GetImageHeight(bitmap.Height), false));
                         SecondPhotoIsChanged = true;
                     }
                     GC.Collect();
                 }
             }
         }
-        
+
         public Java.IO.File CreateDirectoryForPictures()
         {
             Java.IO.File _dir = new Java.IO.File(

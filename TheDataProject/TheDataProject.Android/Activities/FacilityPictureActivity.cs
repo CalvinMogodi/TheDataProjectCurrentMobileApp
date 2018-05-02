@@ -206,6 +206,25 @@ namespace TheDataProject.Droid.Activities
                         };
                         pictures.Add(picture);
                     }
+                    if (SecondPhotoIsChanged && imageNames.Count() > 1)
+                    {
+                        Bitmap _bm = ((BitmapDrawable)secondFacilityPhoto.Drawable).Bitmap;
+                        string file = "";
+                        if (_bm != null)
+                        {
+                            MemoryStream stream = new MemoryStream();
+                            _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+                            byte[] ba = stream.ToArray();
+                            file = Base64.EncodeToString(ba, Base64.Default);
+                        }
+
+                        Models.Picture picture = new Models.Picture()
+                        {
+                            Name = imageNames[1],
+                            File = file,
+                        };
+                        pictures.Add(picture);
+                    }
                     bool isSuccess = await pictureViewModel.ExecuteSavePictureCommand(pictures);
 
                     messageDialog.HideLoading();

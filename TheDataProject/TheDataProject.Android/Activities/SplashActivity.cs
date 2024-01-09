@@ -6,7 +6,7 @@ using TheDataProject.Droid.Activities;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/SplashTheme", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class SplashActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

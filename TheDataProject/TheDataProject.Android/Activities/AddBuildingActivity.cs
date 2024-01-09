@@ -34,7 +34,8 @@ namespace TheDataProject.Droid
         ImageView gpscAddLocationButton, refashAccuracy, buildingPhoto, iImageViewer;
         Button takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         Dialog imageDialog;
-        Spinner buildingType, buildingstandard, disabledAccesss;
+        Spinner buildingType, buildingstandard, disabledAccesss, caRoof, caWalls, caDoorsWindows, caFloors,
+            caCivils, caPlumbing, caElectrical;
         TextInputLayout occupationyearLayout;
         public static readonly int TakeImageId = 1000;
         public static readonly int SelectImageId = 2000;
@@ -86,6 +87,15 @@ namespace TheDataProject.Droid
             constructionDescription = FindViewById<EditText>(Resource.Id.etb_constructiondescription);
             accuracyMessage = FindViewById<TextView>(Resource.Id.accuracy_message);
             refashAccuracy = FindViewById<ImageView>(Resource.Id.refreshaccuracy_button);
+
+            caRoof = FindViewById<Spinner>(Resource.Id.sf_caRoof);
+            caWalls = FindViewById<Spinner>(Resource.Id.sf_caWalls);
+            caDoorsWindows = FindViewById<Spinner>(Resource.Id.sf_caDoorsWindows);
+            caFloors = FindViewById<Spinner>(Resource.Id.sf_caFloors);
+            caCivils = FindViewById<Spinner>(Resource.Id.sf_caCivils);
+            caPlumbing = FindViewById<Spinner>(Resource.Id.sf_caPlumbing);
+            caElectrical = FindViewById<Spinner>(Resource.Id.sf_caElectrical);
+
             refashAccuracy.Click += RefashAccuracy_Click;
 
             _dir = appPreferences.CreateDirectoryForPictures();
@@ -112,6 +122,16 @@ namespace TheDataProject.Droid
                 heritage.Checked = building.Heritage;
                 disabledComment.Text = building.DisabledComment;
                 constructionDescription.Text = building.ConstructionDescription;
+
+                if (building.ConditionAssessment != null) {
+                    caRoof.SetSelection(helpers.GetSpinnerIndex(caRoof, building.ConditionAssessment.Roof));
+                    caWalls.SetSelection(helpers.GetSpinnerIndex(caWalls, building.ConditionAssessment.Walls));
+                    caFloors.SetSelection(helpers.GetSpinnerIndex(caFloors, building.ConditionAssessment.Floors));
+                    caDoorsWindows.SetSelection(helpers.GetSpinnerIndex(caDoorsWindows, building.ConditionAssessment.DoorsWindows));
+                    caCivils.SetSelection(helpers.GetSpinnerIndex(caCivils, building.ConditionAssessment.Civils));
+                    caElectrical.SetSelection(helpers.GetSpinnerIndex(caElectrical, building.ConditionAssessment.Electrical));
+                    caPlumbing.SetSelection(helpers.GetSpinnerIndex(caPlumbing, building.ConditionAssessment.Plumbing));
+                }
 
                 Bitmap bit = SetImageBitmap(_dir + "/" + building.Photo);
                 if (bit != null)
@@ -200,7 +220,7 @@ namespace TheDataProject.Droid
                 }
                 return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -318,6 +338,16 @@ namespace TheDataProject.Droid
                     Facility = new Facility
                     {
                         Id = facilityId
+                    },
+                    ConditionAssessment = new ConditionAssessment {
+                        BuildingId = building.Id,
+                        Roof = caRoof.SelectedItem.ToString(),
+                        Walls = caWalls.SelectedItem.ToString(),
+                        DoorsWindows = caDoorsWindows.SelectedItem.ToString(),
+                        Floors = caFloors.SelectedItem.ToString(),
+                        Civils = caCivils.SelectedItem.ToString(),
+                        Plumbing = caPlumbing.SelectedItem.ToString(),
+                        Electrical = caElectrical.SelectedItem.ToString(),
                     }
                 };
                 bool isAdded = false;
@@ -340,7 +370,7 @@ namespace TheDataProject.Droid
                             MemoryStream stream = new MemoryStream();
                             _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
                             byte[] ba = stream.ToArray();
-                            bal = Base64.EncodeToString(ba, Base64.Default);
+                            bal = Android.Util.Base64.EncodeToString(ba, Base64Flags.Default);
                         }
 
                         Models.Picture picture = new Models.Picture()
@@ -427,7 +457,7 @@ namespace TheDataProject.Droid
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 95, os);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -444,7 +474,7 @@ namespace TheDataProject.Droid
                 }
                 return fileName;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

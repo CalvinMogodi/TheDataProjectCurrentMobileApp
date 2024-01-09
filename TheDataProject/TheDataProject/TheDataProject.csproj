@@ -37,11 +37,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\Command.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Models\BoundryPolygon.cs" />
     <Compile Include="Models\Building.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ConditionAssessment.cs" />
     <Compile Include="Models\DeedsInfo.cs" />
     <Compile Include="Models\GPSCoordinate.cs" />
     <Compile Include="Models\Facility.cs" />

@@ -26,7 +26,7 @@ namespace TheDataProject.Droid.Helpers
         private Context mContext;
         private static String PREFERENCE_ACCESS_KEY = "PREFERENCE_ACCESS_KEY"; //Value Access Key Name  
         public static String NAME = "NAME"; //Value Variable Name  
-        private static String PREFERENCE_ACCESS_List; //Value Access Key Name  
+        private static readonly string PREFERENCE_ACCESS_List; //Value Access Key Name  
         public static String NAMES; //Value Variable Name  
         public AppPreferences(Context context)
         {
@@ -57,7 +57,7 @@ namespace TheDataProject.Droid.Helpers
         {
             try
             {
-                byte[] encodeByte = Base64.Decode(image, Base64.Default);
+                byte[] encodeByte = Base64.Decode(image, Base64Flags.Default);
                 Bitmap bitmap = BitmapFactory.DecodeByteArray(encodeByte, 0, encodeByte.Length);
                 return bitmap;
             }
@@ -73,7 +73,7 @@ namespace TheDataProject.Droid.Helpers
             {
                 return BitmapFactory.DecodeByteArray(encodeByte, 0, encodeByte.Length);               
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

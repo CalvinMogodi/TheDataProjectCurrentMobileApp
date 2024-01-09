@@ -29,5 +29,7 @@ namespace TheDataProject.Models
         public DateTime ModifiedDate { get; set; }
         public int? ModifiedUserId { get; set; }
         public Facility Facility { get; set; }
+        public ConditionAssessment ConditionAssessment { get; set; }
     }
 }
+

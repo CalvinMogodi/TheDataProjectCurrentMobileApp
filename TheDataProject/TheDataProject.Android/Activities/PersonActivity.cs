@@ -13,6 +13,7 @@ using Android.Widget;
 using TheDataProject.Droid.Helpers;
 using TheDataProject.Models;
 using TheDataProject.ViewModels;
+using Person = TheDataProject.Models.Person;
 
 namespace TheDataProject.Droid.Activities
 {

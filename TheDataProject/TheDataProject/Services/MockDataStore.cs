@@ -29,7 +29,7 @@ namespace TheDataProject
 
         public async Task<bool> UpdateFacilityAsync(Facility facility)
         {
-            string restUrl = "http://154.0.170.81:85/api/Facility/UpdateFacility";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Facility/UpdateFacility";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isUpdated = false;
             facility.Location = new Models.Location();
@@ -54,7 +54,7 @@ namespace TheDataProject
 
         public async Task<ObservableCollection<Facility>> GetFacilitysAsync(int userId)
         {
-            string restUrl = "http://154.0.170.81:85/api/Facility/GetFacilitiesByUserId?userId=" + userId;
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Facility/GetFacilitiesByUserId?userId=" + userId;
             var uri = new Uri(string.Format(restUrl, string.Empty));
             try
             {
@@ -67,7 +67,7 @@ namespace TheDataProject
                 else if (response == null) {
                     facilities = new ObservableCollection<Facility>();
                 }
-            } catch (Exception ex)
+            } catch (Exception)
             {
                 facilities = new ObservableCollection<Facility>();
                 return await Task.FromResult(facilities);
@@ -77,7 +77,7 @@ namespace TheDataProject
 
         public async Task<bool> AddBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/AddBuilding";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Building/AddBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isAdded = false;
             try
@@ -90,7 +90,7 @@ namespace TheDataProject
                     isAdded = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return isAdded;
             }
@@ -99,7 +99,7 @@ namespace TheDataProject
 
         public async Task<bool> UpdateBuildingAsync(Building building)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/UpdateBuilding";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Building/UpdateBuilding";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isUpdated = false;
             try
@@ -112,7 +112,7 @@ namespace TheDataProject
                     isUpdated = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return isUpdated;
             }
@@ -121,7 +121,7 @@ namespace TheDataProject
 
         public async Task<ObservableCollection<Building>> GetBuildingsAsync(int facilityId)
         {
-            string restUrl = "http://154.0.170.81:85/api/Building/GetBuildingByFacilityId?facilityId=" + facilityId;
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Building/GetBuildingByFacilityId?facilityId=" + facilityId;
             var uri = new Uri(string.Format(restUrl, string.Empty));
             try { 
                 var response = await client.GetAsync(uri);
@@ -134,7 +134,7 @@ namespace TheDataProject
                         buildings = new ObservableCollection<Building>();
                     }
                 }
-            } catch (Exception ex){
+            } catch (Exception){
                 buildings = new ObservableCollection<Building>();
                 return await Task.FromResult(buildings);
             }
@@ -147,13 +147,14 @@ namespace TheDataProject
 
         public async Task<User> LoginUser(User user)
         {
-            string RestUrl = "http://154.0.170.81:85/api/User/Login?username=" + user.Username+"&password="+ user.Password;
+            string RestUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/User/Login?username=" + user.Username+"&password="+ user.Password;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             HttpResponseMessage response = null;
             User _user = new User();
             try
             {
+                
                 response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
@@ -190,14 +191,14 @@ namespace TheDataProject
 
         public async Task<bool> SaveImage(List<Picture> pictures)
         {
-             string restUrl = "http://154.0.170.81:85/api/Building/SaveImage";
+             string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Building/SaveImage";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSaved= false;
             try
             {
                 var json = JsonConvert.SerializeObject(pictures);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                client.MaxResponseContentBufferSize = 256000;
+                //client.MaxResponseContentBufferSize = 256000;
                 var response = await client.PostAsync(uri, content);
                 if (response.IsSuccessStatusCode)
                 {
@@ -213,7 +214,7 @@ namespace TheDataProject
 
         public async Task<Picture> GetImage(string fileName)
         {
-            string RestUrl = "http://154.0.170.81:85/api/Building/GetImage?pictureGuid=" + fileName;
+            string RestUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Building/GetImage?pictureGuid=" + fileName;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             HttpResponseMessage response = null;
@@ -243,7 +244,7 @@ namespace TheDataProject
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return _picture;
             }
@@ -253,7 +254,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdateDeedsInfoAsync(DeedsInfo deedsInfo)
         {
-            string restUrl = "http://154.0.170.81:85/api/DeedsInfo/CreateEdit";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/DeedsInfo/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try
@@ -266,7 +267,7 @@ namespace TheDataProject
                     isSuccess = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return isSuccess;
             }
@@ -275,7 +276,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdateLocationAsync(Location location)
         {
-            string restUrl = "http://154.0.170.81:85/api/Location/CreateEdit";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Location/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try
@@ -288,7 +289,7 @@ namespace TheDataProject
                     isSuccess = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return isSuccess;
             }
@@ -297,7 +298,7 @@ namespace TheDataProject
 
         public async Task<bool> AddUpdatePersonAsync(Person person)
         {
-            string restUrl = "http://154.0.170.81:85/api/Person/CreateEdit";
+            string restUrl = "https://amethysthemisphere.dedicated.co.za:81/theproject/api/Person/CreateEdit";
             var uri = new Uri(string.Format(restUrl, string.Empty));
             bool isSuccess = false;
             try
@@ -310,7 +311,7 @@ namespace TheDataProject
                     isSuccess = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return isSuccess;
             }

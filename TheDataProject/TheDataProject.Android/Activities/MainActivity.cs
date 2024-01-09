@@ -15,7 +15,7 @@ using Android.Views.InputMethods;
 
 namespace TheDataProject.Droid
 {
-    [Activity(Label = "@string/app_name", Icon = "@mipmap/icon", LaunchMode = LaunchMode.SingleInstance,
+    [Activity(Label = "@string/app_name", Icon = "@mipmap/icon", Exported = true, LaunchMode = LaunchMode.SingleInstance,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     [IntentFilter(new string[] { Intent.ActionSearch })]
     [MetaData("android.app.searchable", Resource = "@layout/searchable")]

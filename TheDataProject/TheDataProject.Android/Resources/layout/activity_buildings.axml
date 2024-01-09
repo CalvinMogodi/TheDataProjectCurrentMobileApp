@@ -23,7 +23,7 @@
       android:gravity="center"
       android:orientation="horizontal">
       <Button
-          android:text="Information"
+          android:text="@string/tab2"
           android:background="?attr/colorPrimary"
           android:theme="@style/button_cancel"
           android:id="@+id/information_button"
@@ -31,7 +31,7 @@
           android:paddingLeft="20dp"
           android:layout_height="wrap_content" />
       <Button
-          android:text="Buildings"
+          android:text="@string/tab3"
           android:background="?attr/colorPrimary"
           android:theme="@style/button_primary"
           android:id="@+id/buildings_button"

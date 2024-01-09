@@ -30,41 +30,17 @@ namespace TheDataProject.Droid.Activities
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class FacilityInformationActivity : Activity
     {
-        //public string Photo { get; set; }
-        //FloatingActionButton editButton, saveButton, gpsLocationButton, bpLocationButton;
-        Button locationCancelButton, locationDoneButton, responsiblePersonCancelButton, responsiblePersonDoneButton, deedCancelButton, deedDoneButton
-            , takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
-
-        //EditText streetAddress, suburb, region, fullname, designation, mobileNumber, emailaddress, erfNumber, titleDeedNumber, extentm2, ownerInformation;
-        //Spinner settlementtype, province, localmunicipality, zoning;
-        //AlertDialog locationDialog, responsiblePersonDialog, deedDialog;
-        //CardView locationHolder, responsiblepersonHolder, deedHolder;
-        //TextView clientCode, facilityName, tvfLatitude, tvfLongitude, boundaryPolygonsText;
+        Button takeaphotoButton, selectPictureButton, siCancelButton, siDoneButton;
         ImageView facilityPhoto, iImageViewer, secondFacilityPhoto;
-        //LinearLayout locationlinearlayout;
-        //int userId;
-        //ListView bpListView;
-        //List<string> itemList, imageNames;
         Dialog imageDialog, sameImageDialog;
-        //public GPSCoordinate _GPSCoordinates;
-        //public List<BoundryPolygon> _BoundryPolygons;
-        //ArrayAdapter<string> arrayAdapter;
         public static readonly int TakeImageId = 1000;
         public static readonly int SelectImageId = 2000;
-        //int oldPosition;
-        //public static Java.IO.File _file;
-        //public static Java.IO.File _dir;
         public static Bitmap bitmapnew;
         public bool IsFirstPhoto = false;
         public bool FirstPhotoIsChanged = false;
         public bool SecondPhotoIsChanged = false;
-        //public bool isEdit = false;
         public Java.IO.File _PhotoFile;
-        //FacilitiesViewModel ViewModel;
-        //public Facility facility;
         Button buildingsButton;
-
-       // protected override int LayoutResource => Resource.Layout.activity_facility;
 
         protected override void OnCreate(Bundle savedInstanceState)
            

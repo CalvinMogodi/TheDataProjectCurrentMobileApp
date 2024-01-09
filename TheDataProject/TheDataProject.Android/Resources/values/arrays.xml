@@ -4,125 +4,133 @@
 		<item>@string/tab1</item>
 	</string-array>
 
-  <string-array name="facilitySections">
-    <item>@string/tab2</item>
-    <item>@string/tab3</item>
-  </string-array>
+	<string-array name="facilitySections">
+		<item>@string/tab2</item>
+		<item>@string/tab3</item>
+	</string-array>
 
-  <string-array name="settlementtypes">
-    <item>FORMAL - Formal</item>
-    <item>INFORMAL - Informal</item>
-  </string-array>
+	<string-array name="settlementtypes">
+		<item>FORMAL - Formal</item>
+		<item>INFORMAL - Informal</item>
+	</string-array>
 
-  <string-array name="provinces">
-    <item>Gauteng</item>
-    <item>Eastern Cape</item>
-    <item>Free State</item>    
-    <item>KwaZulu-Natal</item>
-    <item>Limpopo</item>
-    <item>Mpumalanga</item>
-    <item>Northern Cape</item>
-    <item>North West</item>
-    <item>Western Cape</item>  
-  </string-array>
+	<string-array name="provinces">
+		<item>Gauteng</item>
+		<item>Eastern Cape</item>
+		<item>Free State</item>
+		<item>KwaZulu-Natal</item>
+		<item>Limpopo</item>
+		<item>Mpumalanga</item>
+		<item>Northern Cape</item>
+		<item>North West</item>
+		<item>Western Cape</item>
+	</string-array>
 
-  <string-array name="localmunicipalities">
-    <item>City Of Ekurhuleni</item>
-    <item>City Of Johannesburg</item>
-    <item>City Of Tshwane</item>    
-  </string-array>
+	<string-array name="localmunicipalities">
+		<item>City Of Ekurhuleni</item>
+		<item>City Of Johannesburg</item>
+		<item>City Of Tshwane</item>
+	</string-array>
 
-  <string-array name="yesno">
-    <item>Yes</item>
-    <item>No</item>
-  </string-array>
+	<string-array name="yesno">
+		<item>Yes</item>
+		<item>No</item>
+	</string-array>
 
-  <string-array name="zoningtypes">
-    <item> </item>
-    <item>Agriculture</item>
-    <item>business 1</item>
-    <item>Business 2</item>
-    <item>Business 3</item>
-    <item>Community facility</item>
-    <item>Industrial 1</item>
-    <item>Industrial 2</item>
-    <item>Mining</item>
-    <item>Parking</item>
-    <item>Private Open Space</item>
-    <item>Public garage</item>
-    <item>Public open space</item>
-    <item>Public services</item>
-    <item>Recreation</item>
-    <item>Residential 1</item>
-    <item>Residential 2</item>
-    <item>Residential 3</item>
-    <item>Residential 4</item>
-    <item>Roads</item>
-    <item>Social services</item>
-    <item>Special</item>
-    <item>Transportation</item>
-  </string-array>
+	<string-array name="zoningtypes">
+		<item> </item>
+		<item>Agriculture</item>
+		<item>business 1</item>
+		<item>Business 2</item>
+		<item>Business 3</item>
+		<item>Community facility</item>
+		<item>Industrial 1</item>
+		<item>Industrial 2</item>
+		<item>Mining</item>
+		<item>Parking</item>
+		<item>Private Open Space</item>
+		<item>Public garage</item>
+		<item>Public open space</item>
+		<item>Public services</item>
+		<item>Recreation</item>
+		<item>Residential 1</item>
+		<item>Residential 2</item>
+		<item>Residential 3</item>
+		<item>Residential 4</item>
+		<item>Roads</item>
+		<item>Social services</item>
+		<item>Special</item>
+		<item>Transportation</item>
+	</string-array>
 
-  <string-array name="buildingtypes">
-    <item>Community Hall</item>
-    <item>Carport</item>
-    <item>Courthouse</item>
-    <item>City Hall</item>
-    <item>Embassy</item>
-    <item>School Administration Block</item>
-    <item>Biology Lab</item>
-    <item>Computer Lab</item>
-    <item>Double Storey Classroom Block</item>
-    <item>Classroom Block</item>
-    <item>Student Center</item>
-    <item>Home Economics Classroom</item>
-    <item>Lecture Hall</item>
-    <item>Library</item>
-    <item>Multipurpose Hall</item>
-    <item>Nutrition Center</item>
-    <item>Science Lab</item>
-    <item>Toilet Block</item>
-    <item>Workshops</item>
-    <item>Fire Station</item>
-    <item>Gate House</item>
-    <item>Clinic</item>
-    <item>Multi purpose building</item>
-    <item>Industrial</item>
-    <item>Branch Library</item>
-    <item>Community Library – Micro</item>
-    <item>Community Library</item>
-    <item>Library</item>
-    <item>Residential Block of flats</item>
-    <item>Office Grade - A</item>
-    <item>Office Grade - B</item>
-    <item>Office Grade - C</item>
-    <item>Office Grade - P</item>
-    <item>Police Station</item>
-    <item>Parliament</item>
-    <item>Prison</item>
-    <item>Post Office</item>
-    <item>Public Amenity</item>
-    <item>Multi sports complex</item>
-    <item>Stadiums</item>
-    <item>Residential dwelling</item>
-  </string-array>
+	<string-array name="buildingtypes">
+		<item>Community Hall</item>
+		<item>Carport</item>
+		<item>Courthouse</item>
+		<item>City Hall</item>
+		<item>Embassy</item>
+		<item>School Administration Block</item>
+		<item>Biology Lab</item>
+		<item>Computer Lab</item>
+		<item>Double Storey Classroom Block</item>
+		<item>Classroom Block</item>
+		<item>Student Center</item>
+		<item>Home Economics Classroom</item>
+		<item>Lecture Hall</item>
+		<item>Library</item>
+		<item>Multipurpose Hall</item>
+		<item>Nutrition Center</item>
+		<item>Science Lab</item>
+		<item>Toilet Block</item>
+		<item>Workshops</item>
+		<item>Fire Station</item>
+		<item>Gate House</item>
+		<item>Clinic</item>
+		<item>Multi purpose building</item>
+		<item>Industrial</item>
+		<item>Branch Library</item>
+		<item>Community Library – Micro</item>
+		<item>Community Library</item>
+		<item>Library</item>
+		<item>Residential Block of flats</item>
+		<item>Office Grade - A</item>
+		<item>Office Grade - B</item>
+		<item>Office Grade - C</item>
+		<item>Office Grade - P</item>
+		<item>Police Station</item>
+		<item>Parliament</item>
+		<item>Prison</item>
+		<item>Post Office</item>
+		<item>Public Amenity</item>
+		<item>Multi sports complex</item>
+		<item>Stadiums</item>
+		<item>Residential dwelling</item>
+	</string-array>
 
-  <string-array name="buildingstandards">
-    <item> </item>
-    <item>S5 - Highly sensitive purpose with critical results (e.g. hospital operating theatre) or high profile public building (e.g. Parliament House).</item>
-    <item>S4 - Good public presentation and a high-quality working/living environment are necessary (e.g. CBD building, Multi unit dwellings,Retail units).</item>
-    <item>S3 - Functionally-focused 	building 	(e.g. laboratory, public carparks).  </item>
-    <item>S2 - Ancillary functions only with no critical operational role (e.g. storage) or building has a limited life.  </item>
-    <item>S1 - Building is no longer operational - it is dormant, pending disposal, demolition, etc.  </item>
-  </string-array>
+	<string-array name="buildingstandards">
+		<item> </item>
+		<item>S5 - Highly sensitive purpose with critical results (e.g. hospital operating theatre) or high profile public building (e.g. Parliament House).</item>
+		<item>S4 - Good public presentation and a high-quality working/living environment are necessary (e.g. CBD building, Multi unit dwellings,Retail units).</item>
+		<item>S3 - Functionally-focused 	building 	(e.g. laboratory, public carparks).  </item>
+		<item>S2 - Ancillary functions only with no critical operational role (e.g. storage) or building has a limited life.  </item>
+		<item>S1 - Building is no longer operational - it is dormant, pending disposal, demolition, etc.  </item>
+	</string-array>
 
-  <string-array name="disabledaccesss">
-    <item> </item>
-    <item>Complies with regulation entirely, ideal situation</item>
-    <item>Does not comply all of the regulation and minimum effort would be required to rectify </item>
-    <item>Does not comply with regulation with moderate changes required to achieve compliance </item>
-    <item>Does not comply with regulation with major alterations and changes needing to be effected to layout achieve compliance </item>
-    <item>Does not comply with regulation</item>
-  </string-array>
+	<string-array name="conditionAssessments">
+		<item>Excellent</item>
+		<item>Good</item>
+		<item>Fair/Adequate</item>
+		<item>Marginal</item>
+		<item>Poor</item>
+	</string-array>
+
+	<string-array name="disabledaccesss">
+		<item> </item>
+		<item>Complies with regulation entirely, ideal situation</item>
+		<item>Does not comply all of the regulation and minimum effort would be required to rectify </item>
+		<item>Does not comply with regulation with moderate changes required to achieve compliance </item>
+		<item>Does not comply with regulation with major alterations and changes needing to be effected to layout achieve compliance </item>
+		<item>Does not comply with regulation</item>
+	</string-array>
 
 </resources>

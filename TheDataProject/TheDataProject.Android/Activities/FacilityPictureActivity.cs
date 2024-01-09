@@ -196,7 +196,7 @@ namespace TheDataProject.Droid.Activities
                             MemoryStream stream = new MemoryStream();
                             _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
                             byte[] ba = stream.ToArray();
-                            file = Base64.EncodeToString(ba, Base64.Default);
+                            file = Base64.EncodeToString(ba, Base64Flags.Default);
                         }
 
                         Models.Picture picture = new Models.Picture()
@@ -215,7 +215,7 @@ namespace TheDataProject.Droid.Activities
                             MemoryStream stream = new MemoryStream();
                             _bm.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
                             byte[] ba = stream.ToArray();
-                            file = Base64.EncodeToString(ba, Base64.Default);
+                            file = Base64.EncodeToString(ba, Base64Flags.Default);
                         }
 
                         Models.Picture picture = new Models.Picture()
@@ -279,7 +279,7 @@ namespace TheDataProject.Droid.Activities
             StartActivityForResult(intent, TakeImageId);
         }
 
-        async void TakeASecondPicture(object sender, EventArgs e)
+        void TakeASecondPicture(object sender, EventArgs e)
         {
             IsFirstPhoto = false;
             Intent intent = new Intent(Android.Provider.MediaStore.ActionImageCapture);

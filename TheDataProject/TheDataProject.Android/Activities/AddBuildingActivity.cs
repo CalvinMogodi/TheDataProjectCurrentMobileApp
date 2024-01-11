@@ -251,6 +251,8 @@ namespace TheDataProject.Droid
 
         private void TakeAPicture(object sender, EventArgs eventArgs)
         {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.SetVmPolicy(builder.Build());
             Intent intent = new Intent(MediaStore.ActionImageCapture);
             _file = new Java.IO.File(_dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
             intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_file));
@@ -312,7 +314,7 @@ namespace TheDataProject.Droid
                     numberOfFloors = Convert.ToInt32(nooOfFoors.Text);
 
                 if (PhotoIsChanged)
-                    FileName = SaveImage(((BitmapDrawable)buildingPhoto.Drawable).Bitmap);
+                    FileName = String.Format("building_{0}", Guid.NewGuid());
 
                 Building item = new Building
                 {

@@ -355,6 +355,8 @@ namespace TheDataProject.Droid.Activities
 
         private void TakeAPicture(object sender, EventArgs eventArgs)
         {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.SetVmPolicy(builder.Build());
             Intent intent = new Intent(MediaStore.ActionImageCapture);
             _PhotoFile = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
             intent.PutExtra(MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_PhotoFile));

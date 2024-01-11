@@ -149,7 +149,7 @@ namespace TheDataProject.Droid.Activities
 
                 if (FirstPhotoIsChanged)
                 {
-                    string thisFileName = appPreferences.SaveImage(((BitmapDrawable)facilityPhoto.Drawable).Bitmap);
+                    string thisFileName = String.Format("facility_{0}", Guid.NewGuid());
                     if (imageNames.Count() > 0)
                         imageNames[0] = thisFileName;
                     else
@@ -272,15 +272,19 @@ namespace TheDataProject.Droid.Activities
 
         async void TakeAPicture(object sender, EventArgs e)
         {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.SetVmPolicy(builder.Build());
             IsFirstPhoto = true;
             Intent intent = new Intent(Android.Provider.MediaStore.ActionImageCapture);
-            _File = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
+            _File = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.png", Guid.NewGuid()));
             intent.PutExtra(Android.Provider.MediaStore.ExtraOutput, Android.Net.Uri.FromFile(_File));
             StartActivityForResult(intent, TakeImageId);
         }
 
         void TakeASecondPicture(object sender, EventArgs e)
         {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.SetVmPolicy(builder.Build());
             IsFirstPhoto = false;
             Intent intent = new Intent(Android.Provider.MediaStore.ActionImageCapture);
             _File = new Java.IO.File(CreateDirectoryForPictures(), String.Format("{0}.jpg", Guid.NewGuid()));
